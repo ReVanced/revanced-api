@@ -1,0 +1,65 @@
+{
+  "name": "poetry3-poetry-pyenv",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // 👇 Features to add to the Dev Container. More info: https://containers.dev/implementors/features.
+  // "features": {},
+
+  // 👇 Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+
+  // 👇 Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "",
+
+  // 👇 Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "njpwerner.autodocstring",
+        "ms-azuretools.vscode-docker",
+        "github.copilot-labs",
+        "github.copilot-nightly",
+        "eamodio.gitlens",
+        "visualstudioexptteam.intellicode-api-usage-examples",
+        "ms-python.isort",
+        "ms-vsliveshare.vsliveshare",
+        "matangover.mypy",
+        "ms-python.vscode-pylance",
+        "mgesbert.python-path",
+        "zeshuaro.vscode-python-poetry",
+        "njqdev.vscode-python-typehint",
+        "ms-python.black-formatter"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {},
+    "ghcr.io/devcontainers-contrib/features/black:2": {},
+    "ghcr.io/devcontainers-contrib/features/curl-apt-get:1": {},
+    "ghcr.io/devcontainers-contrib/features/ffmpeg-apt-get:1": {},
+    "ghcr.io/devcontainers-contrib/features/micro:1": {},
+    "ghcr.io/devcontainers-contrib/features/mosh-apt-get:1": {},
+    "ghcr.io/devcontainers-contrib/features/mypy:2": {},
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-contrib/features/wget-apt-get:1": {},
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+    "ghcr.io/jckimble/devcontainer-features/ngrok:3": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "codespace",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    }
+  }
+
+  // 👇 Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
