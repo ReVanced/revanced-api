@@ -1,8 +1,11 @@
-from sanic import Blueprint, Request
-from sanic.response import JSONResponse, json
+from sanic import Blueprint
+from sanic import Request
+from sanic.response import json
+from sanic.response import JSONResponse
 from sanic_ext import openapi
 
-from api.backends.github import Github, GithubRepository
+from api.backends.github import Github
+from api.backends.github import GithubRepository
 
 github: Blueprint = Blueprint("github", url_prefix="/github", version=1)
 

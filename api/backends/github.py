@@ -3,7 +3,8 @@ import os
 import ujson
 from aiohttp import ClientResponse
 
-from api.backends.backend import Backend, Repository
+from api.backends.backend import Backend
+from api.backends.backend import Repository
 from api.backends.entities import *
 from api.utils.http_utils import http_get
 

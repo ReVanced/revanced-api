@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import Any, Protocol
+from typing import Any
+from typing import Protocol
 
 from api.backends.entities import *
 
