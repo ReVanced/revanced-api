@@ -1,11 +1,11 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
-# FROM mcr.microsoft.com/devcontainers/base:jammy 
+# FROM mcr.microsoft.com/devcontainers/base:jammy
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER=vscode
 
 RUN DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \ 
+    && apt-get update \
     && apt-get install -y build-essential --no-install-recommends make \
         ca-certificates \
         git \
@@ -23,7 +23,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         libxml2-dev \
         libxmlsec1-dev \
         libffi-dev \
-        liblzma-dev
+        liblzma-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Python and poetry installation
 USER $USER
