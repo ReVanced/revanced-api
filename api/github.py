@@ -22,14 +22,14 @@ Routes:
 
 """
 
-github: Blueprint = Blueprint("github", version=2)
+github: Blueprint = Blueprint('github', version=2)
 
 github_backend: Github = Github()
 
 
-@github.get("/<repo:str>/releases")
+@github.get('/<repo:str>/releases')
 @openapi.definition(
-    summary="Get releases for a repository", response=[ReleaseListResponseModel]
+    summary='Get releases for a repository', response=[ReleaseListResponseModel]
 )
 async def list_releases(request: Request, repo: str) -> JSONResponse:
     """
@@ -49,8 +49,8 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    per_page = int(request.args.get("per_page")) if request.args.get("per_page") else 30
-    page = int(request.args.get("page")) if request.args.get("page") else 1
+    per_page = int(request.args.get('per_page')) if request.args.get('per_page') else 30
+    page = int(request.args.get('page')) if request.args.get('page') else 1
 
     data = await github_backend.list_releases(
         repository=GithubRepository(owner=owner, name=repo),
@@ -61,9 +61,9 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
     return json(data, status=200)
 
 
-@github.get("/<repo:str>/release/latest")
+@github.get('/<repo:str>/release/latest')
 @openapi.definition(
-    summary="Get the latest release for a repository", response=ReleaseResponseModel
+    summary='Get the latest release for a repository', response=ReleaseResponseModel
 )
 async def latest_release(request: Request, repo: str) -> JSONResponse:
     """
@@ -71,7 +71,7 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
 
     **Args:**
         - repo (str): The name of the Github repository to retrieve the release for.
-        
+
     **Query Parameters:**
         - dev (bool): Whether or not to retrieve the latest development release.
 
@@ -89,9 +89,9 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
     return json(data, status=200)
 
 
-@github.get("/<repo:str>/release/tag/<tag:str>")
+@github.get('/<repo:str>/release/tag/<tag:str>')
 @openapi.definition(
-    summary="Retrieve a release for a Github repository by its tag name.",
+    summary='Retrieve a release for a Github repository by its tag name.',
     response=ReleaseResponseModel,
 )
 async def get_release_by_tag_name(

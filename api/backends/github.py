@@ -5,7 +5,8 @@ from typing import Optional
 
 import ujson
 from aiohttp import ClientResponse
-from gql import Client, gql
+from gql import Client
+from gql import gql
 from gql.transport.aiohttp import AIOHTTPTransport
 from graphql import DocumentNode
 from sanic import SanicException
