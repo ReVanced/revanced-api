@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -11,7 +11,6 @@ repos:
     -   id: double-quote-string-fixer
     -   id: name-tests-test
     -   id: requirements-txt-fixer
-    -   id: pretty-format-json
     -   id: check-toml
     -   id: check-merge-conflict
     -   id: double-quote-string-fixer
@@ -25,7 +24,7 @@ repos:
       - id: black
         language_version: python3.9
 -   repo: https://github.com/iamthefij/docker-pre-commit
-    rev: master
+    rev: v3.0.1
     hooks:
       - id: docker-compose-check
 -   repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
