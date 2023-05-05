@@ -1,18 +1,3 @@
-from sanic import Blueprint
-from sanic import Request
-from sanic.response import json
-from sanic.response import JSONResponse
-from sanic_ext import openapi
-
-<<<<<<< HEAD
-from api.backends.github import Github
-from api.backends.github import GithubRepository
-=======
-from api.backends.github import Github, GithubRepository
-from api.models.github import *
-from config import owner
->>>>>>> 93af5f0 (refactor: backend changes)
-
 """
 This module provides endpoints for interacting with the Github API.
 
@@ -21,6 +6,18 @@ Routes:
     - GET /<repo:str>/releases/latest: Retrieve the latest release for a Github repository.
 
 """
+
+from sanic import Blueprint
+from sanic import Request
+from sanic.response import json
+from sanic.response import JSONResponse
+from sanic_ext import openapi
+
+from api.backends.github import Github
+from api.backends.github import GithubRepository
+from api.backends.github import Github, GithubRepository
+from api.models.github import *
+from config import owner
 
 github: Blueprint = Blueprint('github', version=2)
 

@@ -1,3 +1,10 @@
+"""
+This module provides a blueprint for the socials endpoint.
+
+Routes:
+    - GET /socials: Get ReVanced socials.
+"""
+
 from sanic import Blueprint
 from sanic import Request
 from sanic.response import json
@@ -6,13 +13,6 @@ from sanic_ext import openapi
 
 from api.models.socials import SocialsResponseModel
 from config import social_links
-
-"""
-This module provides a blueprint for the socials endpoint.
-
-Routes:
-    - GET /socials: Get ReVanced socials.
-"""
 
 socials: Blueprint = Blueprint("socials", version=2)
 
