@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 aiohttp = {version = ">=3.8.4", extras = ["speedups"]}
+gql = {version = ">=3.4.0", extras = ["aiohttp"]}
 sanic = {version = ">=23.3.0", extras = ["ext", "http3"]}
 ujson = ">=5.7.0"
 asyncstdlib = "3.10.6"
@@ -17,7 +18,7 @@ aioquic = ">=0.9.20"
 
 [tool.poetry.dev-dependencies]
 mypy = ">=1.2.0"
-types-ujson = ">=5.7.0.3"
+types-ujson = ">=5.7.0.5"
 types-aiofiles = ">=23.1.0.1"
 sanic-testing = ">=23.3.0"
 pytest-asyncio = ">=0.21.0"
