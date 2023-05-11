@@ -8,21 +8,15 @@ repos:
     -   id: check-added-large-files
     -   id: check-docstring-first
     -   id: debug-statements
-    -   id: double-quote-string-fixer
     -   id: name-tests-test
     -   id: requirements-txt-fixer
     -   id: check-toml
     -   id: check-merge-conflict
-    -   id: double-quote-string-fixer
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.9.0
-    hooks:
-    -   id: reorder-python-imports
 -   repo: https://github.com/psf/black
     rev: 23.3.0
     hooks:
       - id: black
-        language_version: python3.9
+        language_version: python3.11
 -   repo: https://github.com/iamthefij/docker-pre-commit
     rev: v3.0.1
     hooks:
