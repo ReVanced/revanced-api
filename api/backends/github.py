@@ -228,11 +228,13 @@ class Github(Backend):
                 contributor,
             )
             return Contributor(**filter_contributor)
-        
+
         contributors_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
-        
+
         contributors: list[Contributor] = []
-        response: ClientResponse = await http_get(headers=self.headers, url=contributors_endpoint)
+        response: ClientResponse = await http_get(
+            headers=self.headers, url=contributors_endpoint
+        )
         if response.status == 200:
             contributors = await asyncio.gather(
                 *[
