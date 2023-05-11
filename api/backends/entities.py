@@ -24,6 +24,7 @@ class Metadata(dict):
         prerelease: bool,
         created_at: str,
         published_at: str,
+        body: str,
     ):
         dict.__init__(
             self,
@@ -33,6 +34,7 @@ class Metadata(dict):
             prerelease=prerelease,
             created_at=created_at,
             published_at=published_at,
+            body=body,
         )
 
 
@@ -47,9 +49,12 @@ class Asset(dict):
         - download_url (str): The URL to download the asset.
     """
 
-    def __init__(self, name: str, content_type: str, download_url: str):
+    def __init__(self, name: str, content_type: str, browser_download_url: str):
         dict.__init__(
-            self, name=name, content_type=content_type, download_url=download_url
+            self,
+            name=name,
+            content_type=content_type,
+            browser_download_url=browser_download_url,
         )
 
 
@@ -65,20 +70,6 @@ class Release(dict):
 
     def __init__(self, metadata: Metadata, assets: list[Asset]):
         dict.__init__(self, metadata=metadata, assets=assets)
-
-
-@dataclass
-class Notes(dict):
-    """
-    Represents the release notes for a release.
-
-    Attributes:
-        - name (str): The name of the release.
-        - body (str): The body of the release notes.
-    """
-
-    def __init__(self, name: str, body: str):
-        dict.__init__(self, name=name, body=body)
 
 
 @dataclass

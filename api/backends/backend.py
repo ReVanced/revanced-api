@@ -1,6 +1,5 @@
 from abc import abstractmethod
-from typing import Any
-from typing import Protocol
+from typing import Any, Protocol
 
 from api.backends.entities import *
 
@@ -14,7 +13,6 @@ class Backend(Protocol):
 
     Methods:
         list_releases: Retrieve a list of releases.
-        get_release: Retrieve a specific release.
         get_release_by_tag_name: Retrieve a release by its tag name.
         get_latest_release: Retrieve the latest release.
         get_latest_pre_release: Retrieve the latest pre-release.
@@ -35,10 +33,6 @@ class Backend(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_release(self, *args: Any, **kwargs: Any) -> Release:
-        raise NotImplementedError
-
-    @abstractmethod
     async def get_release_by_tag_name(self, *args: Any, **kwargs: Any) -> Release:
         raise NotImplementedError
 
@@ -51,15 +45,11 @@ class Backend(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_release_notes(self, *args: Any, **kwargs: Any) -> Notes:
-        raise NotImplementedError
-
-    @abstractmethod
     async def get_contributors(self, *args: Any, **kwargs: Any) -> list[Contributor]:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_patches(self, *args: Any, **kwargs: Any) -> dict:
+    async def get_patches(self, *args: Any, **kwargs: Any) -> list[dict]:
         raise NotImplementedError
 
 

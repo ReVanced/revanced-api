@@ -5,10 +5,7 @@ Routes:
     - HEAD /ping: Ping the API.
 """
 
-from sanic import Blueprint
-from sanic import HTTPResponse
-from sanic import Request
-from sanic import response
+from sanic import Blueprint, HTTPResponse, Request, response
 from sanic_ext import openapi
 
 ping: Blueprint = Blueprint("ping", version=2)

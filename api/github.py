@@ -7,26 +7,23 @@ Routes:
 
 """
 
-from sanic import Blueprint
-from sanic import Request
-from sanic.response import json
-from sanic.response import JSONResponse
+from sanic import Blueprint, Request
+from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
-from api.backends.github import Github
-from api.backends.github import GithubRepository
+from api.backends.entities import Release, Contributor
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
-from config import owner
+from config import owner, api_version
 
-github: Blueprint = Blueprint('github', version=2)
+github: Blueprint = Blueprint("github", version=api_version)
 
 github_backend: Github = Github()
 
 
-@github.get('/<repo:str>/releases')
+@github.get("/<repo:str>/releases")
 @openapi.definition(
-    summary='Get releases for a repository', response=[ReleaseListResponseModel]
+    summary="Get releases for a repository", response=[ReleaseListResponseModel]
 )
 async def list_releases(request: Request, repo: str) -> JSONResponse:
     """
@@ -46,10 +43,12 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    per_page = int(request.args.get('per_page')) if request.args.get('per_page') else 30
-    page = int(request.args.get('page')) if request.args.get('page') else 1
+    per_page = int(request.args.get("per_page")) if request.args.get("per_page") else 30
+    page = int(request.args.get("page")) if request.args.get("page") else 1
 
-    data = await github_backend.list_releases(
+    data: dict[str, list[Release]] = {}
+
+    data["releases"] = await github_backend.list_releases(
         repository=GithubRepository(owner=owner, name=repo),
         per_page=per_page,
         page=page,
@@ -58,9 +57,10 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
     return json(data, status=200)
 
 
-@github.get('/<repo:str>/release/latest')
+@github.get("/<repo:str>/releases/latest")
 @openapi.definition(
-    summary='Get the latest release for a repository', response=ReleaseResponseModel
+    summary="Get the latest release for a repository",
+    response=SingleReleaseResponseModel,
 )
 async def latest_release(request: Request, repo: str) -> JSONResponse:
     """
@@ -79,17 +79,25 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    data = await github_backend.get_latest_release(
-        repository=GithubRepository(owner=owner, name=repo)
+    data: dict[str, Release] = {}
+
+    data["release"] = (
+        await github_backend.get_latest_pre_release(
+            repository=GithubRepository(owner=owner, name=repo)
+        )
+        if request.args.get("dev") == "true"
+        else await github_backend.get_latest_release(
+            repository=GithubRepository(owner=owner, name=repo)
+        )
     )
 
     return json(data, status=200)
 
 
-@github.get('/<repo:str>/release/tag/<tag:str>')
+@github.get("/<repo:str>/releases/tag/<tag:str>")
 @openapi.definition(
-    summary='Retrieve a release for a Github repository by its tag name.',
-    response=ReleaseResponseModel,
+    summary="Retrieve a release for a Github repository by its tag name.",
+    response=SingleReleaseResponseModel,
 )
 async def get_release_by_tag_name(
     request: Request, repo: str, tag: str
@@ -99,7 +107,7 @@ async def get_release_by_tag_name(
 
     **Args:**
         - repo (str): The name of the Github repository to retrieve the release for.
-        - repo (str): The tag for the release to be retrieved.
+        - tag (str): The tag for the release to be retrieved.
 
     **Returns:**
         - JSONResponse: A Sanic JSONResponse object containing the release.
@@ -108,7 +116,66 @@ async def get_release_by_tag_name(
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    data = await github_backend.get_release_by_tag_name(
+    data: dict[str, Release] = {}
+
+    data["release"] = await github_backend.get_release_by_tag_name(
+        repository=GithubRepository(owner=owner, name=repo), tag_name=tag
+    )
+
+    return json(data, status=200)
+
+
+@github.get("/<repo:str>/contributors")
+@openapi.definition(
+    summary="Retrieve a list of contributors for a repository.",
+    response=ContributorsModel,
+)
+async def get_contributors(request: Request, repo: str) -> JSONResponse:
+    """
+    Retrieve a list of contributors for a repository.
+
+    **Args:**
+        - repo (str): The name of the Github repository to retrieve the contributors for.
+
+    **Returns:**
+        - JSONResponse: A Sanic JSONResponse object containing the list of patches.
+
+    **Raises:**
+        - HTTPException: If there is an error retrieving the patches.
+    """
+
+    data: dict[str, list[Contributor]] = {}
+
+    data["contributors"] = await github_backend.get_contributors(
+        repository=GithubRepository(owner=owner, name=repo)
+    )
+
+    return json(data, status=200)
+
+
+@github.get("/patches/<tag:str>")
+@openapi.definition(
+    summary="Retrieve a list of patches for a release.", response=PatchesModel
+)
+async def get_patches(request: Request, tag: str) -> JSONResponse:
+    """
+    Retrieve a list of patches for a release.
+
+    **Args:**
+        - tag (str): The tag for the patches to be retrieved.
+
+    **Returns:**
+        - JSONResponse: A Sanic JSONResponse object containing the list of patches.
+
+    **Raises:**
+        - HTTPException: If there is an error retrieving the patches.
+    """
+
+    repo: str = "revanced-patches"
+
+    data: dict[str, list[dict]] = {}
+
+    data["patches"] = await github_backend.get_patches(
         repository=GithubRepository(owner=owner, name=repo), tag_name=tag
     )
 

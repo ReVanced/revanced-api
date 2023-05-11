@@ -18,3 +18,28 @@ redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
 # GitHub Backend Configuration
 
 owner: str = "revanced"
+
+# API Versioning
+
+api_version: str = "v2"
+openapi_version: str = "2.0.0"
+openapi_title: str = "ReVanced API"
+openapi_description: str = """
+## The official JSON API for ReVanced Releases 🚀
+
+### Links
+
+- [Changelogs](https://github.com/revanced/)
+- [Official links to ReVanced](https://revanced.app)
+
+### Important Information
+
+* Rate Limiting - 60 requests per minute
+* Cache - 5 minutes
+
+### Additional Notes
+
+1. Breaking changes are to be expected
+2. Client side caching is advised to avoid unnecessary requests
+3. Abuse of the API will result in IP blocks
+"""
