@@ -1697,6 +1697,33 @@ files = [
 ]
 
 [[package]]
+name = "types-beautifulsoup4"
+version = "4.12.0.5"
+description = "Typing stubs for beautifulsoup4"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-beautifulsoup4-4.12.0.5.tar.gz", hash = "sha256:d9be456416a62a5b9740559592e1063a69d4b0a1b83911d878558c8ae8e07074"},
+    {file = "types_beautifulsoup4-4.12.0.5-py3-none-any.whl", hash = "sha256:718364c8e6787884501c700b1d22b6c0a8711bf9d6c9bf96e1fba81495bc46a8"},
+]
+
+[package.dependencies]
+types-html5lib = "*"
+
+[[package]]
+name = "types-html5lib"
+version = "1.1.11.14"
+description = "Typing stubs for html5lib"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-html5lib-1.1.11.14.tar.gz", hash = "sha256:091e9e74e0ee37c93fd789a164e99b2af80ecf5a314280450c6a763d027ea209"},
+    {file = "types_html5lib-1.1.11.14-py3-none-any.whl", hash = "sha256:758c1a27f3b63363a346f3646be9f8b1f25df4fc1f96f88af6d1d831f24ad675"},
+]
+
+[[package]]
 name = "types-ujson"
 version = "5.7.0.5"
 description = "Typing stubs for ujson"
@@ -2011,4 +2038,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "537418ada8b9f57fe7bd61e5ceb973e2b5692b822aeb46c52562bf3314f7ba9a"
+content-hash = "d0c70a384099ad9f0e3516c3b2f53d9301731309888fff191d3e3268246514e2"

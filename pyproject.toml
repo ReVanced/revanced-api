@@ -25,6 +25,7 @@ types-ujson = ">=5.7.0.5"
 types-aiofiles = ">=23.1.0.1"
 sanic-testing = ">=23.3.0"
 pytest-asyncio = ">=0.21.0"
+types-beautifulsoup4 = ">=4.12.0.5"
 
 [build-system]
 requires = ["poetry-core"]
