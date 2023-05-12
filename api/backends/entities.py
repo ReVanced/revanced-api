@@ -92,3 +92,23 @@ class Contributor(dict):
             html_url=html_url,
             contributions=contributions,
         )
+
+
+@dataclass
+class AppInfo(dict):
+    """
+    Represents the information of an app.
+
+    Attributes:
+        - name (str): The name of the app.
+        - category (str): The app category.
+        - logo (str): The base64 enconded app logo.
+    """
+
+    def __init__(self, name: str, category: str, logo: str):
+        dict.__init__(
+            self,
+            name=name,
+            category=category,
+            logo=logo,
+        )

@@ -62,3 +62,26 @@ class Repository:
 
     def __init__(self, backend: Backend):
         self.backend = backend
+
+
+class AppInfoProvider(Protocol):
+    """Interface for a generic app info provider.
+
+    Attributes:
+        name (str): Name of the app info provider.
+        base_url (str): Base URL of the app info provider.
+
+    Methods:
+        get_app_info: Retrieve information about an app.
+    """
+
+    name: str
+    base_url: str
+
+    def __init__(self, name: str, base_url: str):
+        self.name = name
+        self.base_url = base_url
+
+    @abstractmethod
+    async def get_app_info(self, *args: Any, **kwargs: Any) -> AppInfo:
+        raise NotImplementedError
