@@ -20,4 +20,7 @@ async def http_get(headers, url):
     global _client
     if _client == None:
         _client = ClientSession(json_serialize=ujson.dumps)
-    return await _client.get(url, headers=headers)
+        return await _client.get(url, headers=headers)
+    else:
+        assert isinstance(_client, ClientSession)
+        return await _client.get(url, headers=headers)
