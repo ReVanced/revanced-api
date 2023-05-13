@@ -1,7 +1,6 @@
 import asyncio
 import os
 from operator import eq
-from platform import release
 from typing import Optional
 
 import ujson
@@ -70,7 +69,6 @@ class Github(Backend):
                 lambda key: key in {"name", "content_type", "browser_download_url"},
                 asset,
             )
-
             return Asset(**asset_data)
 
         filter_metadata = keyfilter(
@@ -86,13 +84,10 @@ class Github(Backend):
             },
             release,
         )
-
         metadata = Metadata(**filter_metadata)
-
         assets = await asyncio.gather(
             *[__assemble_asset(asset) for asset in release["assets"]]
         )
-
         return Release(metadata=metadata, assets=assets)
 
     async def list_releases(
@@ -113,20 +108,19 @@ class Github(Backend):
         response: ClientResponse = await http_get(
             headers=self.headers, url=list_releases_endpoint
         )
-        if response.status == 200:
-            releases: list[Release] = []
-            releases = await asyncio.gather(
-                *[
-                    self.__assemble_release(release)
-                    for release in await response.json(loads=ujson.loads)
-                ]
-            )
-            return releases
-        else:
+        if response.status != 200:
             raise SanicException(
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
+        releases: list[Release] = []
+        releases = await asyncio.gather(
+            *[
+                self.__assemble_release(release)
+                for release in await response.json(loads=ujson.loads)
+            ]
+        )
+        return releases
 
     async def get_release_by_tag_name(
         self, repository: GithubRepository, tag_name: str
@@ -145,14 +139,12 @@ class Github(Backend):
         response: ClientResponse = await http_get(
             headers=self.headers, url=release_by_tag_endpoint
         )
-        if response.status == 200:
-            return await self.__assemble_release(await response.json(loads=ujson.loads))
-
-        else:
+        if response.status != 200:
             raise SanicException(
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
+        return await self.__assemble_release(await response.json(loads=ujson.loads))
 
     async def get_latest_release(
         self,
@@ -171,14 +163,12 @@ class Github(Backend):
         response: ClientResponse = await http_get(
             headers=self.headers, url=latest_release_endpoint
         )
-        if response.status == 200:
-            return await self.__assemble_release(await response.json(loads=ujson.loads))
-
-        else:
+        if response.status != 200:
             raise SanicException(
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
+        return await self.__assemble_release(await response.json(loads=ujson.loads))
 
     async def get_latest_pre_release(
         self,
@@ -197,20 +187,18 @@ class Github(Backend):
         response: ClientResponse = await http_get(
             headers=self.headers, url=list_releases_endpoint
         )
-        if response.status == 200:
-            latest_pre_release: dict = list(
-                filter(
-                    lambda release: release["prerelease"] is True,
-                    await response.json(loads=ujson.loads),
-                )
-            )[0]
-            return await self.__assemble_release(latest_pre_release)
-
-        else:
+        if response.status != 200:
             raise SanicException(
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
+        latest_pre_release: dict = list(
+            filter(
+                lambda release: release["prerelease"] is True,
+                await response.json(loads=ujson.loads),
+            )
+        )[0]
+        return await self.__assemble_release(latest_pre_release)
 
     async def get_contributors(self, repository: GithubRepository) -> list[Contributor]:
         """Get a list of contributors for a given repository.
@@ -230,24 +218,22 @@ class Github(Backend):
             return Contributor(**filter_contributor)
 
         contributors_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
-
         contributors: list[Contributor] = []
         response: ClientResponse = await http_get(
             headers=self.headers, url=contributors_endpoint
         )
-        if response.status == 200:
-            contributors = await asyncio.gather(
-                *[
-                    __assemble_contributor(contributor)
-                    for contributor in await response.json(loads=ujson.loads)
-                ]
-            )
-            return contributors
-        else:
+        if response.status != 200:
             raise SanicException(
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
+        contributors = await asyncio.gather(
+            *[
+                __assemble_contributor(contributor)
+                for contributor in await response.json(loads=ujson.loads)
+            ]
+        )
+        return contributors
 
     async def get_patches(
         self, repository: GithubRepository, tag_name: str
@@ -267,10 +253,9 @@ class Github(Backend):
             patch_asset = next(
                 filter(lambda x: eq(get_in(["name"], x), "patches.json"), asset), None
             )
-
             return get_in(["browser_download_url"], patch_asset)
 
-        data: ClientResponse = await http_get(
+        response: ClientResponse = await http_get(
             headers=self.headers,
             url=await __fetch_download_url(
                 await self.get_release_by_tag_name(
@@ -278,11 +263,9 @@ class Github(Backend):
                 )
             ),
         )
-
-        if data.status == 200:
-            return ujson.loads(await data.read())
-        else:
+        if response.status != 200:
             raise SanicException(
-                context=await data.json(loads=ujson.loads),
-                status_code=data.status,
+                context=await response.json(loads=ujson.loads),
+                status_code=response.status,
             )
+        return ujson.loads(await response.read())
