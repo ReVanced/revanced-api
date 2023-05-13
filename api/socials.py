@@ -10,9 +10,9 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.socials import SocialsResponseModel
-from config import social_links
+from config import social_links, api_version
 
-socials: Blueprint = Blueprint("socials", version=2)
+socials: Blueprint = Blueprint("socials", version=api_version)
 
 
 @socials.get("/socials")

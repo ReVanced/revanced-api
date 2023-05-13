@@ -13,7 +13,9 @@ from api.backends.apkdl import ApkDl
 from api.backends.entities import AppInfo
 from api.models.appinfo import AppInfoModel
 
-apkdl: Blueprint = Blueprint("app", version=1)
+from config import api_version
+
+apkdl: Blueprint = Blueprint("app", version=api_version)
 
 apkdl_backend: ApkDl = ApkDl()
 

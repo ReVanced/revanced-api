@@ -32,7 +32,7 @@ class ReleaseResponseModel(BaseModel):
     """
 
     metadata: MetadataFields
-    asset: AssetFields
+    assets: list[AssetFields]
 
 
 class SingleReleaseResponseModel(BaseModel):

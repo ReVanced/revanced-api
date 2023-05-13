@@ -1,5 +1,8 @@
 # Social Links
 
+from api.backends.backend import Repository
+
+
 social_links: dict[str, str] = {
     "website": "https://revanced.app",
     "github": "https://github.com/revanced",
@@ -43,3 +46,8 @@ openapi_description: str = """
 2. Client side caching is advised to avoid unnecessary requests
 3. Abuse of the API will result in IP blocks
 """
+
+# Testing Configuration
+
+github_testing_repository: str = "revanced-patches"
+github_testing_tag: str = "v2.173.0"
