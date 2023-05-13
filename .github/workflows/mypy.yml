@@ -36,9 +36,11 @@ jobs:
           fi
 
       - name: Install testing tools
-        run: pip install pydantic
+        run: pip install mypy pydantic
 
-      - name: Run pytest
-        uses: pavelzw/pytest-action@v2
+      - name: Run mypy
+        uses: sasanquaneuf/mypy-github-action@main
+        with:
+          checkName: "mypy"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

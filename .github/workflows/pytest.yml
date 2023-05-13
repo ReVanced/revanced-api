@@ -1,4 +1,4 @@
-name: "PyTest | Python tests and coverage"
+name: "PyTest | Testing and Code Coverage"
 
 on:
   push:
@@ -36,11 +36,9 @@ jobs:
           fi
 
       - name: Install testing tools
-        run: pip install mypy pydantic
+        run: pip install pydantic
 
-      - name: Run mypy
-        uses: sasanquaneuf/mypy-github-action@main
-        with:
-          checkName: "mypy"
+      - name: Run pytest
+        uses: pavelzw/pytest-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
