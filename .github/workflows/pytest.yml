@@ -45,7 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Get Coverage 
+      - name: Get Coverage
         uses: orgoro/coverage@v3
         with:
           coverageFile: ./coverage.xml
