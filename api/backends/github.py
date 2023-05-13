@@ -13,7 +13,7 @@ from api.backends.backend import Backend, Repository
 from api.backends.entities import *
 from api.utils.http_utils import http_get
 
-name: str = "github"
+repo_name: str = "github"
 base_url: str = "https://api.github.com"
 
 
@@ -54,7 +54,7 @@ class Github(Backend):
         """
         Initializes a new instance of the Github class.
         """
-        super().__init__(name, base_url)
+        super().__init__(repo_name, base_url)
         self.token: Optional[str] = os.getenv("GITHUB_TOKEN")
         self.headers: dict[str, str] = {
             "Authorization": f"Bearer {self.token}",
@@ -63,7 +63,8 @@ class Github(Backend):
         }
         self.repositories_rest_endpoint: str = f"{base_url}/repos"
 
-    async def __assemble_release(self, release: dict) -> Release:
+    @staticmethod
+    async def __assemble_release(release: dict) -> Release:
         async def __assemble_asset(asset: dict) -> Asset:
             asset_data: dict = keyfilter(
                 lambda key: key in {"name", "content_type", "browser_download_url"},
@@ -113,8 +114,7 @@ class Github(Backend):
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
-        releases: list[Release] = []
-        releases = await asyncio.gather(
+        releases: list[Release] = await asyncio.gather(
             *[
                 self.__assemble_release(release)
                 for release in await response.json(loads=ujson.loads)
@@ -153,8 +153,7 @@ class Github(Backend):
         """Get the latest release for a given repository.
 
         Args:
-            owner (str): The username or organization name that owns the repository.
-            repo (str): The name of the repository.
+            repository (GithubRepository): The Github repository for which to retrieve the release.
 
         Returns:
             Release: The latest release for the given repository.
@@ -177,8 +176,7 @@ class Github(Backend):
         """Get the latest pre-release for a given repository.
 
         Args:
-            owner (str): The username or organization name that owns the repository.
-            repo (str): The name of the repository.
+            repository (GithubRepository): The Github repository for which to retrieve the release.
 
         Returns:
             Release: The latest pre-release for the given repository.
@@ -218,7 +216,6 @@ class Github(Backend):
             return Contributor(**filter_contributor)
 
         contributors_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
-        contributors: list[Contributor] = []
         response: ClientResponse = await http_get(
             headers=self.headers, url=contributors_endpoint
         )
@@ -227,7 +224,7 @@ class Github(Backend):
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
-        contributors = await asyncio.gather(
+        contributors: list[Contributor] = await asyncio.gather(
             *[
                 __assemble_contributor(contributor)
                 for contributor in await response.json(loads=ujson.loads)

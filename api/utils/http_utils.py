@@ -18,7 +18,7 @@ async def http_get(headers, url):
         The HTTP response returned by the server.
     """
     global _client
-    if _client == None:
+    if _client is None:
         _client = ClientSession(json_serialize=ujson.dumps)
         return await _client.get(url, headers=headers)
     else:

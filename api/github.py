@@ -4,6 +4,9 @@ This module provides endpoints for interacting with the Github API.
 Routes:
     - GET /<repo:str>/releases: Retrieve a list of releases for a Github repository.
     - GET /<repo:str>/releases/latest: Retrieve the latest release for a Github repository.
+    - GET /<repo:str>/releases/tag/<tag:str>: Retrieve a specific release for a Github repository by its tag name.
+    - GET /<repo:str>/contributors: Retrieve a list of contributors for a Github repository.
+    - GET /patches/<tag:str>: Retrieve a list of patches for a given release tag.
 
 """
 
@@ -46,13 +49,13 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
     per_page = int(request.args.get("per_page")) if request.args.get("per_page") else 30
     page = int(request.args.get("page")) if request.args.get("page") else 1
 
-    data: dict[str, list[Release]] = {}
-
-    data["releases"] = await github_backend.list_releases(
-        repository=GithubRepository(owner=owner, name=repo),
-        per_page=per_page,
-        page=page,
-    )
+    data: dict[str, list[Release]] = {
+        "releases": await github_backend.list_releases(
+            repository=GithubRepository(owner=owner, name=repo),
+            per_page=per_page,
+            page=page,
+        )
+    }
 
     return json(data, status=200)
 
@@ -79,17 +82,15 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    data: dict[str, Release] = {}
-
-    data["release"] = (
-        await github_backend.get_latest_pre_release(
+    data: dict[str, Release] = {
+        "release": await github_backend.get_latest_pre_release(
             repository=GithubRepository(owner=owner, name=repo)
         )
         if request.args.get("dev") == "true"
         else await github_backend.get_latest_release(
             repository=GithubRepository(owner=owner, name=repo)
         )
-    )
+    }
 
     return json(data, status=200)
 
@@ -116,11 +117,11 @@ async def get_release_by_tag_name(
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    data: dict[str, Release] = {}
-
-    data["release"] = await github_backend.get_release_by_tag_name(
-        repository=GithubRepository(owner=owner, name=repo), tag_name=tag
-    )
+    data: dict[str, Release] = {
+        "release": await github_backend.get_release_by_tag_name(
+            repository=GithubRepository(owner=owner, name=repo), tag_name=tag
+        )
+    }
 
     return json(data, status=200)
 
@@ -144,11 +145,11 @@ async def get_contributors(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the patches.
     """
 
-    data: dict[str, list[Contributor]] = {}
-
-    data["contributors"] = await github_backend.get_contributors(
-        repository=GithubRepository(owner=owner, name=repo)
-    )
+    data: dict[str, list[Contributor]] = {
+        "contributors": await github_backend.get_contributors(
+            repository=GithubRepository(owner=owner, name=repo)
+        )
+    }
 
     return json(data, status=200)
 
@@ -173,10 +174,10 @@ async def get_patches(request: Request, tag: str) -> JSONResponse:
 
     repo: str = "revanced-patches"
 
-    data: dict[str, list[dict]] = {}
-
-    data["patches"] = await github_backend.get_patches(
-        repository=GithubRepository(owner=owner, name=repo), tag_name=tag
-    )
+    data: dict[str, list[dict]] = {
+        "patches": await github_backend.get_patches(
+            repository=GithubRepository(owner=owner, name=repo), tag_name=tag
+        )
+    }
 
     return json(data, status=200)

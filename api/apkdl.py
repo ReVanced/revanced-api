@@ -24,6 +24,7 @@ apkdl_backend: ApkDl = ApkDl()
     response=[AppInfoModel],
 )
 async def root(request: Request, app_id: str) -> JSONResponse:
-    data: dict[str, AppInfo] = {}
-    data["app_info"] = await apkdl_backend.get_app_info(package_name=app_id)
+    data: dict[str, AppInfo] = {
+        "app_info": await apkdl_backend.get_app_info(package_name=app_id)
+    }
     return json(data, status=200)

@@ -27,6 +27,5 @@ async def root(request: Request) -> JSONResponse:
     **Returns:**
         - JSONResponse: A Sanic JSONResponse instance containing a dictionary with the social links.
     """
-    data: dict[str, dict] = {}
-    data["socials"] = social_links
+    data: dict[str, dict] = {"socials": social_links}
     return json(data, status=200)
