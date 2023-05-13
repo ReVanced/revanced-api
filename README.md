@@ -1,4 +1,5 @@
 # ReVanced Releases API
+
 ---
 
 ![License: AGPLv3](https://img.shields.io/github/license/revanced/revanced-api)
