@@ -1,0 +1,39 @@
+name: "MyPy | Static Type Checking"
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+  workflow_dispatch:
+
+env:
+  default_branch: dev
+
+jobs:
+  mypy:
+    name: mypy
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.3"
+
+      - name: Install testing tools
+        run: pip install mypy pydantic
+
+      - name: Run mypy
+        uses: sasanquaneuf/mypy-github-action@main
+        with:
+          checkName: "mypy"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
