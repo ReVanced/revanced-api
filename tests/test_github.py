@@ -14,7 +14,7 @@ from api.models.github import (
     PatchesModel,
 )
 
-from config import github_testing_repository, github_testing_tag
+from config import github_testing_repository, github_testing_tag, api_version
 
 
 # utils
@@ -41,7 +41,9 @@ async def __test_single_release(response: TestingResponse) -> bool:
 
 @pytest.mark.asyncio
 async def test_releases(app: Sanic):
-    _, response = await app.asgi_client.get(f"/v2/{github_testing_repository}/releases")
+    _, response = await app.asgi_client.get(
+        f"/{api_version}/{github_testing_repository}/releases"
+    )
     assert response.status == 200
     assert ReleaseListResponseModel(
         releases=[
@@ -57,10 +59,10 @@ async def test_releases(app: Sanic):
 @pytest.mark.asyncio
 async def test_latest_release(app: Sanic):
     _, response = await app.asgi_client.get(
-        f"/v2/{github_testing_repository}/releases/latest"
+        f"/{api_version}/{github_testing_repository}/releases/latest"
     )
     _, response_dev = await app.asgi_client.get(
-        f"/v2/{github_testing_repository}/releases/latest?dev=true"
+        f"/{api_version}/{github_testing_repository}/releases/latest?dev=true"
     )
     assert await __test_single_release(response)
     assert await __test_single_release(response_dev)
@@ -69,7 +71,7 @@ async def test_latest_release(app: Sanic):
 @pytest.mark.asyncio
 async def test_release_by_tag(app: Sanic):
     _, response = await app.asgi_client.get(
-        f"/v2/{github_testing_repository}/releases/tag/{github_testing_tag}"
+        f"/{api_version}/{github_testing_repository}/releases/tag/{github_testing_tag}"
     )
     assert await __test_single_release(response)
 
@@ -77,7 +79,7 @@ async def test_release_by_tag(app: Sanic):
 @pytest.mark.asyncio
 async def test_contributors(app: Sanic):
     _, response = await app.asgi_client.get(
-        f"/v2/{github_testing_repository}/contributors"
+        f"/{api_version}/{github_testing_repository}/contributors"
     )
     assert ContributorsModel(
         contributors=[
@@ -89,7 +91,9 @@ async def test_contributors(app: Sanic):
 
 @pytest.mark.asyncio
 async def test_patches(app: Sanic):
-    _, response = await app.asgi_client.get(f"/v2/patches/{github_testing_tag}")
+    _, response = await app.asgi_client.get(
+        f"/{api_version}/patches/{github_testing_tag}"
+    )
 
     assert PatchesModel(
         patches=[PatchesResponseFields(**patch) for patch in response.json["patches"]]

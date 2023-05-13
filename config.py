@@ -51,3 +51,4 @@ openapi_description: str = """
 
 github_testing_repository: str = "revanced-patches"
 github_testing_tag: str = "v2.173.0"
+apkdl_testing_package: str = "com.google.android.youtube"

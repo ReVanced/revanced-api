@@ -10,6 +10,7 @@ from api import api
 def app() -> Sanic:
     app: Sanic = Sanic("ReVanced-API")
     app.blueprint(api)
+    app.config.TOUCHUP = False
     return app
 
 
