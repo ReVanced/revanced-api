@@ -15,11 +15,10 @@ from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
-from api.backends.entities import Release
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
+from api.models.compat import ToolsResponseModel
 from config import compat_repositories, owner
-from toolz import filter
 
 github: Blueprint = Blueprint("old")
 
@@ -27,7 +26,9 @@ github_backend: Github = Github()
 
 
 @github.get("/tools")
-@openapi.definition(summary="Get patching tools' latest version.", response=[])
+@openapi.definition(
+    summary="Get patching tools' latest version.", response=[ToolsResponseModel]
+)
 async def tools(request: Request) -> JSONResponse:
     """
     Retrieve a list of releases for a Github repository.

@@ -1,8 +1,5 @@
 # Social Links
 
-from api.backends.backend import Repository
-
-
 social_links: dict[str, str] = {
     "website": "https://revanced.app",
     "github": "https://github.com/revanced",
@@ -11,6 +8,18 @@ social_links: dict[str, str] = {
     "reddit": "https://www.reddit.com/r/revancedapp",
     "telegram": "https://t.me/app_revanced",
     "youtube": "https://www.youtube.com/@ReVanced",
+}
+
+# Donation info
+
+donation_info: dict[str, str] = {
+    "liberapay": "https://liberapay.com/ReVanced/donate",
+    "github": "https://github.com/sponsors/ReVanced",
+    "btc": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
+    "doge": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
+    "eth": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
+    "ltc": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
+    "xmr": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
 }
 
 # API Configuration
@@ -56,7 +65,7 @@ apkdl_testing_package: str = "com.google.android.youtube"
 # Old API Configuration
 
 compat_api_version: str = "v1"
-compat_repositories: set = {
+compat_repositories: set = (
     "revanced-patcher",
     "revanced-patches",
     "revanced-integrations",
@@ -64,4 +73,4 @@ compat_repositories: set = {
     "revanced-cli",
     "revanced-website",
     "revanced-releases-api",
-}
+)

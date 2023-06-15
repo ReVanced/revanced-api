@@ -139,10 +139,10 @@ async def get_contributors(request: Request, repo: str) -> JSONResponse:
         - repo (str): The name of the Github repository to retrieve the contributors for.
 
     **Returns:**
-        - JSONResponse: A Sanic JSONResponse object containing the list of patches.
+        - JSONResponse: A Sanic JSONResponse object containing the list of contributors.
 
     **Raises:**
-        - HTTPException: If there is an error retrieving the patches.
+        - HTTPException: If there is an error retrieving the contributors.
     """
 
     data: dict[str, list[Contributor]] = {
