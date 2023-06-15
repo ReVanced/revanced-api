@@ -44,22 +44,21 @@ class ApkDl(AppInfoProvider):
             lambda div: div.img["src"],
             lambda _: page.find("div", {"class": "logo"}),
         )
-        app_name: str = find_div_text("App Name").text
-        category: str = find_div_text("Category").text
-        if not app_name or not category:
-            raise SanicException("ApkDl: App data incomplete or not found")
-        logo_url: str = fetch_logo_url(None)
-        logo_response: ClientResponse = await http_get(headers={}, url=logo_url)
-        logo_string: str
-        if logo_response.status == 200:
-            encoded_logo: str = b64encode(await logo_response.content.read()).decode(
-                "utf-8"
-            )
-            logo_string = f"data:image/png;base64,{encoded_logo}"
-        else:
-            logo_string = ""
-        return AppInfo(
-            name=app_name,
-            category=category,
-            logo=logo_string,
+        logo_response: ClientResponse = await http_get(
+            headers={}, url=fetch_logo_url(None)
         )
+        logo: str = (
+            f"data:image/png;base64,{b64encode(await logo_response.content.read()).decode('utf-8')}"
+            if logo_response.status == 200
+            else ""
+        )
+        app_data = dict(
+            name=find_div_text("App Name").text,
+            category=find_div_text("Category").text,
+            logo=logo,
+        )
+        if not all(app_data.values()):
+            raise SanicException(
+                "ApkDl: App data incomplete or not found", status_code=500
+            )
+        return AppInfo(**app_data)

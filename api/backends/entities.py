@@ -25,6 +25,7 @@ class Metadata(dict):
         created_at: str,
         published_at: str,
         body: str,
+        repository: str = None,
     ):
         dict.__init__(
             self,
@@ -35,6 +36,7 @@ class Metadata(dict):
             created_at=created_at,
             published_at=published_at,
             body=body,
+            repository=None,
         )
 
 

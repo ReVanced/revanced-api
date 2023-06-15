@@ -1,13 +1,16 @@
 import asyncio
 import os
+from distutils.version import LooseVersion
 from operator import eq
 from typing import Optional
 
 import ujson
 from aiohttp import ClientResponse
 from sanic import SanicException
-from toolz import filter
+from sanic.log import logger
+from toolz import filter, map
 from toolz.dicttoolz import get_in, keyfilter
+from toolz.itertoolz import mapcat
 
 from api.backends.backend import Backend, Repository
 from api.backends.entities import *
@@ -86,9 +89,7 @@ class Github(Backend):
             release,
         )
         metadata = Metadata(**filter_metadata)
-        assets = await asyncio.gather(
-            *[__assemble_asset(asset) for asset in release["assets"]]
-        )
+        assets = await asyncio.gather(*map(__assemble_asset, release["assets"]))
         return Release(metadata=metadata, assets=assets)
 
     async def list_releases(
@@ -115,10 +116,10 @@ class Github(Backend):
                 status_code=response.status,
             )
         releases: list[Release] = await asyncio.gather(
-            *[
-                self.__assemble_release(release)
-                for release in await response.json(loads=ujson.loads)
-            ]
+            *map(
+                lambda release: self.__assemble_release(release),
+                await response.json(loads=ujson.loads),
+            )
         )
         return releases
 
@@ -190,12 +191,12 @@ class Github(Backend):
                 context=await response.json(loads=ujson.loads),
                 status_code=response.status,
             )
-        latest_pre_release: dict = list(
+        latest_pre_release = next(
             filter(
-                lambda release: release["prerelease"] is True,
+                lambda release: release["prerelease"],
                 await response.json(loads=ujson.loads),
             )
-        )[0]
+        )
         return await self.__assemble_release(latest_pre_release)
 
     async def get_contributors(self, repository: GithubRepository) -> list[Contributor]:
@@ -225,11 +226,9 @@ class Github(Backend):
                 status_code=response.status,
             )
         contributors: list[Contributor] = await asyncio.gather(
-            *[
-                __assemble_contributor(contributor)
-                for contributor in await response.json(loads=ujson.loads)
-            ]
+            *map(__assemble_contributor, await response.json(loads=ujson.loads))
         )
+
         return contributors
 
     async def get_patches(
@@ -266,3 +265,53 @@ class Github(Backend):
                 status_code=response.status,
             )
         return ujson.loads(await response.read())
+
+    async def get_tools(self, repositories: list[GithubRepository], dev: bool) -> list:
+        """Get the latest releases for a set of repositories (v1 compat).
+
+        Args:
+            repositories (set[GithubRepository]): The repositories for which to retrieve releases.
+            dev: If we should get the latest pre-release instead.
+
+        Returns:
+            list[dict[str, str]]: A JSON object containing the releases.
+        """
+
+        def transform(data, repository):
+            """Transforms a dictionary from the input list into a list of dictionaries with the desired structure.
+
+            Args:
+                data(dict): A dictionary from the input list.
+
+            Returns:
+                _[list]: A list of dictionaries with the desired structure.
+            """
+
+            def process_asset(asset):
+                """Transforms an asset dictionary into a new dictionary with the desired structure.
+
+                Args:
+                    asset(dict): An asset dictionary.
+
+                Returns:
+                    _[dict]: A new dictionary with the desired structure.
+                """
+                return {
+                    "repository": f"{repository.owner}/{repository.name}",
+                    "version": data["metadata"]["tag_name"],
+                    "timestamp": data["metadata"]["published_at"],
+                    "name": asset["name"],
+                    "browser_download_url": asset["browser_download_url"],
+                    "content_type": asset["content_type"],
+                }
+
+            return map(process_asset, data["assets"])
+
+        results = await asyncio.gather(
+            *map(
+                lambda release: self.get_latest_release(release),
+                repositories,
+            )
+        )
+
+        return list(mapcat(lambda pair: transform(*pair), zip(results, repositories)))
