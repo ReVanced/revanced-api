@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -15,8 +15,8 @@ repos:
     -   id: check-toml
     -   id: check-merge-conflict
     -   id: double-quote-string-fixer
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.9.0
+-   repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.10.0
     hooks:
     -   id: reorder-python-imports
 -   repo: https://github.com/psf/black
@@ -25,7 +25,7 @@ repos:
       - id: black
         language_version: python3.9
 -   repo: https://github.com/iamthefij/docker-pre-commit
-    rev: master
+    rev: v3.0.1
     hooks:
       - id: docker-compose-check
 -   repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
