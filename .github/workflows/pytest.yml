@@ -1,4 +1,4 @@
-name: "MyPy | Static Type Checking"
+name: "PyTest | Testing and Code Coverage"
 
 on:
   push:
@@ -11,8 +11,8 @@ env:
   default_branch: dev
 
 jobs:
-  mypy:
-    name: mypy
+  pytest:
+    name: pytest
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -35,9 +35,9 @@ jobs:
           then pip install -r requirements.txt;
           fi
 
-      - name: Run mypy
-        uses: sasanquaneuf/mypy-github-action@main
+      - name: Run pytest
+        uses: pavelzw/pytest-action@v2
         with:
-          checkName: "mypy"
+          custom-arguments: "--cov --cov-report=xml"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
