@@ -12,14 +12,12 @@ aiohttp = {version = ">=3.8.4", extras = ["speedups"]}
 sanic = {version = ">=23.3.0", extras = ["ext", "http3"]}
 ujson = ">=5.7.0"
 asyncstdlib = "3.10.6"
-pydantic = ">=1.10.7"
+pydantic = "^1.10.11"
 aioquic = ">=0.9.20"
 cytoolz = ">=0.12.1"
 beautifulsoup4 = ">=4.12.2"
 setuptools = ">=67.7.2"
 lxml = ">=4.9.2"
-
-[tool.poetry.dev-dependencies]
 mypy = ">=1.2.0"
 types-ujson = ">=5.7.0.5"
 types-aiofiles = ">=23.1.0.1"

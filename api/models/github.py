@@ -109,9 +109,19 @@ class ContributorsModel(BaseModel):
     contributors: list[ContributorsFields]
 
 
+class TeamMemberFields(BaseModel):
+    """
+    Implements the fields for a team member.
+    """
+
+    login: str
+    avatar_url: str
+    html_url: str
+
+
 class TeamMembersModel(BaseModel):
     """
     Responde model for a list of team members.
     """
 
-    members: list[ContributorsFields]
+    members: list[TeamMemberFields]

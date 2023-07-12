@@ -12,6 +12,8 @@ from api.models.github import (
     ContributorsFields,
     ContributorsModel,
     PatchesModel,
+    TeamMemberFields,
+    TeamMembersModel,
 )
 
 from config import github_testing_repository, github_testing_tag, api_version
@@ -97,4 +99,12 @@ async def test_patches(app: Sanic):
 
     assert PatchesModel(
         patches=[PatchesResponseFields(**patch) for patch in response.json["patches"]]
+    )
+
+
+@pytest.mark.asyncio
+async def test_team_members(app: Sanic):
+    _, response = await app.asgi_client.get(f"/{api_version}/team/members")
+    assert TeamMembersModel(
+        members=[TeamMemberFields(**member) for member in response.json["members"]]
     )

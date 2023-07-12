@@ -69,7 +69,7 @@ apkdl_testing_package: str = "com.google.android.youtube"
 # Old API Configuration
 
 compat_api_version: str = "v1"
-compat_repositories: set = (
+compat_repositories: list = [
     "revanced-patcher",
     "revanced-patches",
     "revanced-integrations",
@@ -77,4 +77,4 @@ compat_repositories: set = (
     "revanced-cli",
     "revanced-website",
     "revanced-releases-api",
-)
+]
