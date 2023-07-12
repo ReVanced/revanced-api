@@ -12,7 +12,7 @@ This is a simple API that proxies requests needed to feed the ReVanced Manager a
 
 ## Usage
 
-To run this API, you will need to have Python 3.11.x installed. You can install the dependencies with poetry:
+To run this API, you need Python 3.11.x. You can install the dependencies with poetry:
 
 ```shell
 poetry install

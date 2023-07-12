@@ -1,5 +1,8 @@
 # Social Links
 
+from email.policy import default
+
+
 social_links: dict[str, str] = {
     "website": "https://revanced.app",
     "github": "https://github.com/revanced",
@@ -13,7 +16,7 @@ social_links: dict[str, str] = {
 # Donation info
 
 donation_info: dict[str, str] = {
-    "liberapay": "https://liberapay.com/ReVanced/donate",
+    "opencollective": "https://opencollective.com/revanced",
     "github": "https://github.com/sponsors/ReVanced",
     "btc": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
     "doge": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
@@ -30,6 +33,7 @@ redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
 # GitHub Backend Configuration
 
 owner: str = "revanced"
+default_repository: str = ".github"
 
 # API Versioning
 

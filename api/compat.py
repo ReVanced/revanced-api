@@ -48,7 +48,7 @@ async def tools(request: Request) -> JSONResponse:
     """
 
     data: dict[str, list] = {
-        "tools": await github_backend.get_tools(
+        "tools": await github_backend.compat_get_tools(
             repositories=[
                 GithubRepository(owner=owner, name=repo)
                 for repo in compat_repositories

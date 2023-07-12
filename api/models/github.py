@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from pydantic import BaseModel
 
 
@@ -98,7 +98,7 @@ class ContributorsFields(BaseModel):
     login: str
     avatar_url: str
     html_url: str
-    contributions: int
+    contributions: Optional[int]
 
 
 class ContributorsModel(BaseModel):
@@ -107,3 +107,11 @@ class ContributorsModel(BaseModel):
     """
 
     contributors: list[ContributorsFields]
+
+
+class TeamMembersModel(BaseModel):
+    """
+    Responde model for a list of team members.
+    """
+
+    members: list[ContributorsFields]

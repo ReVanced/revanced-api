@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -36,7 +37,7 @@ class Metadata(dict):
             created_at=created_at,
             published_at=published_at,
             body=body,
-            repository=None,
+            repository=repository,
         )
 
 
@@ -83,17 +84,26 @@ class Contributor(dict):
         - login (str): The GitHub username of the contributor.
         - avatar_url (str): The URL to the contributor's avatar image.
         - html_url (str): The URL to the contributor's GitHub profile.
-        - contributions (int): The number of contributions the contributor has made to the repository.
+        - contributions (Optional[int]): The number of contributions the contributor has made to the repository.
     """
 
-    def __init__(self, login: str, avatar_url: str, html_url: str, contributions: int):
-        dict.__init__(
-            self,
-            login=login,
-            avatar_url=avatar_url,
-            html_url=html_url,
-            contributions=contributions,
-        )
+    def __init__(
+        self,
+        login: str,
+        avatar_url: str,
+        html_url: str,
+        contributions: Optional[int] = None,
+    ):
+        if contributions:
+            dict.__init__(
+                self,
+                login=login,
+                avatar_url=avatar_url,
+                html_url=html_url,
+                contributions=contributions,
+            )
+        else:
+            dict.__init__(self, login=login, avatar_url=avatar_url, html_url=html_url)
 
 
 @dataclass

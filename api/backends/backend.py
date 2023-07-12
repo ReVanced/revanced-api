@@ -52,6 +52,10 @@ class Backend(Protocol):
     async def get_patches(self, *args: Any, **kwargs: Any) -> list[dict]:
         raise NotImplementedError
 
+    @abstractmethod
+    async def get_team_members(self, *args: Any, **kwargs: Any) -> list[Contributor]:
+        raise NotImplementedError
+
 
 class Repository:
     """A repository that communicates with a specific backend.

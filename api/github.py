@@ -17,7 +17,7 @@ from sanic_ext import openapi
 from api.backends.entities import Release, Contributor
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
-from config import owner, api_version
+from config import owner, default_repository, api_version
 
 github: Blueprint = Blueprint("github", version=api_version)
 
@@ -177,6 +177,31 @@ async def get_patches(request: Request, tag: str) -> JSONResponse:
     data: dict[str, list[dict]] = {
         "patches": await github_backend.get_patches(
             repository=GithubRepository(owner=owner, name=repo), tag_name=tag
+        )
+    }
+
+    return json(data, status=200)
+
+
+@github.get("/team/members")
+@openapi.definition(
+    summary="Retrieve a list of team members for the Revanced organization.",
+    response=TeamMembersModel,
+)
+async def get_team_members(request: Request) -> JSONResponse:
+    """
+    Retrieve a list of team members for the Revanced organization.
+
+    **Returns:**
+        - JSONResponse: A Sanic JSONResponse object containing the list of team members.
+
+    **Raises:**
+        - HTTPException: If there is an error retrieving the team members.
+    """
+
+    data: dict[str, list[Contributor]] = {
+        "members": await github_backend.get_team_members(
+            repository=GithubRepository(owner=owner, name=default_repository)
         )
     }
 

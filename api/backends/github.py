@@ -1,19 +1,18 @@
 import asyncio
 import os
-from distutils.version import LooseVersion
 from operator import eq
-from typing import Optional
+from typing import Any, Optional
 
 import ujson
 from aiohttp import ClientResponse
 from sanic import SanicException
-from sanic.log import logger
 from toolz import filter, map
 from toolz.dicttoolz import get_in, keyfilter
 from toolz.itertoolz import mapcat
 
 from api.backends.backend import Backend, Repository
 from api.backends.entities import *
+from api.backends.entities import Contributor
 from api.utils.http_utils import http_get
 
 repo_name: str = "github"
@@ -91,6 +90,23 @@ class Github(Backend):
         metadata = Metadata(**filter_metadata)
         assets = await asyncio.gather(*map(__assemble_asset, release["assets"]))
         return Release(metadata=metadata, assets=assets)
+
+    @staticmethod
+    async def __assemble_contributor(
+        contributor: dict, team_view: bool = False
+    ) -> Contributor:
+        if team_view:
+            filter_contributor = keyfilter(
+                lambda key: key in {"login", "avatar_url", "html_url"},
+                contributor,
+            )
+            return Contributor(**filter_contributor)
+
+        filter_contributor = keyfilter(
+            lambda key: key in {"login", "avatar_url", "html_url", "contributions"},
+            contributor,
+        )
+        return Contributor(**filter_contributor)
 
     async def list_releases(
         self, repository: GithubRepository, per_page: int = 30, page: int = 1
@@ -209,13 +225,6 @@ class Github(Backend):
             list[Contributor]: A list of contributors for the given repository.
         """
 
-        async def __assemble_contributor(contributor: dict) -> Contributor:
-            filter_contributor = keyfilter(
-                lambda key: key in {"login", "avatar_url", "html_url", "contributions"},
-                contributor,
-            )
-            return Contributor(**filter_contributor)
-
         contributors_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
         response: ClientResponse = await http_get(
             headers=self.headers, url=contributors_endpoint
@@ -226,7 +235,7 @@ class Github(Backend):
                 status_code=response.status,
             )
         contributors: list[Contributor] = await asyncio.gather(
-            *map(__assemble_contributor, await response.json(loads=ujson.loads))
+            *map(self.__assemble_contributor, await response.json(loads=ujson.loads))
         )
 
         return contributors
@@ -266,7 +275,36 @@ class Github(Backend):
             )
         return ujson.loads(await response.read())
 
-    async def get_tools(self, repositories: list[GithubRepository], dev: bool) -> list:
+    async def get_team_members(self, repository: GithubRepository) -> list[Contributor]:
+        """Get the list of team members from the owner organization of a given repository.
+
+        Args:
+            repository (GithubRepository): The repository for which to retrieve team members in the owner organization.
+
+        Returns:
+            list[Contributor]: A list of members in the owner organization.
+        """
+        team_members_endpoint: str = f"{self.base_url}/orgs/{repository.owner}/members"
+        response: ClientResponse = await http_get(
+            headers=self.headers, url=team_members_endpoint
+        )
+        if response.status != 200:
+            raise SanicException(
+                context=await response.json(loads=ujson.loads),
+                status_code=response.status,
+            )
+        team_members: list[Contributor] = await asyncio.gather(
+            *map(
+                lambda member: self.__assemble_contributor(member, team_view=True),
+                await response.json(loads=ujson.loads),
+            )
+        )
+
+        return team_members
+
+    async def compat_get_tools(
+        self, repositories: list[GithubRepository], dev: bool
+    ) -> list:
         """Get the latest releases for a set of repositories (v1 compat).
 
         Args:
