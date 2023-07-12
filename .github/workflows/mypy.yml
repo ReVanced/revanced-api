@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11.3"
+          python-version: "3.11.4"
 
       - name: Install project dependencies
         run: |
@@ -34,9 +34,6 @@ jobs:
           if [ -f requirements.txt ];
           then pip install -r requirements.txt;
           fi
-
-      - name: Install testing tools
-        run: pip install mypy pydantic
 
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@main
