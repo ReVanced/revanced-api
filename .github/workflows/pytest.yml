@@ -35,13 +35,10 @@ jobs:
           then pip install -r requirements.txt;
           fi
 
-      - name: Install testing tools
-        run: pip install pydantic
-
       - name: Run pytest
         uses: pavelzw/pytest-action@v2
         with:
-          custom-arguments: '--cov --cov-report=xml'
+          custom-arguments: "--cov --cov-report=xml"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
