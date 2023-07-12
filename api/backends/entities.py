@@ -26,7 +26,7 @@ class Metadata(dict):
         created_at: str,
         published_at: str,
         body: str,
-        repository: str = None,
+        repository: Optional[str] = None,
     ):
         dict.__init__(
             self,
