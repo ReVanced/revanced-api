@@ -37,3 +37,15 @@ def get_static_function(value):
 
 for src, dest in REDIRECTS.items():
     app.route(src)(get_static_function(sanic.response.redirect(dest)))
+
+
+@app.middleware("response")
+async def add_cache_control(request, response):
+    response.headers["Cache-Control"] = "public, max-age=300"
+
+
+@app.middleware("response")
+async def add_csp(request, response):
+    response.headers[
+        "Content-Security-Policy"
+    ] = "default-src * 'unsafe-inline' 'unsafe-eval'; img-src * data:;"
