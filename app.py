@@ -46,6 +46,4 @@ async def add_cache_control(request, response):
 
 @app.middleware("response")
 async def add_csp(request, response):
-    response.headers[
-        "Content-Security-Policy"
-    ] = "default-src * 'unsafe-inline' 'unsafe-eval'; img-src * data:;"
+    response.headers["Content-Security-Policy"] = "img-src * data:;"

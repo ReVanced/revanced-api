@@ -17,7 +17,7 @@ from sanic_ext import openapi
 
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
-from api.models.compat import ToolsResponseModel
+from api.models.compat import ToolsResponseModel, ContributorsResponseModel
 from config import compat_repositories, owner
 
 github: Blueprint = Blueprint("old")
@@ -55,6 +55,32 @@ async def tools(request: Request) -> JSONResponse:
                 if repo not in ["revanced-releases-api", "revanced-website"]
             ],
             dev=True if request.args.get("dev") else False,
+        )
+    }
+
+    return json(data, status=200)
+
+
+@github.get("/contributors")
+@openapi.definition(
+    summary="Get organization-wise contributors.", response=[ContributorsResponseModel]
+)
+async def contributors(request: Request) -> JSONResponse:
+    """
+    Retrieve a list of releases for a Github repository.
+
+    **Returns:**
+        - JSONResponse: A Sanic JSONResponse object containing the list of releases.
+
+    **Raises:**
+        - HTTPException: If there is an error retrieving the releases.
+    """
+
+    data: dict[str, list] = {
+        "repositories": await github_backend.compat_get_contributors(
+            repositories=[
+                GithubRepository(owner=owner, name=repo) for repo in compat_repositories
+            ]
         )
     }
 
