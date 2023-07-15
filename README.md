@@ -3,8 +3,9 @@
 ---
 
 ![License: AGPLv3](https://img.shields.io/github/license/revanced/revanced-api)
+[![Build and Publish Docker Image](https://github.com/revanced/revanced-api/actions/workflows/main.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/main.yml)
 [![Qodana | Code Quality Scan](https://github.com/revanced/revanced-api/actions/workflows/quodana.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/quodana.yml)
-[![MyPy | Static Type Checking](https://github.com/revanced/revanced-api/actions/workflows/mypy.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/mypy.yml)
+[![PyTest | Testing and Code Coverage](https://github.com/revanced/revanced-api/actions/workflows/pytest.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/pytest.yml)
 
 ---
 
