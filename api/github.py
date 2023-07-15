@@ -82,15 +82,21 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
         - HTTPException: If there is an error retrieving the releases.
     """
 
-    data: dict[str, Release] = {
-        "release": await github_backend.get_latest_pre_release(
-            repository=GithubRepository(owner=owner, name=repo)
-        )
-        if request.args.get("dev") == "true"
-        else await github_backend.get_latest_release(
-            repository=GithubRepository(owner=owner, name=repo)
-        )
-    }
+    data: dict[str, Release]
+
+    match request.args.get("dev"):
+        case "true":
+            data = {
+                "release": await github_backend.get_latest_pre_release(
+                    repository=GithubRepository(owner=owner, name=repo)
+                )
+            }
+        case _:
+            data = {
+                "release": await github_backend.get_latest_release(
+                    repository=GithubRepository(owner=owner, name=repo)
+                )
+            }
 
     return json(data, status=200)
 
@@ -165,6 +171,9 @@ async def get_patches(request: Request, tag: str) -> JSONResponse:
     **Args:**
         - tag (str): The tag for the patches to be retrieved.
 
+    **Query Parameters:**
+        - dev (bool): Whether or not to retrieve the latest development release.
+
     **Returns:**
         - JSONResponse: A Sanic JSONResponse object containing the list of patches.
 
@@ -174,9 +183,11 @@ async def get_patches(request: Request, tag: str) -> JSONResponse:
 
     repo: str = "revanced-patches"
 
+    dev: bool = bool(request.args.get("dev"))
+
     data: dict[str, list[dict]] = {
         "patches": await github_backend.get_patches(
-            repository=GithubRepository(owner=owner, name=repo), tag_name=tag
+            repository=GithubRepository(owner=owner, name=repo), tag_name=tag, dev=dev
         )
     }
 
