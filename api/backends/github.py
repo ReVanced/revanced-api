@@ -1,6 +1,7 @@
 import asyncio
 import os
 from operator import eq
+import re
 from typing import Any, Optional
 
 import ujson
@@ -342,3 +343,38 @@ class Github(Backend):
         )
 
         return list(mapcat(lambda pair: transform(*pair), zip(results, repositories)))
+
+    async def compat_get_contributors(
+        self, repositories: list[GithubRepository]
+    ) -> list:
+        """Get the contributors for a set of repositories (v1 compat).
+
+        Args:
+            repositories (set[GithubRepository]): The repositories for which to retrieve contributors.
+
+        Returns:
+            list[dict[str, str]]: A JSON object containing the contributors.
+        """
+
+        def transform(data, repository):
+            """Transforms a dictionary from the input list into a list of dictionaries with the desired structure.
+
+            Args:
+                data(dict): A dictionary from the input list.
+
+            Returns:
+                _[list]: A list of dictionaries with the desired structure.
+            """
+            return {
+                "name": f"{repository.owner}/{repository.name}",
+                "contributors": data,
+            }
+
+        results = await asyncio.gather(
+            *map(
+                lambda repository: self.get_contributors(repository),
+                repositories,
+            )
+        )
+
+        return list(map(lambda pair: transform(*pair), zip(results, repositories)))

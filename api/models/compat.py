@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from api.models.github import ContributorsFields
 
 
 class ToolsResponseFields(BaseModel):
@@ -25,3 +26,24 @@ class ToolsResponseModel(BaseModel):
     """
 
     tools: list[ToolsResponseFields]
+
+
+class ContributorsResponseFields(BaseModel):
+    """Implements the fields for the /contributors endpoint.
+
+    Args:
+        BaseModel (pydantic.BaseModel): BaseModel from pydantic
+    """
+
+    name: str
+    contributors: list[ContributorsFields]
+
+
+class ContributorsResponseModel(BaseModel):
+    """Implements the JSON response model for the /contributors endpoint.
+
+    Args:
+        BaseModel (pydantic.BaseModel): BaseModel from pydantic
+    """
+
+    repositories: list[ContributorsResponseFields]
