@@ -109,11 +109,11 @@ class Github(Backend):
         return Contributor(**filter_contributor)
 
     @staticmethod
-    async def __validate_request(response: ClientResponse) -> None:
-        if response.status != 200:
+    async def __validate_request(_response: ClientResponse) -> None:
+        if _response.status != 200:
             raise SanicException(
-                context=await response.json(loads=ujson.loads),
-                status_code=response.status,
+                context=await _response.json(loads=ujson.loads),
+                status_code=_response.status,
             )
 
     async def list_releases(
