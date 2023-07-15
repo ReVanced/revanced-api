@@ -1,4 +1,4 @@
-name: "PyTest | Testing and Code Coverage"
+name: "PyTest & Codecov | Testing and Code Coverage"
 
 on:
   push:
@@ -41,3 +41,8 @@ jobs:
           custom-arguments: "--cov --cov-report=xml"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -1,4 +1,4 @@
-name: "Qodana | Code Quality Scan"
+name: "Qodana | Code Quality Scan and Static Analysis"
 
 on:
   push:
@@ -31,9 +31,6 @@ jobs:
           if [ -f requirements.txt ];
           then pip install -r requirements.txt;
           fi
-
-      - name: Install testing tools
-        run: pip install mypy pydantic
 
       - name: "Qodana Scan"
         uses: JetBrains/qodana-action@v2023.1.5
