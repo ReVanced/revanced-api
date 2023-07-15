@@ -242,8 +242,8 @@ class Github(Backend):
             list[dict]: A JSON object containing the patches.
         """
 
-        async def __fetch_download_url(release: Release) -> str:
-            asset = get_in(["assets"], release)
+        async def __fetch_download_url(_release: Release) -> str:
+            asset = get_in(["assets"], _release)
             patch_asset = next(
                 filter(lambda x: eq(get_in(["name"], x), "patches.json"), asset), None
             )
@@ -263,7 +263,7 @@ class Github(Backend):
 
         response: ClientResponse = await http_get(
             headers=self.headers,
-            url=await __fetch_download_url(release=release),
+            url=await __fetch_download_url(_release=release),
         )
         await self.__validate_request(response)
         return ujson.loads(await response.read())
