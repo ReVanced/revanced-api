@@ -305,17 +305,18 @@ class Github(Backend):
             list[dict[str, str]]: A JSON object containing the releases.
         """
 
-        def transform(data, repository):
+        def transform(data: dict, repository: GithubRepository):
             """Transforms a dictionary from the input list into a list of dictionaries with the desired structure.
 
             Args:
                 data(dict): A dictionary from the input list.
+                repository(GithubRepository): The repository for which to retrieve releases.
 
             Returns:
                 _[list]: A list of dictionaries with the desired structure.
             """
 
-            def process_asset(asset):
+            def process_asset(asset: dict) -> dict:
                 """Transforms an asset dictionary into a new dictionary with the desired structure.
 
                 Args:
@@ -356,11 +357,12 @@ class Github(Backend):
             list[dict[str, str]]: A JSON object containing the contributors.
         """
 
-        def transform(data, repository):
+        def transform(data: dict, repository: GithubRepository) -> list:
             """Transforms a dictionary from the input list into a list of dictionaries with the desired structure.
 
             Args:
                 data(dict): A dictionary from the input list.
+                repository(GithubRepository): The repository for which to retrieve contributors.
 
             Returns:
                 _[list]: A list of dictionaries with the desired structure.
