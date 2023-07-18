@@ -10,7 +10,7 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.donations import DonationsResponseModel
-from config import donation_info, api_version
+from config import api_version, wallets, links
 
 donations: Blueprint = Blueprint("donations", version=api_version)
 
@@ -27,5 +27,10 @@ async def root(request: Request) -> JSONResponse:
     **Returns:**
         - JSONResponse: A Sanic JSONResponse instance containing a dictionary with the donation links and wallets.
     """
-    data: dict[str, dict] = {"donations": donation_info}
+    data: dict[str, dict] = {
+        "donations": {
+            "wallets": wallets,
+            "links": links,
+        }
+    }
     return json(data, status=200)
