@@ -1,15 +1,15 @@
 import asyncio
+from json import loads
 import os
 from operator import eq
-import re
-from typing import Any, Optional
+from typing import Optional
 
 import ujson
 from aiohttp import ClientResponse
 from sanic import SanicException
-from toolz import filter, map
+from toolz import filter, map, partial
 from toolz.dicttoolz import get_in, keyfilter
-from toolz.itertoolz import mapcat
+from toolz.itertoolz import mapcat, pluck
 
 from api.backends.backend import Backend, Repository
 from api.backends.entities import *
@@ -98,7 +98,7 @@ class Github(Backend):
     ) -> Contributor:
         match team_view:
             case True:
-                keys = {"login", "avatar_url", "html_url"}
+                keys = {"login", "avatar_url", "html_url", "bio"}
             case _:
                 keys = {"login", "avatar_url", "html_url", "contributions"}
 
@@ -279,14 +279,30 @@ class Github(Backend):
             list[Contributor]: A list of members in the owner organization.
         """
         team_members_endpoint: str = f"{self.base_url}/orgs/{repository.owner}/members"
+        user_info_endpoint: str = f"{self.base_url}/users/"
         response: ClientResponse = await http_get(
             headers=self.headers, url=team_members_endpoint
         )
         await self.__validate_request(response)
+        logins: list[str] = list(pluck("login", await response.json()))
+        _http_get = partial(http_get, headers=self.headers)
+        user_data_response: list[dict] = await asyncio.gather(
+            *map(
+                lambda login: _http_get(url=f"{user_info_endpoint}{login}"),
+                logins,
+            )
+        )
+        user_data = await asyncio.gather(
+            *map(
+                lambda _response: _response.json(loads=ujson.loads),
+                user_data_response,
+            )
+        )
+        print(await response.json(loads=ujson.loads))
         team_members: list[Contributor] = await asyncio.gather(
             *map(
                 lambda member: self.__assemble_contributor(member, team_view=True),
-                await response.json(loads=ujson.loads),
+                list(user_data),
             )
         )
 

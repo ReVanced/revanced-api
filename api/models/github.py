@@ -117,6 +117,7 @@ class TeamMemberFields(BaseModel):
     login: str
     avatar_url: str
     html_url: str
+    bio: Optional[str]
 
 
 class TeamMembersModel(BaseModel):
