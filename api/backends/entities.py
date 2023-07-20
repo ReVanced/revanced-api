@@ -93,17 +93,40 @@ class Contributor(dict):
         avatar_url: str,
         html_url: str,
         contributions: Optional[int] = None,
+        bio: Optional[str] = None,
     ):
-        if contributions:
-            dict.__init__(
-                self,
-                login=login,
-                avatar_url=avatar_url,
-                html_url=html_url,
-                contributions=contributions,
-            )
-        else:
-            dict.__init__(self, login=login, avatar_url=avatar_url, html_url=html_url)
+        match contributions, bio:
+            case None, None:
+                dict.__init__(
+                    self, login=login, avatar_url=avatar_url, html_url=html_url, bio=bio
+                )
+            case int(_), None:
+                dict.__init__(
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    contributions=contributions,
+                )
+            case None, str(_):
+                dict.__init__(
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    bio=bio,
+                )
+            case int(_), str(_):
+                dict.__init__(
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    contributions=contributions,
+                    bio=bio,
+                )
+            case _:
+                raise ValueError("Invalid arguments")
 
 
 @dataclass
