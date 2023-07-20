@@ -2,7 +2,7 @@ name: "Qodana | Code Quality Scan and Static Analysis"
 
 on:
   push:
-    branches: [dev, main]
+    branches: [dev]
   pull_request:
     types: [opened, reopened, edited, synchronize]
   workflow_dispatch:
