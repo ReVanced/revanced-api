@@ -294,7 +294,7 @@ class Github(Backend):
         )
         user_data = await asyncio.gather(
             *map(
-                lambda response: response.json(loads=ujson.loads),
+                lambda _response: _response.json(loads=ujson.loads),
                 user_data_response,
             )
         )
