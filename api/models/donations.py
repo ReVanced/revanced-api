@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class WalletFields(BaseModel):
     """
     Implements the fields for a crypto wallet.
@@ -8,6 +9,7 @@ class WalletFields(BaseModel):
     name: str
     address: str
 
+
 class LinkFields(BaseModel):
     """
     Implements the fields for a donation link.
@@ -15,6 +17,7 @@ class LinkFields(BaseModel):
 
     name: str
     url: str
+
 
 class DonationFields(BaseModel):
     """

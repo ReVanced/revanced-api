@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class SocialField(BaseModel):
     """
     Implements the fields for a social network link.
@@ -7,6 +8,7 @@ class SocialField(BaseModel):
 
     name: str
     url: str
+
 
 class SocialsResponseModel(BaseModel):
     """
