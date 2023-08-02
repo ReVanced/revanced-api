@@ -1,13 +1,28 @@
 from pydantic import BaseModel
 
+class WalletFields(BaseModel):
+    """
+    Implements the fields for a crypto wallet.
+    """
+
+    name: str
+    address: str
+
+class LinkFields(BaseModel):
+    """
+    Implements the fields for a donation link.
+    """
+
+    name: str
+    url: str
 
 class DonationFields(BaseModel):
     """
     A Pydantic BaseModel that represents all the donation links and wallets.
     """
 
-    wallets: dict[str, str]
-    links: dict[str, str]
+    wallets: list[WalletFields]
+    links: list[LinkFields]
 
 
 class DonationsResponseModel(BaseModel):

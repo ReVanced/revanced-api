@@ -1,32 +1,77 @@
 # Social Links
 
 from email.policy import default
+from api.models.donations import LinkFields, WalletFields
+
+from api.models.socials import SocialField
 
 
-social_links: dict[str, str] = {
-    "website": "https://revanced.app",
-    "github": "https://github.com/revanced",
-    "twitter": "https://twitter.com/revancedapp",
-    "discord": "https://revanced.app/discord",
-    "reddit": "https://www.reddit.com/r/revancedapp",
-    "telegram": "https://t.me/app_revanced",
-    "youtube": "https://www.youtube.com/@ReVanced",
-}
+social_links: list[SocialField] = [
+    {
+        "name": "website",
+        "url": "https://revanced.app"
+    },
+    {
+        "name": "github",
+        "url": "https://github.com/revanced"
+    },
+    {
+        "name": "twitter",
+        "url": "https://twitter.com/revancedapp"
+    },
+    {
+        "name": "discord",
+        "url": "https://revanced.app/discord"
+    },
+    {
+        "name": "reddit",
+        "url": "https://www.reddit.com/r/revancedapp"
+    },
+    {
+        "name": "telegram",
+        "url": "https://t.me/app_revanced"
+    },
+    {
+        "name": "youtube",
+        "url": "https://www.youtube.com/@ReVanced"
+    },
+]
 
 # Donation info
 
-wallets: dict[str, str] = {
-    "btc": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
-    "doge": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
-    "eth": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
-    "ltc": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
-    "xmr": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
-}
+wallets: list[WalletFields] = [
+    {
+        "name": "btc",
+        "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f"
+    },
+    {
+        "name": "doge",
+        "address": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp"
+    },
+    {
+        "name": "eth",
+        "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5"
+    },
+    {
+        "name": "ltc",
+        "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2"
+    },
+    {
+        "name": "xmr",
+        "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh"
+    }
+]
 
-links: dict[str, str] = {
-    "opencollective": "https://opencollective.com/revanced",
-    "github": "https://github.com/sponsors/ReVanced",
-}
+links: list[LinkFields] = [
+    {
+        "name": "Open Collective",
+        "url": "https://opencollective.com/revanced"
+    },
+    {
+        "name": "Github Sponsors",
+        "url": "https://github.com/sponsors/ReVanced"
+    }
+]
 
 # API Configuration
 
