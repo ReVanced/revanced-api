@@ -13,12 +13,29 @@ social_links: list[dict[str, str]] = [
 # Donation info
 
 wallets: list[dict[str, str]] = [
-    {"name": "btc", "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f"},
-    {"name": "doge", "address": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp"},
-    {"name": "eth", "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5"},
-    {"name": "ltc", "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2"},
     {
-        "name": "xmr",
+        "network": "Bitcoin",
+        "currency_code": "btc",
+        "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
+    },
+    {
+        "network": "Dogecoin",
+        "currency_code": "doge",
+        "address": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
+    },
+    {
+        "network": "Ethereum",
+        "currency_code": "eth",
+        "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
+    },
+    {
+        "network": "Litecoin",
+        "currency_code": "ltc",
+        "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
+    },
+    {
+        "network": "Monero",
+        "currency_code": "xmr",
         "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
     },
 ]
