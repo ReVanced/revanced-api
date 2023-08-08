@@ -14,28 +14,28 @@ social_links: list[dict[str, str]] = [
 
 wallets: list[dict[str, str]] = [
     {
-        "name": "Bitcoin",
-        "code": "btc",
+        "network": "Bitcoin",
+        "currency-code": "btc",
         "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
     },
     {
-        "name": "Dogecoin",
-        "code": "doge",
+        "network": "Dogecoin",
+        "currency-code": "doge",
         "address": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
     },
     {
-        "name": "Ethereum",
-        "code": "eth",
+        "network": "Ethereum",
+        "currency-code": "eth",
         "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
     },
     {
-        "name": "Litecoin",
-        "code": "ltc",
+        "network": "Litecoin",
+        "currency-code": "ltc",
         "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
     },
     {
-        "name": "Monero",
-        "code": "xmr",
+        "network": "Monero",
+        "currency-code": "xmr",
         "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
     },
 ]
