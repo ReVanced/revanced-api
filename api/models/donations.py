@@ -7,7 +7,7 @@ class WalletFields(BaseModel):
     """
 
     network: str
-    currency-code: str
+    currency_code: str
     address: str
 
 
