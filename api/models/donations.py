@@ -6,7 +6,8 @@ class WalletFields(BaseModel):
     Implements the fields for a crypto wallet.
     """
 
-    name: str
+    network: str
+    currency_code: str
     address: str
 
 
