@@ -9,6 +9,7 @@ class WalletFields(BaseModel):
     network: str
     currency_code: str
     address: str
+    preferred: bool
 
 
 class LinkFields(BaseModel):
@@ -18,6 +19,7 @@ class LinkFields(BaseModel):
 
     name: str
     url: str
+    preferred: bool
 
 
 class DonationFields(BaseModel):

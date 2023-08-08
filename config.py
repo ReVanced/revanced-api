@@ -12,37 +12,50 @@ social_links: list[dict[str, str]] = [
 
 # Donation info
 
-wallets: list[dict[str, str]] = [
+wallets: list[dict[str, str | bool]] = [
     {
         "network": "Bitcoin",
         "currency_code": "BTC",
         "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
+        "preferred": False,
     },
     {
         "network": "Dogecoin",
         "currency_code": "DOGE",
         "address": "D8GH73rNjudgi6bS2krrXWEsU9KShedLXp",
+        "preferred": True,
     },
     {
         "network": "Ethereum",
         "currency_code": "ETH",
         "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
+        "preferred": False,
     },
     {
         "network": "Litecoin",
         "currency_code": "LTC",
         "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
+        "preferred": False,
     },
     {
         "network": "Monero",
         "currency_code": "XMR",
         "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
+        "preferred": False,
     },
 ]
 
-links: list[dict[str, str]] = [
-    {"name": "Open Collective", "url": "https://opencollective.com/revanced"},
-    {"name": "Github Sponsors", "url": "https://github.com/sponsors/ReVanced"},
+links: list[dict[str, str | bool]] = [
+    {
+        "name": "Open Collective",
+        "url": "https://opencollective.com/revanced",
+        "preferred": True,
+    },
+    {
+        "name": "Github Sponsors",
+        "url": "https://github.com/sponsors/ReVanced",
+        "preferred": False,
+    },
 ]
 
 # API Configuration
