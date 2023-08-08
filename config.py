@@ -46,8 +46,16 @@ wallets: list[dict[str, str | bool]] = [
 ]
 
 links: list[dict[str, str | bool]] = [
-    {"name": "Open Collective", "url": "https://opencollective.com/revanced", "preferred": True,},
-    {"name": "Github Sponsors", "url": "https://github.com/sponsors/ReVanced", "preferred": False,},
+    {
+        "name": "Open Collective",
+        "url": "https://opencollective.com/revanced",
+        "preferred": True,
+    },
+    {
+        "name": "Github Sponsors",
+        "url": "https://github.com/sponsors/ReVanced",
+        "preferred": False,
+    },
 ]
 
 # API Configuration
