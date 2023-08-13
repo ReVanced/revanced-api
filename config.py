@@ -52,7 +52,7 @@ links: list[dict[str, str | bool]] = [
         "preferred": True,
     },
     {
-        "name": "Github Sponsors",
+        "name": "GitHub Sponsors",
         "url": "https://github.com/sponsors/ReVanced",
         "preferred": False,
     },

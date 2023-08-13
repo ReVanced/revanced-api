@@ -2,10 +2,10 @@
 This module provides endpoints for compatibility with the old API.
 
 Routes:
-    - GET /<repo:str>/releases: Retrieve a list of releases for a Github repository.
-    - GET /<repo:str>/releases/latest: Retrieve the latest release for a Github repository.
-    - GET /<repo:str>/releases/tag/<tag:str>: Retrieve a specific release for a Github repository by its tag name.
-    - GET /<repo:str>/contributors: Retrieve a list of contributors for a Github repository.
+    - GET /<repo:str>/releases: Retrieve a list of releases for a GitHub repository.
+    - GET /<repo:str>/releases/latest: Retrieve the latest release for a GitHub repository.
+    - GET /<repo:str>/releases/tag/<tag:str>: Retrieve a specific release for a GitHub repository by its tag name.
+    - GET /<repo:str>/contributors: Retrieve a list of contributors for a GitHub repository.
     - GET /patches/<tag:str>: Retrieve a list of patches for a given release tag.
 
 """
@@ -31,10 +31,10 @@ github_backend: Github = Github()
 )
 async def tools(request: Request) -> JSONResponse:
     """
-    Retrieve a list of releases for a Github repository.
+    Retrieve a list of releases for a GitHub repository.
 
     **Args:**
-        - repo (str): The name of the Github repository to retrieve releases for.
+        - repo (str): The name of the GitHub repository to retrieve releases for.
 
     **Query Parameters:**
         - per_page (int): The number of releases to retrieve per page.
@@ -67,7 +67,7 @@ async def tools(request: Request) -> JSONResponse:
 )
 async def contributors(request: Request) -> JSONResponse:
     """
-    Retrieve a list of releases for a Github repository.
+    Retrieve a list of releases for a GitHub repository.
 
     **Returns:**
         - JSONResponse: A Sanic JSONResponse object containing the list of releases.
