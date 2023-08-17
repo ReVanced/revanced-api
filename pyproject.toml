@@ -12,7 +12,7 @@ aiohttp = {version = "^3.8.5", extras = ["speedups"]}
 sanic = {version = "^23.6.0", extras = ["ext"]}
 ujson = "^5.8.0"
 asyncstdlib = "^3.10.8"
-pydantic = "^1.10.12"
+pydantic = "^2.2.0"
 cytoolz = "^0.12.2"
 beautifulsoup4 = "^4.12.2"
 setuptools = "^68.0.0"
