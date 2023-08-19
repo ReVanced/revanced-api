@@ -298,7 +298,6 @@ class Github(Backend):
                 user_data_response,
             )
         )
-        print(await response.json(loads=ujson.loads))
         team_members: list[Contributor] = await asyncio.gather(
             *map(
                 lambda member: self.__assemble_contributor(member, team_view=True),
