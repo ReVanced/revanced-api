@@ -52,7 +52,8 @@ async def tools(request: Request) -> JSONResponse:
             repositories=[
                 GithubRepository(owner=owner, name=repo)
                 for repo in compat_repositories
-                if repo not in ["revanced-releases-api", "revanced-website"]
+                if repo
+                not in ["revanced-api", "revanced-releases-api", "revanced-website"]
             ],
             dev=True if request.args.get("dev") else False,
         )
