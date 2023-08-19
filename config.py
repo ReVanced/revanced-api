@@ -1,13 +1,68 @@
+# API Configuration
+
+backend: str = "github"
+redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
+
+# GitHub Backend Configuration
+
+owner: str = "ReVanced"
+default_repository: str = ".github"
+
+# API Versioning
+
+api_version: str = "v2"
+openapi_version: str = "2.0.0"
+openapi_title: str = "ReVanced API"
+openapi_description: str = """
+## The official JSON API for ReVanced Releases 🚀
+
+### Links
+
+- [Changelogs](https://github.com/revanced/)
+- [Official links to ReVanced](https://revanced.app)
+
+### Important Information
+
+* Rate Limiting - 60 requests per minute
+* Cache - 5 minutes
+
+### Additional Notes
+
+1. Breaking changes are to be expected
+2. Client side caching is advised to avoid unnecessary requests
+3. Abuse of the API will result in IP blocks
+"""
+
+# Testing Configuration
+
+github_testing_repository: str = "revanced-patches"
+github_testing_tag: str = "v2.173.0"
+apkdl_testing_package: str = "com.google.android.youtube"
+
+# Old API Configuration
+
+compat_api_version: str = "v1"
+compat_repositories: list = [
+    "revanced-patcher",
+    "revanced-patches",
+    "revanced-integrations",
+    "revanced-manager",
+    "revanced-cli",
+    "revanced-website",
+    "revanced-api",
+    "revanced-releases-api",
+]
+
 # Social Links
 
 social_links: list[dict[str, str]] = [
-    {"name": "website", "url": "https://revanced.app"},
-    {"name": "github", "url": "https://github.com/revanced"},
-    {"name": "twitter", "url": "https://twitter.com/revancedapp"},
-    {"name": "discord", "url": "https://revanced.app/discord"},
-    {"name": "reddit", "url": "https://www.reddit.com/r/revancedapp"},
-    {"name": "telegram", "url": "https://t.me/app_revanced"},
-    {"name": "youtube", "url": "https://www.youtube.com/@ReVanced"},
+    {"name": "Website", "url": "https://revanced.app"},
+    {"name": "GitHub", "url": "https://github.com/revanced"},
+    {"name": "Twitter", "url": "https://twitter.com/revancedapp"},
+    {"name": "Discord", "url": "https://revanced.app/discord"},
+    {"name": "Reddit", "url": "https://www.reddit.com/r/revancedapp"},
+    {"name": "Telegram", "url": "https://t.me/app_revanced"},
+    {"name": "YouTube", "url": "https://www.youtube.com/@ReVanced"},
 ]
 
 # Donation info
@@ -58,56 +113,12 @@ links: list[dict[str, str | bool]] = [
     },
 ]
 
-# API Configuration
-
-backend: str = "github"
-redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
-
-# GitHub Backend Configuration
-
-owner: str = "revanced"
-default_repository: str = ".github"
-
-# API Versioning
-
-api_version: str = "v2"
-openapi_version: str = "2.0.0"
-openapi_title: str = "ReVanced API"
-openapi_description: str = """
-## The official JSON API for ReVanced Releases 🚀
-
-### Links
-
-- [Changelogs](https://github.com/revanced/)
-- [Official links to ReVanced](https://revanced.app)
-
-### Important Information
-
-* Rate Limiting - 60 requests per minute
-* Cache - 5 minutes
-
-### Additional Notes
-
-1. Breaking changes are to be expected
-2. Client side caching is advised to avoid unnecessary requests
-3. Abuse of the API will result in IP blocks
-"""
-
-# Testing Configuration
-
-github_testing_repository: str = "revanced-patches"
-github_testing_tag: str = "v2.173.0"
-apkdl_testing_package: str = "com.google.android.youtube"
-
-# Old API Configuration
-
-compat_api_version: str = "v1"
-compat_repositories: list = [
-    "revanced-patcher",
-    "revanced-patches",
-    "revanced-integrations",
-    "revanced-manager",
-    "revanced-cli",
-    "revanced-website",
-    "revanced-releases-api",
-]
+default_info: dict[str, str | list[str | bool] | bool] = {
+    "name": owner,
+    "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
+    "contact": [
+        {"method": "mail", "value": "contact@revanced.app"},
+    ],
+    "socials": social_links,
+    "donations": {"wallets": wallets, "links": links},
+}
