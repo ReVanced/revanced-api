@@ -11,7 +11,7 @@ class InfoFields(BaseModel):
     name: str
     about: str
     contact: dict[str, str]
-    socials: SocialFields
+    socials: list[SocialFields]
     donations: DonationFields
 
 
