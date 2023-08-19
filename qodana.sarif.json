@@ -11288,7 +11288,7 @@
                     "charOffset": 0,
                     "charLength": 72,
                     "snippet": {
-                      "text": "\"\"\"\nThis module provides endpoints for interacting with the Github API.\n"
+                      "text": "\"\"\"\nThis module provides endpoints for interacting with the GitHub API.\n"
                     },
                     "sourceLanguage": "Python"
                   },
@@ -11298,7 +11298,7 @@
                     "charOffset": 0,
                     "charLength": 165,
                     "snippet": {
-                      "text": "\"\"\"\nThis module provides endpoints for interacting with the Github API.\n\nRoutes:\n    - GET /<repo:str>/releases: Retrieve a list of releases for a Github repository."
+                      "text": "\"\"\"\nThis module provides endpoints for interacting with the GitHub API.\n\nRoutes:\n    - GET /<repo:str>/releases: Retrieve a list of releases for a GitHub repository."
                     }
                   }
                 },

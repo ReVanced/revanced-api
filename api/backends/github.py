@@ -22,11 +22,11 @@ base_url: str = "https://api.github.com"
 
 class GithubRepository(Repository):
     """
-    A repository class that represents a Github repository.
+    A repository class that represents a GitHub repository.
 
     Args:
-        owner (str): The username of the owner of the Github repository.
-        name (str): The name of the Github repository.
+        owner (str): The username of the owner of the GitHub repository.
+        name (str): The name of the GitHub repository.
     """
 
     def __init__(self, owner: str, name: str):
@@ -34,8 +34,8 @@ class GithubRepository(Repository):
         Initializes a new instance of the GithubRepository class.
 
         Args:
-            owner (str): The username of the owner of the Github repository.
-            name (str): The name of the Github repository.
+            owner (str): The username of the owner of the GitHub repository.
+            name (str): The name of the GitHub repository.
         """
         super().__init__(Github())
         self.owner = owner
@@ -44,18 +44,18 @@ class GithubRepository(Repository):
 
 class Github(Backend):
     """
-    A backend class that interacts with the Github API.
+    A backend class that interacts with the GitHub API.
 
     Attributes:
-        name (str): The name of the Github backend.
-        base_url (str): The base URL of the Github API.
-        token (str): The Github access token used for authentication.
-        headers (dict[str, str]): The HTTP headers to be sent with each request to the Github API.
+        name (str): The name of the GitHub backend.
+        base_url (str): The base URL of the GitHub API.
+        token (str): The GitHub access token used for authentication.
+        headers (dict[str, str]): The HTTP headers to be sent with each request to the GitHub API.
     """
 
     def __init__(self):
         """
-        Initializes a new instance of the Github class.
+        Initializes a new instance of the GitHub class.
         """
         super().__init__(repo_name, base_url)
         self.token: Optional[str] = os.getenv("GITHUB_TOKEN")
@@ -121,10 +121,10 @@ class Github(Backend):
         self, repository: GithubRepository, per_page: int = 30, page: int = 1
     ) -> list[Release]:
         """
-        Returns a list of Release objects for a given Github repository.
+        Returns a list of Release objects for a given GitHub repository.
 
         Args:
-            repository (GithubRepository): The Github repository for which to retrieve the releases.
+            repository (GithubRepository): The GitHub repository for which to retrieve the releases.
             per_page (int): The number of releases to return per page.
             page (int): The page number of the releases to return.
 
@@ -148,10 +148,10 @@ class Github(Backend):
         self, repository: GithubRepository, tag_name: str
     ) -> Release:
         """
-        Retrieves a specific release for a given Github repository by its tag name.
+        Retrieves a specific release for a given GitHub repository by its tag name.
 
         Args:
-            repository (GithubRepository): The Github repository for which to retrieve the release.
+            repository (GithubRepository): The GitHub repository for which to retrieve the release.
             tag_name (str): The tag name of the release to retrieve.
 
         Returns:
@@ -171,7 +171,7 @@ class Github(Backend):
         """Get the latest release for a given repository.
 
         Args:
-            repository (GithubRepository): The Github repository for which to retrieve the release.
+            repository (GithubRepository): The GitHub repository for which to retrieve the release.
 
         Returns:
             Release: The latest release for the given repository.
@@ -190,7 +190,7 @@ class Github(Backend):
         """Get the latest pre-release for a given repository.
 
         Args:
-            repository (GithubRepository): The Github repository for which to retrieve the release.
+            repository (GithubRepository): The GitHub repository for which to retrieve the release.
 
         Returns:
             Release: The latest pre-release for the given repository.

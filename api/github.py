@@ -1,11 +1,11 @@
 """
-This module provides endpoints for interacting with the Github API.
+This module provides endpoints for interacting with the GitHub API.
 
 Routes:
-    - GET /<repo:str>/releases: Retrieve a list of releases for a Github repository.
-    - GET /<repo:str>/releases/latest: Retrieve the latest release for a Github repository.
-    - GET /<repo:str>/releases/tag/<tag:str>: Retrieve a specific release for a Github repository by its tag name.
-    - GET /<repo:str>/contributors: Retrieve a list of contributors for a Github repository.
+    - GET /<repo:str>/releases: Retrieve a list of releases for a GitHub repository.
+    - GET /<repo:str>/releases/latest: Retrieve the latest release for a GitHub repository.
+    - GET /<repo:str>/releases/tag/<tag:str>: Retrieve a specific release for a GitHub repository by its tag name.
+    - GET /<repo:str>/contributors: Retrieve a list of contributors for a GitHub repository.
     - GET /patches/<tag:str>: Retrieve a list of patches for a given release tag.
 
 """
@@ -30,10 +30,10 @@ github_backend: Github = Github()
 )
 async def list_releases(request: Request, repo: str) -> JSONResponse:
     """
-    Retrieve a list of releases for a Github repository.
+    Retrieve a list of releases for a GitHub repository.
 
     **Args:**
-        - repo (str): The name of the Github repository to retrieve releases for.
+        - repo (str): The name of the GitHub repository to retrieve releases for.
 
     **Query Parameters:**
         - per_page (int): The number of releases to retrieve per page.
@@ -67,10 +67,10 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
 )
 async def latest_release(request: Request, repo: str) -> JSONResponse:
     """
-    Retrieve the latest release for a Github repository.
+    Retrieve the latest release for a GitHub repository.
 
     **Args:**
-        - repo (str): The name of the Github repository to retrieve the release for.
+        - repo (str): The name of the GitHub repository to retrieve the release for.
 
     **Query Parameters:**
         - dev (bool): Whether or not to retrieve the latest development release.
@@ -103,17 +103,17 @@ async def latest_release(request: Request, repo: str) -> JSONResponse:
 
 @github.get("/<repo:str>/releases/tag/<tag:str>")
 @openapi.definition(
-    summary="Retrieve a release for a Github repository by its tag name.",
+    summary="Retrieve a release for a GitHub repository by its tag name.",
     response=SingleReleaseResponseModel,
 )
 async def get_release_by_tag_name(
     request: Request, repo: str, tag: str
 ) -> JSONResponse:
     """
-    Retrieve a release for a Github repository by its tag name.
+    Retrieve a release for a GitHub repository by its tag name.
 
     **Args:**
-        - repo (str): The name of the Github repository to retrieve the release for.
+        - repo (str): The name of the GitHub repository to retrieve the release for.
         - tag (str): The tag for the release to be retrieved.
 
     **Returns:**
@@ -142,7 +142,7 @@ async def get_contributors(request: Request, repo: str) -> JSONResponse:
     Retrieve a list of contributors for a repository.
 
     **Args:**
-        - repo (str): The name of the Github repository to retrieve the contributors for.
+        - repo (str): The name of the GitHub repository to retrieve the contributors for.
 
     **Returns:**
         - JSONResponse: A Sanic JSONResponse object containing the list of contributors.
