@@ -2,15 +2,21 @@ from api.models.donations import DonationFields
 from api.models.socials import SocialFields
 from pydantic import BaseModel
 
+class ContactFields(BaseModel):
+    """
+    Implements the fields for the API owner contact info.
+    """
+    email: str
+
 
 class InfoFields(BaseModel):
     """
-    Implements the fields for a API owner info.
+    Implements the fields for the API owner info.
     """
 
     name: str
     about: str
-    contact: dict[str, str]
+    contact: ContactFields
     socials: list[SocialFields]
     donations: DonationFields
 
