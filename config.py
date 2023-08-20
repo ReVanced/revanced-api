@@ -5,7 +5,7 @@ redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
 
 # GitHub Backend Configuration
 
-owner: str = "ReVanced"
+owner: str = "revanced"
 default_repository: str = ".github"
 
 # API Versioning
@@ -114,7 +114,7 @@ links: list[dict[str, str | bool]] = [
 ]
 
 default_info: dict[str, str | list[str | bool] | bool] = {
-    "name": owner,
+    "name": "ReVanced",
     "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
     "contact": {"email": "contact@revanced.app"},
     "socials": social_links,
