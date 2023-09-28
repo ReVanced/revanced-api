@@ -54,7 +54,7 @@ jobs:
 
       - name: Build and push main Docker image
         id: build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           build-args: GH_TOKEN=${{ secrets.GH_TOKEN }}
           context: .
