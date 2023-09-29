@@ -10,5 +10,6 @@ from api.donations import donations
 from api.announcements import announcements
 from api.login import login
 
-api = Blueprint.group(login, ping, github, info, socials,
-                      donations, announcements, compat, url_prefix="/")
+api = Blueprint.group(
+    login, ping, github, info, socials, donations, announcements, compat, url_prefix="/"
+)

@@ -12,7 +12,8 @@ beskar = Beskar()
 
 def configure_auth(app):
     app.config.SECRET_KEY = os.environ.get("SECRET_KEY").join(
-        secrets.choice(string.ascii_letters) for i in range(15))
+        secrets.choice(string.ascii_letters) for i in range(15)
+    )
     app.config["TOKEN_ACCESS_LIFESPAN"] = {"hours": 24}
     app.config["TOKEN_REFRESH_LIFESPAN"] = {"days": 30}
     beskar.init_app(app, UserDbModel)
@@ -29,11 +30,11 @@ def _init_default_user():
 
     session = Session()
 
-    existing_user = session.query(
-        UserDbModel).filter_by(username=username).first()
+    existing_user = session.query(UserDbModel).filter_by(username=username).first()
     if not existing_user:
-        session.add(UserDbModel(username=username,
-                    password=beskar.hash_password(password)))
+        session.add(
+            UserDbModel(username=username, password=beskar.hash_password(password))
+        )
         session.commit()
 
     session.close()

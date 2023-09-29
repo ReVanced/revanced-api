@@ -11,7 +11,7 @@ Base.metadata.create_all(engine)
 
 
 class AnnouncementDbModel(Base):
-    __tablename__ = 'announcements'
+    __tablename__ = "announcements"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     author = Column(String, nullable=True)
@@ -20,23 +20,21 @@ class AnnouncementDbModel(Base):
     created_at = Column(DateTime, nullable=False)
     channel_id = Column(Integer, nullable=True)
 
-    attachments = relationship(
-        'AttachmentDbModel', back_populates='announcements')
+    attachments = relationship("AttachmentDbModel", back_populates="announcements")
 
 
 class AttachmentDbModel(Base):
-    __tablename__ = 'attachments'
+    __tablename__ = "attachments"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    announcement_id = Column(Integer, ForeignKey('announcements.id'))
+    announcement_id = Column(Integer, ForeignKey("announcements.id"))
     attachment_url = Column(String, nullable=False)
 
-    announcements = relationship(
-        'AnnouncementDbModel', back_populates='attachments')
+    announcements = relationship("AnnouncementDbModel", back_populates="attachments")
 
 
 class UserDbModel(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, nullable=False)
@@ -52,8 +50,7 @@ class UserDbModel(Base):
         try:
             session = Session()
 
-            user = session.query(UserDbModel).filter_by(
-                username=username).first()
+            user = session.query(UserDbModel).filter_by(username=username).first()
 
             session.close()
 

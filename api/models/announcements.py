@@ -24,9 +24,12 @@ class AnnouncementResponseModel(dict):
             content=ContentFields(
                 message=announcement.message,
                 attachment_urls=[
-                    attachment.attachment_url for attachment in announcement.attachments]
-            ) if announcement.message or announcement.attachments else None,
-            channel_id=announcement.channel_id
+                    attachment.attachment_url for attachment in announcement.attachments
+                ],
+            )
+            if announcement.message or announcement.attachments
+            else None,
+            channel_id=announcement.channel_id,
         )
 
         return response

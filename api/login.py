@@ -18,7 +18,7 @@ from config import api_version
 login: Blueprint = Blueprint("login", version=api_version)
 
 
-@login.post('/login')
+@login.post("/login")
 @openapi.definition(
     summary="Login to the API",
 )
