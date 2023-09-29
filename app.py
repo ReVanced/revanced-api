@@ -6,6 +6,9 @@ from sanic_ext import Config
 from api import api
 from config import *
 
+from limiter import configure_limiter
+from auth import configure_auth
+
 REDIRECTS = {
     "/": "/docs/swagger",
 }
@@ -25,8 +28,13 @@ app.config.CORS_SUPPORTS_CREDENTIALS = True
 app.config.CORS_SEND_WILDCARD = True
 app.config.CORS_ORIGINS = "*"
 
-app.blueprint(api)
+# sanic-beskar
+configure_auth(app)
 
+# sanic-limiter
+configure_limiter(app)
+
+app.blueprint(api)
 
 # https://sanic.dev/en/guide/how-to/static-redirects.html
 
