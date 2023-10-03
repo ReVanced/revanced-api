@@ -1,5 +1,5 @@
 ## Build dependencies
-FROM python:3.11-slim as dependencies
+FROM python:3.12-slim as dependencies
 
 WORKDIR /usr/src/app
 
@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 ## Image
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 WORKDIR /usr/src/app
 
