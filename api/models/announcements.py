@@ -1,4 +1,4 @@
-from persistance.models import AnnouncementDbModel
+from data.models import AnnouncementDbModel
 
 
 class ContentFields(dict):

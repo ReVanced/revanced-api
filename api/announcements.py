@@ -14,8 +14,8 @@ import datetime
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
-from persistance.database import Session
-from persistance.models import AnnouncementDbModel, AttachmentDbModel
+from data.database import Session
+from data.models import AnnouncementDbModel, AttachmentDbModel
 
 import sanic_beskar
 

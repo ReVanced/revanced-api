@@ -1,11 +1,11 @@
 import os
 import secrets
 import string
-from persistance.database import Session
+from data.database import Session
 
 from sanic_beskar import Beskar
 
-from persistance.models import UserDbModel
+from data.models import UserDbModel
 
 beskar = Beskar()
 

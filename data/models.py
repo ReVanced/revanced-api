@@ -3,12 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
 
-from persistance.database import Session, engine
+from data.database import Session, engine
 
 Base = declarative_base()
-
-Base.metadata.create_all(engine)
-
 
 class AnnouncementDbModel(Base):
     __tablename__ = "announcements"
@@ -74,3 +71,5 @@ class UserDbModel(Base):
     @property
     def identity(self):
         return self.id
+
+Base.metadata.create_all(engine)
