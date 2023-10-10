@@ -8,6 +8,7 @@ class SocialFields(BaseModel):
 
     name: str
     url: str
+    preferred: bool
 
 
 class SocialsResponseModel(BaseModel):
