@@ -8,6 +8,7 @@ Routes:
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
+from sanic_beskar.exceptions import AuthenticationError
 
 from auth import beskar
 from limiter import limiter
@@ -41,10 +42,13 @@ async def login_user(request: Request) -> JSONResponse:
     if not username or not password:
         return json({"error": "Missing username or password"}, status=400)
 
-    user = await beskar.authenticate(username, password)
+    try:
+        user = await beskar.authenticate(username, password)
+    except AuthenticationError:
+        return json({"error": "Invalid username or password"}, status=403)
 
     if not user:
-        return json({"error": "Invalid username or password"}, status=400)
+        return json({"error": "Invalid username or password"}, status=403)
 
     ret = {"access_token": await beskar.encode_token(user)}
     return json(ret, status=200)
