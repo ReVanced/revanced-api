@@ -21,6 +21,7 @@ import sanic_beskar
 
 from api.models.announcements import AnnouncementResponseModel
 from config import api_version
+from limiter import limiter
 
 announcements: Blueprint = Blueprint("announcements", version=api_version)
 
@@ -154,6 +155,7 @@ async def get_latest_announcement_for_channel(
 
 
 @announcements.post("/announcements/<channel:str>")
+@limiter.limit("16 per hour")
 @sanic_beskar.auth_required
 @openapi.definition(
     summary="Create an announcement",
