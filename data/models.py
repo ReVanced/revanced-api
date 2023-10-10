@@ -7,6 +7,7 @@ from data.database import Session, engine
 
 Base = declarative_base()
 
+
 class AnnouncementDbModel(Base):
     __tablename__ = "announcements"
 
@@ -71,5 +72,6 @@ class UserDbModel(Base):
     @property
     def identity(self):
         return self.id
+
 
 Base.metadata.create_all(engine)

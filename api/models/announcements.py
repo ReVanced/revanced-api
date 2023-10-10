@@ -5,6 +5,7 @@ class ContentFields(dict):
     message: str | None
     attachment_urls: list[str] | None
 
+
 class AnnouncementResponseModel(dict):
     id: int
     author: str | None

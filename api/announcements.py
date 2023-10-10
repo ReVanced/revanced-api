@@ -56,9 +56,7 @@ async def get_announcements(request: Request) -> JSONResponse:
     summary="Get a list of announcements from a channel",
     response=[[AnnouncementResponseModel]],
 )
-async def get_announcements_for_channel(
-    request: Request, channel: str
-) -> JSONResponse:
+async def get_announcements_for_channel(request: Request, channel: str) -> JSONResponse:
     """
     Retrieve a list of announcements from a channel.
 
