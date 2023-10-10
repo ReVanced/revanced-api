@@ -14,10 +14,10 @@ class AnnouncementDbModel(Base):
     author = Column(String, nullable=True)
     title = Column(String, nullable=False)
     message = Column(String, nullable=True)
-    created_at = Column(DateTime, nullable=False)
-    channel_id = Column(Integer, nullable=True)
-
     attachments = relationship("AttachmentDbModel", back_populates="announcements")
+    channel = Column(String, nullable=True)
+    created_at = Column(DateTime, nullable=False)
+    level = Column(Integer, nullable=True)
 
 
 class AttachmentDbModel(Base):

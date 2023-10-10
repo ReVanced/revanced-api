@@ -3,10 +3,10 @@ This module provides a blueprint for the announcements endpoint.
 
 Routes:
     - GET /announcements: Get a list of announcements from all channels.
-    - GET /announcements/<channel_id:int>: Get a list of announcement for a channel.
+    - GET /announcements/<channel:str>: Get a list of announcement from a channel.
     - GET /announcements/latest: Get the latest announcement.
-    - GET /announcements/<channel_id:int>/latest: Get the latest announcement for a channel.
-    - POST /announcements/<channel_id:int>: Create an announcement.
+    - GET /announcements/<channel:str>/latest: Get the latest announcement from a channel.
+    - POST /announcements/<channel:str>: Create an announcement.
     - DELETE /announcements/<announcement_id:int>: Delete an announcement.
 """
 
@@ -50,22 +50,22 @@ async def get_announcements(request: Request) -> JSONResponse:
     return json(announcements, status=200)
 
 
-@announcements.get("/announcements/<channel_id:int>")
+@announcements.get("/announcements/<channel:str>")
 @openapi.definition(
-    summary="Get a list of announcements for a channel",
+    summary="Get a list of announcements from a channel",
     response=[[AnnouncementResponseModel]],
 )
 async def get_announcements_for_channel(
-    request: Request, channel_id: int
+    request: Request, channel: str
 ) -> JSONResponse:
     """
-    Retrieve a list of announcements for a channel.
+    Retrieve a list of announcements from a channel.
 
     **Args:**
-        - channel_id (int): The ID of the channel to retrieve announcements for.
+        - channel (str): The channel to retrieve announcements from.
 
     **Returns:**
-        - JSONResponse: A Sanic JSONResponse object containing a list of announcements for a channel.
+        - JSONResponse: A Sanic JSONResponse object containing a list of announcements from a channel.
     """
 
     session = Session()
@@ -73,7 +73,7 @@ async def get_announcements_for_channel(
     announcements = [
         AnnouncementResponseModel.to_response(announcement)
         for announcement in session.query(AnnouncementDbModel)
-        .filter_by(channel_id=channel_id)
+        .filter_by(channel=channel)
         .all()
     ]
 
@@ -113,32 +113,32 @@ async def get_latest_announcement(request: Request) -> JSONResponse:
     return json(announcement_response, status=200)
 
 
-# for specific channel id
+# for specific channel
 
 
-@announcements.get("/announcements/<channel_id:int>/latest")
+@announcements.get("/announcements/<channel:str>/latest")
 @openapi.definition(
-    summary="Get the latest announcement for a channel",
+    summary="Get the latest announcement from a channel",
     response=AnnouncementResponseModel,
 )
 async def get_latest_announcement_for_channel(
-    request: Request, channel_id: int
+    request: Request, channel: str
 ) -> JSONResponse:
     """
-    Retrieve the latest announcement for a channel.
+    Retrieve the latest announcement from a channel.
 
     **Args:**
-        - channel_id (int): The ID of the channel to retrieve the latest announcement for.
+        - channel (str): The channel to retrieve the latest announcement from.
 
     **Returns:**
-        - JSONResponse: A Sanic JSONResponse object containing the latest announcement for a channel.
+        - JSONResponse: A Sanic JSONResponse object containing the latest announcement from a channel.
     """
 
     session = Session()
 
     announcement = (
         session.query(AnnouncementDbModel)
-        .filter_by(channel_id=channel_id)
+        .filter_by(channel=channel)
         .order_by(AnnouncementDbModel.id.desc())
         .first()
     )
@@ -153,14 +153,14 @@ async def get_latest_announcement_for_channel(
     return json(announcement_response, status=200)
 
 
-@announcements.post("/announcements/<channel_id:int>")
+@announcements.post("/announcements/<channel:str>")
 @sanic_beskar.auth_required
 @openapi.definition(
     summary="Create an announcement",
     body=AnnouncementResponseModel,
     response=AnnouncementResponseModel,
 )
-async def post_announcement(request: Request, channel_id: int) -> JSONResponse:
+async def post_announcement(request: Request, channel: str) -> JSONResponse:
     """
     Create an announcement.
 
@@ -168,7 +168,8 @@ async def post_announcement(request: Request, channel_id: int) -> JSONResponse:
         - author (str | None): The author of the announcement.
         - title (str): The title of the announcement.
         - content (ContentFields | None): The content of the announcement.
-        - channel_id (int): The ID of the channel to create the announcement for.
+        - channel (str): The channel to create the announcement in.
+        - nevel (int | None): The severity of the announcement.
     """
     session = Session()
 
@@ -190,15 +191,17 @@ async def post_announcement(request: Request, channel_id: int) -> JSONResponse:
         if content and "attachments" in content
         else []
     )
-    created_at = (datetime.datetime.now(),)
+    level = request.json.get("level", None)
+    created_at = datetime.datetime.now()
 
     announcement = AnnouncementDbModel(
         author=author,
         title=title,
         message=message,
-        created_at=created_at,
-        channel_id=channel_id,
         attachments=attachments,
+        channel=channel,
+        created_at=created_at,
+        level=level,
     )
 
     session.add(announcement)

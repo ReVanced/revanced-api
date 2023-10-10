@@ -5,14 +5,14 @@ class ContentFields(dict):
     message: str | None
     attachment_urls: list[str] | None
 
-
 class AnnouncementResponseModel(dict):
     id: int
     author: str | None
     title: str
     content: ContentFields | None
-    channel_id: int
+    channel: str
     created_at: str
+    level: int | None
 
     @staticmethod
     def to_response(announcement: AnnouncementDbModel):
@@ -20,7 +20,6 @@ class AnnouncementResponseModel(dict):
             id=announcement.id,
             author=announcement.author,
             title=announcement.title,
-            created_at=str(announcement.created_at),
             content=ContentFields(
                 message=announcement.message,
                 attachment_urls=[
@@ -29,7 +28,9 @@ class AnnouncementResponseModel(dict):
             )
             if announcement.message or announcement.attachments
             else None,
-            channel_id=announcement.channel_id,
+            channel=announcement.channel,
+            created_at=str(announcement.created_at),
+            level=announcement.level,
         )
 
         return response
