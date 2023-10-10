@@ -56,10 +56,10 @@ compat_repositories: list = [
 # Social Links
 
 social_links: list[dict[str, str | bool]] = [
-    {"name": "Website", "preferred": False, "url": "https://revanced.app"},
+    {"name": "Website", "preferred": True, "url": "https://revanced.app"},
     {"name": "GitHub", "url": "https://github.com/revanced"},
     {"name": "Twitter", "url": "https://twitter.com/revancedapp"},
-    {"name": "Discord", "preferred": False, "url": "https://revanced.app/discord"},
+    {"name": "Discord", "preferred": True, "url": "https://revanced.app/discord"},
     {"name": "Reddit", "url": "https://www.reddit.com/r/revancedapp"},
     {"name": "Telegram", "url": "https://t.me/app_revanced"},
     {"name": "YouTube", "url": "https://www.youtube.com/@ReVanced"},
