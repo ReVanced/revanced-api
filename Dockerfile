@@ -28,6 +28,9 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY --from=dependencies /opt/venv /opt/venv
 COPY . .
 
+VOLUME persistance
+
+
 CMD docker/run-backend.sh
 HEALTHCHECK CMD docker/run-healthcheck.sh
 
