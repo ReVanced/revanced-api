@@ -182,13 +182,13 @@ files = [
 
 [[package]]
 name = "asyncstdlib"
-version = "3.10.8"
+version = "3.10.9"
 description = "The missing async toolbox"
 optional = false
 python-versions = "~=3.6"
 files = [
-    {file = "asyncstdlib-3.10.8-py3-none-any.whl", hash = "sha256:eb0dbc697a238fe1ef141e29b3396ead816aaf8a28f07e584e05d1d9fb26841a"},
-    {file = "asyncstdlib-3.10.8.tar.gz", hash = "sha256:e18b67de483dfbfec3c17ec2121a8a3fa9b950874ff03802819bd3b1af56148f"},
+    {file = "asyncstdlib-3.10.9-py3-none-any.whl", hash = "sha256:2325840babe05a717ea6f03ae71a5bb7e93786e0d1df1d60aeb8069aac6746cc"},
+    {file = "asyncstdlib-3.10.9.tar.gz", hash = "sha256:c5de1bf1c60de1203a9b135058dcfea7de2507d321e56279baca0905cd8628cd"},
 ]
 
 [package.extras]
@@ -1906,4 +1906,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ed48cb304d29d269f7bb4f4e5197eef464fa7412b0f14eb15aec89c62e13936f"
+content-hash = "a30b49d88e5ab472e80bfeab7587916f46f6e32c4364246fe78f33e093f3b39d"
