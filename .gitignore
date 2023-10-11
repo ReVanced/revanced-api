@@ -161,3 +161,4 @@ cython_debug/
 
 # custom
 env.sh
+persistance/database.db

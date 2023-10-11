@@ -20,7 +20,11 @@ To run this API, you need Python 3.11.x. You can install the dependencies with p
 poetry install
 ```
 
-Create an environment variable called `GITHUB_TOKEN` with a valid GitHub token with read access to public repositories.
+Create the following environment variables:
+
+- `GITHUB_TOKEN` with a valid GitHub token with read access to public repositories
+- `SECRET_KEY` to salt login sessions
+- `USERNAME` & `PASSWORD` to initialize the database with a user to login with to authenticated endpoints
 
 Then, you can run the API in development mode with:
 

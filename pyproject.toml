@@ -28,13 +28,19 @@ pytest-emoji = "^0.2.0"
 coverage = "^7.3.2"
 pytest-cov = "^4.1.0"
 pytest = "^7.4.0"
+sqlalchemy = "^2.0.21"
+sanic-beskar = "^2.2.12"
+bson = "^0.5.10"
+fastpbkdf2 = "^0.2"
+cryptography = "^41.0.4"
+sanic-limiter = { git = "https://github.com/Omegastick/sanic-limiter" }
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 filterwarnings = [
     "ignore::DeprecationWarning",
-    "ignore::pytest.PytestCollectionWarning"
-    ]
+    "ignore::pytest.PytestCollectionWarning",
+]
 
 [build-system]
 requires = ["poetry-core"]
