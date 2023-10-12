@@ -56,11 +56,26 @@ compat_repositories: list = [
 # Branding
 
 branding_links: dict[str, str] = {
-    {"assettype": "logo", "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-logo/revanced-logo.svg"},
-    {"assettype": "horizontal-light", "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-light.svg"},
-    {"assettype": "horizontal-dark", "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-dark.svg"},
-    {"assettype": "vertical-light", "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-light.svg"},
-    {"assettype": "vertical-dark", "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-dark.svg"},
+    {
+        "assettype": "logo",
+        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-logo/revanced-logo.svg",
+    },
+    {
+        "assettype": "horizontal-light",
+        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-light.svg",
+    },
+    {
+        "assettype": "horizontal-dark",
+        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-dark.svg",
+    },
+    {
+        "assettype": "vertical-light",
+        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-light.svg",
+    },
+    {
+        "assettype": "vertical-dark",
+        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-dark.svg",
+    },
 }
 
 # Social Links

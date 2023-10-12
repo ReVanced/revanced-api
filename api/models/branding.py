@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class BrandingFields(BaseModel):
     """
     Implements the fields for a brand link.
