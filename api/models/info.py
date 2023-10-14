@@ -19,8 +19,8 @@ class InfoFields(BaseModel):
 
     name: str
     about: str
+    branding: str
     contact: ContactFields
-    branding: list[BrandingFields]
     socials: list[SocialFields]
     donations: DonationFields
 

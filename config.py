@@ -53,31 +53,6 @@ compat_repositories: list = [
     "revanced-releases-api",
 ]
 
-# Branding
-
-branding_links: dict[str, str] = {
-    {
-        "assettype": "logo",
-        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-logo/revanced-logo.svg",
-    },
-    {
-        "assettype": "horizontal-light",
-        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-light.svg",
-    },
-    {
-        "assettype": "horizontal-dark",
-        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-horizontal-dark.svg",
-    },
-    {
-        "assettype": "vertical-light",
-        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-light.svg",
-    },
-    {
-        "assettype": "vertical-dark",
-        "url": "https://github.com/ReVanced/revanced-branding/raw/main/assets/revanced-headline/revanced-headline-vertical-dark.svg",
-    },
-}
-
 # Social Links
 
 social_links: list[dict[str, str | bool]] = [
@@ -145,6 +120,7 @@ links: list[dict[str, str | bool]] = [
 default_info: dict[str, str | list[str | bool] | bool] = {
     "name": "ReVanced",
     "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
+    "branding": "https://raw.githubusercontent.com/ReVanced/revanced-branding/main/assets/revanced-logo/revanced-logo.svg",
     "contact": {"email": "contact@revanced.app"},
     "socials": social_links,
     "donations": {"wallets": wallets, "links": links},
