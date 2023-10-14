@@ -1,4 +1,3 @@
-from api.models.branding import BrandingFields
 from api.models.donations import DonationFields
 from api.models.socials import SocialFields
 from pydantic import BaseModel
