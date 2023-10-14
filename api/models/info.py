@@ -10,12 +10,14 @@ class ContactFields(BaseModel):
 
     email: str
 
+
 class BrandingFields(BaseModel):
     """
     Implements the fields for the API owner branding info.
     """
 
     logo: str
+
 
 class InfoFields(BaseModel):
     """
