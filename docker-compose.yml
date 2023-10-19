@@ -4,8 +4,13 @@ services:
   revanced-api:
     container_name: revanced-api
     image: ghcr.io/revanced/revanced-api:latest
+    volumes:
+      - /data/revanced-api:/usr/src/app/persistence
     environment:
       - GITHUB_TOKEN=YOUR_GITHUB_TOKEN
+      - SECRET_KEY=YOUR_SECRET_KEY
+      - USERNAME=YOUR_USERNAME
+      - PASSWORD=YOUR_PASSWORD
     ports:
       - 127.0.0.1:7934:8000
     restart: unless-stopped

@@ -5,7 +5,7 @@
 ![License: AGPLv3](https://img.shields.io/github/license/revanced/revanced-api)
 [![codecov](https://codecov.io/gh/ReVanced/revanced-api/branch/dev/graph/badge.svg?token=10H8D2CRQO)](https://codecov.io/gh/ReVanced/revanced-api)
 [![Build and Publish Docker Image](https://github.com/revanced/revanced-api/actions/workflows/main.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/main.yml)
-[![Qodana | Code Quality Scan](https://github.com/revanced/revanced-api/actions/workflows/quodana.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/quodana.yml)
+[![Qodana | Code Quality Scan](https://github.com/revanced/revanced-api/actions/workflows/qodana.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/qodana.yml)
 [![PyTest | Testing and Code Coverage](https://github.com/revanced/revanced-api/actions/workflows/pytest.yml/badge.svg)](https://github.com/revanced/revanced-api/actions/workflows/pytest.yml)
 
 ---
@@ -20,7 +20,11 @@ To run this API, you need Python 3.11.x. You can install the dependencies with p
 poetry install
 ```
 
-Create an environment variable called `GITHUB_TOKEN` with a valid GitHub token with read access to public repositories.
+Create the following environment variables:
+
+- `GITHUB_TOKEN` with a valid GitHub token with read access to public repositories
+- `SECRET_KEY` to salt login sessions
+- `USERNAME` & `PASSWORD` to initialize the database with a user to login with to authenticated endpoints
 
 Then, you can run the API in development mode with:
 

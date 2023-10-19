@@ -55,14 +55,18 @@ compat_repositories: list = [
 
 # Social Links
 
-social_links: list[dict[str, str]] = [
-    {"name": "Website", "url": "https://revanced.app"},
-    {"name": "GitHub", "url": "https://github.com/revanced"},
-    {"name": "Twitter", "url": "https://twitter.com/revancedapp"},
-    {"name": "Discord", "url": "https://revanced.app/discord"},
-    {"name": "Reddit", "url": "https://www.reddit.com/r/revancedapp"},
-    {"name": "Telegram", "url": "https://t.me/app_revanced"},
-    {"name": "YouTube", "url": "https://www.youtube.com/@ReVanced"},
+social_links: list[dict[str, str | bool]] = [
+    {"name": "Website", "url": "https://revanced.app", "preferred": True},
+    {"name": "GitHub", "url": "https://github.com/revanced", "preferred": False},
+    {"name": "Twitter", "url": "https://twitter.com/revancedapp", "preferred": False},
+    {"name": "Discord", "url": "https://revanced.app/discord", "preferred": True},
+    {
+        "name": "Reddit",
+        "url": "https://www.reddit.com/r/revancedapp",
+        "preferred": False,
+    },
+    {"name": "Telegram", "url": "https://t.me/app_revanced", "preferred": False},
+    {"name": "YouTube", "url": "https://www.youtube.com/@ReVanced", "preferred": False},
 ]
 
 # Donation info
@@ -116,6 +120,9 @@ links: list[dict[str, str | bool]] = [
 default_info: dict[str, str | list[str | bool] | bool] = {
     "name": "ReVanced",
     "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
+    "branding": {
+        "logo": "https://raw.githubusercontent.com/ReVanced/revanced-branding/main/assets/revanced-logo/revanced-logo.svg"
+    },
     "contact": {"email": "contact@revanced.app"},
     "socials": social_links,
     "donations": {"wallets": wallets, "links": links},
