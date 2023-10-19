@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN apt update && \
-    apt-get install build-essential libffi-dev libssl-dev openssl --no-install-recommends -y \
+    apt-get install git build-essential libffi-dev libssl-dev openssl --no-install-recommends -y \
     && pip install --no-cache-dir -r requirements.txt
 
 VOLUME persistance
