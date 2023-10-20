@@ -12,5 +12,14 @@ from api.login import login
 from api.robots import robots
 
 api = Blueprint.group(
-    login, ping, github, info, socials, donations, announcements, compat, robots,  url_prefix="/"
+    login,
+    ping,
+    github,
+    info,
+    socials,
+    donations,
+    announcements,
+    compat,
+    robots,
+    url_prefix="/",
 )
