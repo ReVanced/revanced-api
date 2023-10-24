@@ -32,7 +32,7 @@ sqlalchemy = "^2.0.22"
 sanic-beskar = "^2.2.12"
 bson = "^0.5.10"
 fastpbkdf2 = "^0.2"
-cryptography = "^41.0.4"
+cryptography = "^41.0.5"
 sanic-limiter = { git = "https://github.com/Omegastick/sanic-limiter" }
 
 [tool.pytest.ini_options]
