@@ -49,14 +49,16 @@ class Asset(dict):
     Attributes:
         - name (str): The name of the asset.
         - content_type (str): The MIME type of the asset content.
+        - download_count (int): The number of times the asset has been downloaded.
         - download_url (str): The URL to download the asset.
     """
 
-    def __init__(self, name: str, content_type: str, browser_download_url: str):
+    def __init__(self, name: str, content_type: str, download_count: int, browser_download_url: str):
         dict.__init__(
             self,
             name=name,
             content_type=content_type,
+            download_count=download_count,
             browser_download_url=browser_download_url,
         )
 
