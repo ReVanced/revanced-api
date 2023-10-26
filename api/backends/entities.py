@@ -53,7 +53,13 @@ class Asset(dict):
         - download_url (str): The URL to download the asset.
     """
 
-    def __init__(self, name: str, content_type: str, download_count: int, browser_download_url: str):
+    def __init__(
+        self,
+        name: str,
+        content_type: str,
+        download_count: int,
+        browser_download_url: str,
+    ):
         dict.__init__(
             self,
             name=name,

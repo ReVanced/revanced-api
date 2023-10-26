@@ -70,7 +70,8 @@ class Github(Backend):
     async def __assemble_release(release: dict) -> Release:
         async def __assemble_asset(asset: dict) -> Asset:
             asset_data: dict = keyfilter(
-                lambda key: key in {"name", "content_type", "download_count", "browser_download_url"},
+                lambda key: key
+                in {"name", "content_type", "download_count", "browser_download_url"},
                 asset,
             )
             return Asset(**asset_data)
