@@ -23,6 +23,7 @@ class AssetFields(BaseModel):
 
     name: str
     content_type: str
+    download_count: int
     browser_download_url: str
 
 
