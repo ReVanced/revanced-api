@@ -15,14 +15,14 @@ from api.utils.auth import configure_auth
 
 import sentry_sdk
 
-# if os.environ.get("SENTRY_DSN"):
-#     sentry_sdk.init(
-#         dsn=os.environ["SENTRY_DSN"],
-#         enable_tracing=True,
-#         traces_sample_rate=1.0,
-#     )
-# else:
-#     print("WARNING: Sentry DSN not set, not enabling Sentry")
+if os.environ.get("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ["SENTRY_DSN"],
+        enable_tracing=True,
+        traces_sample_rate=1.0,
+    )
+else:
+    print("WARNING: Sentry DSN not set, not enabling Sentry")
 
 REDIRECTS = {
     "/": "/docs/swagger",
@@ -80,3 +80,10 @@ async def add_csp(_, response):
     response.headers[
         "Content-Security-Policy"
     ] = "default-src  * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+
+
+app.static(
+    "/favicon.ico",
+    "static/img/favicon.ico",
+    name="favicon",
+)
