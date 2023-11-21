@@ -20,10 +20,11 @@ from data.models import AnnouncementDbModel, AttachmentDbModel
 import sanic_beskar
 
 from api.models.announcements import AnnouncementResponseModel
-from config import api_version
-from api.limiter import limiter
+from api.utils.limiter import limiter
+from api.utils.versioning import get_version
 
-announcements: Blueprint = Blueprint("announcements", version=api_version)
+module_name = "announcements"
+announcements: Blueprint = Blueprint(module_name, version=get_version(module_name))
 
 
 @announcements.get("/announcements")

@@ -10,9 +10,11 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.donations import DonationsResponseModel
-from config import api_version, wallets, links
+from config import wallets, links
+from api.utils.versioning import get_version
 
-donations: Blueprint = Blueprint("donations", version=api_version)
+module_name = "donations"
+donations: Blueprint = Blueprint(module_name, version=get_version(module_name))
 
 
 @donations.get("/donations")

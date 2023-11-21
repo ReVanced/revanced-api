@@ -17,9 +17,11 @@ from sanic_ext import openapi
 from api.backends.entities import Release, Contributor
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
-from config import owner, default_repository, api_version
+from config import owner, default_repository
+from api.utils.versioning import get_version
 
-github: Blueprint = Blueprint("github", version=api_version)
+module_name = "github"
+github: Blueprint = Blueprint("github", version=get_version(module_name))
 
 github_backend: Github = Github()
 

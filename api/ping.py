@@ -7,9 +7,10 @@ Routes:
 
 from sanic import Blueprint, HTTPResponse, Request, response
 from sanic_ext import openapi
-from config import api_version
+from api.utils.versioning import get_version
 
-ping: Blueprint = Blueprint("ping", version=api_version)
+module_name = "ping"
+ping: Blueprint = Blueprint(module_name, version=get_version(module_name))
 
 
 @ping.head("/ping")

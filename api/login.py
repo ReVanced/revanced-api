@@ -10,13 +10,13 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 from sanic_beskar.exceptions import AuthenticationError
 
-from api.auth import beskar
-from api.limiter import limiter
+from api.utils.auth import beskar
+from api.utils.limiter import limiter
 
-from config import api_version
+from api.utils.versioning import get_version
 
-
-login: Blueprint = Blueprint("login", version=api_version)
+module_name = "login"
+login: Blueprint = Blueprint(module_name, version=get_version(module_name))
 
 
 @login.post("/login")

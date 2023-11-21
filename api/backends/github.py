@@ -1,5 +1,4 @@
 import asyncio
-from json import loads
 import os
 from operator import eq
 from typing import Optional
@@ -7,9 +6,9 @@ from typing import Optional
 import ujson
 from aiohttp import ClientResponse
 from sanic import SanicException
-from toolz import filter, map, partial
-from toolz.dicttoolz import get_in, keyfilter
-from toolz.itertoolz import mapcat, pluck
+from cytoolz import filter, map, partial
+from cytoolz.dicttoolz import get_in, keyfilter
+from cytoolz.itertoolz import mapcat, pluck
 
 from api.backends.backend import Backend, Repository
 from api.backends.entities import *
