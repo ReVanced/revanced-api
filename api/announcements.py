@@ -21,7 +21,7 @@ import sanic_beskar
 
 from api.models.announcements import AnnouncementResponseModel
 from config import api_version
-from limiter import limiter
+from api.limiter import limiter
 
 announcements: Blueprint = Blueprint("announcements", version=api_version)
 

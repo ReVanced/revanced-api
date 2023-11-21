@@ -10,8 +10,8 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 from sanic_beskar.exceptions import AuthenticationError
 
-from auth import beskar
-from limiter import limiter
+from api.auth import beskar
+from api.limiter import limiter
 
 from config import api_version
 

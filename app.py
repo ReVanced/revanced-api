@@ -10,8 +10,8 @@ from sanic_ext import Config
 from api import api
 from config import openapi_title, openapi_version, openapi_description, hostnames
 
-from limiter import configure_limiter
-from auth import configure_auth
+from api.limiter import configure_limiter
+from api.auth import configure_auth
 
 import sentry_sdk
 
