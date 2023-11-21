@@ -1,19 +1,34 @@
 # app.py
+
+import os
+
 from sanic import Sanic
 import sanic.response
 from sanic_ext import Config
 
 from api import api
-from config import *
+from config import openapi_title, openapi_version, openapi_description
 
 from limiter import configure_limiter
 from auth import configure_auth
+
+import sentry_sdk
+
+if os.environ.get("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ["SENTRY_DSN"],
+        enable_tracing=True,
+        traces_sample_rate=1.0,
+        debug=True,
+    )
+else:
+    print("WARNING: Sentry DSN not set, not enabling Sentry")
 
 REDIRECTS = {
     "/": "/docs/swagger",
 }
 
-app = Sanic("ReVanced-API")
+app = Sanic("revanced-api")
 app.extend(config=Config(oas_ignore_head=False))
 app.ext.openapi.describe(
     title=openapi_title,
