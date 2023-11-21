@@ -62,12 +62,12 @@ for src, dest in REDIRECTS.items():
     app.route(src)(get_static_function(sanic.response.redirect(dest)))
 
 
-@app.middleware("response")
+@app.on_response
 async def add_cache_control(request, response):
     response.headers["Cache-Control"] = "public, max-age=300"
 
 
-@app.middleware("response")
+@app.on_response
 async def add_csp(request, response):
     response.headers[
         "Content-Security-Policy"
