@@ -9,8 +9,7 @@ Routes:
     - GET /patches/<tag:str>: Retrieve a list of patches for a given release tag.
 
 """
-
-
+import os
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
@@ -20,7 +19,7 @@ from api.models.github import *
 from api.models.compat import ToolsResponseModel, ContributorsResponseModel
 from config import compat_repositories, owner
 
-compat: Blueprint = Blueprint("old")
+compat: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 github_backend: Github = Github()
 

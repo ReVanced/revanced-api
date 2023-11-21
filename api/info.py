@@ -5,16 +5,15 @@ Routes:
     - GET /info: Get info about the owner of the API.
 """
 
+import os
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.info import InfoResponseModel
 from config import default_info
-from api.utils.versioning import get_version
 
-module_name = "info"
-info: Blueprint = Blueprint("info", version=get_version(module_name))
+info: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 
 @info.get("/info")
