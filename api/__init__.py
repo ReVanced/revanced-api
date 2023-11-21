@@ -1,25 +1,16 @@
 # api/__init__.py
 from sanic import Blueprint
+import importlib
+import pkgutil
 
-from api.github import github
-from api.ping import ping
-from api.socials import socials
-from api.info import info
-from api.compat import github as compat
-from api.donations import donations
-from api.announcements import announcements
-from api.login import login
-from api.robots import robots
+blueprints = []
+for _, module_name, _ in pkgutil.iter_modules(["api"]):
+    # Import the module
+    module = importlib.import_module(f"api.{module_name}")
 
-api = Blueprint.group(
-    login,
-    ping,
-    github,
-    info,
-    socials,
-    donations,
-    announcements,
-    compat,
-    robots,
-    url_prefix="/",
-)
+    # Add the module's blueprint to the list, if it exists
+    if hasattr(module, module_name):
+        blueprints.append(getattr(module, module_name))
+
+# Create the Blueprint group with the dynamically imported blueprints
+api = Blueprint.group(*blueprints, url_prefix="/")

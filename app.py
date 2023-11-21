@@ -10,8 +10,8 @@ from sanic_ext import Config
 from api import api
 from config import openapi_title, openapi_version, openapi_description, hostnames
 
-from api.limiter import configure_limiter
-from api.auth import configure_auth
+from api.utils.limiter import configure_limiter
+from api.utils.auth import configure_auth
 
 import sentry_sdk
 
@@ -65,7 +65,6 @@ for src, dest in REDIRECTS.items():
 
 @app.on_request
 async def domain_check(request) -> HTTPResponse:
-    print(request.host)
     if request.host not in hostnames:
         return sanic.response.redirect(f"https://api.revanced.app/{request.path}")
 

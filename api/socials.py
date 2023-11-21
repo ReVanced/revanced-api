@@ -14,7 +14,6 @@ from config import social_links, api_version
 
 socials: Blueprint = Blueprint("socials", version=api_version)
 
-
 @socials.get("/socials")
 @openapi.definition(
     summary="Get ReVanced socials",

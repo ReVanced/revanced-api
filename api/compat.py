@@ -20,12 +20,12 @@ from api.models.github import *
 from api.models.compat import ToolsResponseModel, ContributorsResponseModel
 from config import compat_repositories, owner
 
-github: Blueprint = Blueprint("old")
+compat: Blueprint = Blueprint("old")
 
 github_backend: Github = Github()
 
 
-@github.get("/tools")
+@compat.get("/tools")
 @openapi.definition(
     summary="Get patching tools' latest version.", response=[ToolsResponseModel]
 )
@@ -62,7 +62,7 @@ async def tools(request: Request) -> JSONResponse:
     return json(data, status=200)
 
 
-@github.get("/contributors")
+@compat.get("/contributors")
 @openapi.definition(
     summary="Get organization-wise contributors.", response=[ContributorsResponseModel]
 )

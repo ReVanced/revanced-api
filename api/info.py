@@ -10,9 +10,11 @@ from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.info import InfoResponseModel
-from config import api_version, default_info
+from config import default_info
+from api.utils.versioning import get_version
 
-info: Blueprint = Blueprint("info", version=api_version)
+module_name = "info"
+info: Blueprint = Blueprint("info", version=get_version(module_name))
 
 
 @info.get("/info")

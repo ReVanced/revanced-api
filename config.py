@@ -16,6 +16,12 @@ default_repository: str = ".github"
 
 # API Versioning
 
+api_versions: dict[str, list[str]] = {
+    "old": ["compat"],
+    "v2": ["announcements", "donations", "github", "info", "login", "ping", "socials"],
+    "v3": ["connections"],
+}
+
 api_version: str = "v2"
 openapi_version: str = "2.0.0"
 openapi_title: str = "ReVanced API"
