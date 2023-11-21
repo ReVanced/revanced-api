@@ -15,15 +15,14 @@ from api.utils.auth import configure_auth
 
 import sentry_sdk
 
-if os.environ.get("SENTRY_DSN"):
-    sentry_sdk.init(
-        dsn=os.environ["SENTRY_DSN"],
-        enable_tracing=True,
-        traces_sample_rate=1.0,
-        debug=True,
-    )
-else:
-    print("WARNING: Sentry DSN not set, not enabling Sentry")
+# if os.environ.get("SENTRY_DSN"):
+#     sentry_sdk.init(
+#         dsn=os.environ["SENTRY_DSN"],
+#         enable_tracing=True,
+#         traces_sample_rate=1.0,
+#     )
+# else:
+#     print("WARNING: Sentry DSN not set, not enabling Sentry")
 
 REDIRECTS = {
     "/": "/docs/swagger",
@@ -50,7 +49,9 @@ configure_auth(app)
 # sanic-limiter
 configure_limiter(app)
 
-app.blueprint(api)
+
+for endpoint in api:
+    app.blueprint(api)
 
 # https://sanic.dev/en/guide/how-to/static-redirects.html
 

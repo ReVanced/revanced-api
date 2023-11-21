@@ -10,6 +10,7 @@ Routes:
     - DELETE /announcements/<announcement_id:int>: Delete an announcement.
 """
 
+import os
 import datetime
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
@@ -21,10 +22,8 @@ import sanic_beskar
 
 from api.models.announcements import AnnouncementResponseModel
 from api.utils.limiter import limiter
-from api.utils.versioning import get_version
 
-module_name = "announcements"
-announcements: Blueprint = Blueprint(module_name, version=get_version(module_name))
+announcements: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 
 @announcements.get("/announcements")

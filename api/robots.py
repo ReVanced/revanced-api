@@ -1,8 +1,9 @@
+import os
 from sanic import Blueprint
 from sanic.response import text
 
 
-robots: Blueprint = Blueprint("robots")
+robots: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 
 @robots.get("/robots.txt")

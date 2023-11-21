@@ -10,6 +10,7 @@ Routes:
 
 """
 
+import os
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
@@ -18,10 +19,8 @@ from api.backends.entities import Release, Contributor
 from api.backends.github import Github, GithubRepository
 from api.models.github import *
 from config import owner, default_repository
-from api.utils.versioning import get_version
 
-module_name = "github"
-github: Blueprint = Blueprint("github", version=get_version(module_name))
+github: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 github_backend: Github = Github()
 

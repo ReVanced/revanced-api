@@ -5,6 +5,7 @@ Routes:
     - POST /login: Login to the API
 """
 
+import os
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
@@ -13,10 +14,7 @@ from sanic_beskar.exceptions import AuthenticationError
 from api.utils.auth import beskar
 from api.utils.limiter import limiter
 
-from api.utils.versioning import get_version
-
-module_name = "login"
-login: Blueprint = Blueprint(module_name, version=get_version(module_name))
+login: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 
 @login.post("/login")
