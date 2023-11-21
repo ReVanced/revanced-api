@@ -2,6 +2,12 @@
 
 backend: str = "github"
 redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
+hostnames: list[str] = [
+    "api.revanced.app",
+    "deimos.revanced.app",
+    "localhost:8000",
+    "127.0.0.1:8000",
+]
 
 # GitHub Backend Configuration
 
