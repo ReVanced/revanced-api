@@ -1,7 +1,7 @@
 import pytest
 from sanic import Sanic
 
-from api.models.socials import ConnectionsResponseModel
+from api.models.socials import SocialsResponseModel
 
 from config import api_version
 
@@ -12,4 +12,4 @@ from config import api_version
 async def test_socials(app: Sanic):
     _, response = await app.asgi_client.get(f"/{api_version}/socials")
     assert response.status == 200
-    assert ConnectionsResponseModel(**response.json)
+    assert SocialsResponseModel(**response.json)

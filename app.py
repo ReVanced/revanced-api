@@ -49,9 +49,7 @@ configure_auth(app)
 # sanic-limiter
 configure_limiter(app)
 
-
-for endpoint in api:
-    app.blueprint(api)
+app.blueprint(api)
 
 # https://sanic.dev/en/guide/how-to/static-redirects.html
 
