@@ -18,8 +18,16 @@ default_repository: str = ".github"
 
 api_versions: dict[str, list[str]] = {
     "old": ["compat"],
-    "v2": ["announcements", "donations", "github", "info", "login", "ping", "socials"],
-    "v3": ["connections"],
+    "v2": [
+        "announcements",
+        "donations",
+        "github",
+        "info",
+        "login",
+        "ping",
+        "socials",
+        "manager",
+    ],
 }
 
 api_version: str = "v2"
