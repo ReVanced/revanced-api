@@ -1,3 +1,10 @@
 {
-  "python.analysis.typeCheckingMode": "off"
+  "python.analysis.typeCheckingMode": "off",
+  "spellright.language": [
+    "pt"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex"
+  ]
 }

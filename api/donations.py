@@ -5,14 +5,16 @@ Routes:
     - GET /donations: Get ReVanced donation links and wallets.
 """
 
+import os
+
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json
 from sanic_ext import openapi
 
 from api.models.donations import DonationsResponseModel
-from config import api_version, wallets, links
+from config import wallets, links
 
-donations: Blueprint = Blueprint("donations", version=api_version)
+donations: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 
 
 @donations.get("/donations")

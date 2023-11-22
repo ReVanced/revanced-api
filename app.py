@@ -1,19 +1,34 @@
 # app.py
-from sanic import Sanic
+
+import os
+from typing import Any
+
+from sanic import HTTPResponse, Sanic
 import sanic.response
 from sanic_ext import Config
 
 from api import api
-from config import *
+from config import openapi_title, openapi_version, openapi_description, hostnames
 
-from limiter import configure_limiter
-from auth import configure_auth
+from api.utils.limiter import configure_limiter
+from api.utils.auth import configure_auth
+
+import sentry_sdk
+
+if os.environ.get("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ["SENTRY_DSN"],
+        enable_tracing=True,
+        traces_sample_rate=1.0,
+    )
+else:
+    print("WARNING: Sentry DSN not set, not enabling Sentry")
 
 REDIRECTS = {
     "/": "/docs/swagger",
 }
 
-app = Sanic("ReVanced-API")
+app = Sanic("revanced-api")
 app.extend(config=Config(oas_ignore_head=False))
 app.ext.openapi.describe(
     title=openapi_title,
@@ -39,7 +54,7 @@ app.blueprint(api)
 # https://sanic.dev/en/guide/how-to/static-redirects.html
 
 
-def get_static_function(value):
+def get_static_function(value) -> Any:
     return lambda *_, **__: value
 
 
@@ -47,13 +62,26 @@ for src, dest in REDIRECTS.items():
     app.route(src)(get_static_function(sanic.response.redirect(dest)))
 
 
-@app.middleware("response")
-async def add_cache_control(request, response):
+@app.on_request
+async def domain_check(request) -> HTTPResponse:
+    if request.host not in hostnames:
+        return sanic.response.redirect(f"https://api.revanced.app/{request.path}")
+
+
+@app.on_response
+async def add_cache_control(_, response):
     response.headers["Cache-Control"] = "public, max-age=300"
 
 
-@app.middleware("response")
-async def add_csp(request, response):
+@app.on_response
+async def add_csp(_, response):
     response.headers[
         "Content-Security-Policy"
     ] = "default-src  * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+
+
+app.static(
+    "/favicon.ico",
+    "static/img/favicon.ico",
+    name="favicon",
+)

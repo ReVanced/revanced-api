@@ -1,5 +1,4 @@
 import asyncio
-from json import loads
 import os
 from operator import eq
 from typing import Optional
@@ -7,9 +6,9 @@ from typing import Optional
 import ujson
 from aiohttp import ClientResponse
 from sanic import SanicException
-from toolz import filter, map, partial
-from toolz.dicttoolz import get_in, keyfilter
-from toolz.itertoolz import mapcat, pluck
+from cytoolz import filter, map, partial, curry, pipe
+from cytoolz.dicttoolz import get_in, keyfilter
+from cytoolz.itertoolz import mapcat, pluck
 
 from api.backends.backend import Backend, Repository
 from api.backends.entities import *
@@ -396,3 +395,46 @@ class Github(Backend):
         )
 
         return list(map(lambda pair: transform(*pair), zip(results, repositories)))
+
+    async def generate_custom_sources(
+        self, repositories: list[GithubRepository], dev: bool
+    ) -> dict[str, dict[str, str]]:
+        """Generate a custom sources dictionary for a set of repositories.
+
+        Args:
+            repositories (list[GithubRepository]): The repositories for which to generate the sources.
+            dev (bool): If we should get the latest pre-release instead.
+
+        Returns:
+            dict[str, dict[str, str]]: A dictionary containing the custom sources.
+        """
+
+        # Helper functions
+        filter_by_name = curry(lambda name, item: name in item["name"])
+        filter_patches_jar = curry(
+            lambda item: "patches" in item["name"] and item["name"].endswith(".jar")
+        )
+        get_fields = curry(
+            lambda fields, item: {field: item[field] for field in fields}
+        )
+        rename_key = curry(
+            lambda old, new, d: {new if k == old else k: v for k, v in d.items()}
+        )
+
+        sources = await self.compat_get_tools(repositories, dev)
+
+        patches = pipe(
+            sources,
+            lambda items: next(filter(filter_patches_jar, items), None),
+            get_fields(["version", "browser_download_url"]),
+            rename_key("browser_download_url", "url"),
+        )
+
+        integrations = pipe(
+            sources,
+            lambda items: next(filter(filter_by_name("integrations"), items), None),
+            get_fields(["version", "browser_download_url"]),
+            rename_key("browser_download_url", "url"),
+        )
+
+        return {"patches": patches, "integrations": integrations}

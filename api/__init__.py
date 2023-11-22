@@ -1,25 +1,27 @@
 # api/__init__.py
 from sanic import Blueprint
+import importlib
+import pkgutil
+from api.utils.versioning import get_version
 
-from api.github import github
-from api.ping import ping
-from api.socials import socials
-from api.info import info
-from api.compat import github as compat
-from api.donations import donations
-from api.announcements import announcements
-from api.login import login
-from api.robots import robots
+# Dynamically import all modules in the 'api' package, excluding subdirectories
+versioned_blueprints = {}
+for finder, module_name, ispkg in pkgutil.iter_modules(["api"]):
+    if not ispkg:
+        # Import the module
+        module = importlib.import_module(f"api.{module_name}")
 
-api = Blueprint.group(
-    login,
-    ping,
-    github,
-    info,
-    socials,
-    donations,
-    announcements,
-    compat,
-    robots,
-    url_prefix="/",
-)
+        # Add the module's blueprint to the versioned list, if it exists
+        if hasattr(module, module_name):
+            blueprint = getattr(module, module_name)
+            version = get_version(module_name)
+            versioned_blueprints.setdefault(version, []).append(blueprint)
+
+# Create Blueprint groups for each version
+api = []
+for version, blueprints in versioned_blueprints.items():
+    if version == "old":
+        group = Blueprint.group(*blueprints, url_prefix="/")
+    else:
+        group = Blueprint.group(*blueprints, version=version, url_prefix="/")
+    api.append(group)
