@@ -1472,9 +1472,6 @@ files = [
     {file = "passlib-1.7.4.tar.gz", hash = "sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04"},
 ]
 
-[package.dependencies]
-argon2-cffi = {version = ">=18.2.0", optional = true, markers = "extra == \"argon2\""}
-
 [package.extras]
 argon2 = ["argon2-cffi (>=18.2.0)"]
 bcrypt = ["bcrypt (>=3.1.0)"]
@@ -1738,24 +1735,24 @@ tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
 
 [[package]]
 name = "pyseto"
-version = "1.7.3"
+version = "1.7.6"
 description = "A Python implementation of PASETO/PASERK."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "pyseto-1.7.3-py3-none-any.whl", hash = "sha256:ee679c0dab1837d73bb3f69e3e0e5f0737039e1bb62377d9d08a54386580f734"},
-    {file = "pyseto-1.7.3.tar.gz", hash = "sha256:df3a3b220a0fb28a9b355012c2f1762ace26626354ad410b55a83addb6407fb8"},
+    {file = "pyseto-1.7.6-py3-none-any.whl", hash = "sha256:ef432eefb1abd552c1fc4457dd82b0039a43cc8a9f820f2fb6a744713b144aa9"},
+    {file = "pyseto-1.7.6.tar.gz", hash = "sha256:e54d87f684dc9a878b700d007862e0971003093e861b609b820e54997dde612f"},
 ]
 
 [package.dependencies]
-cryptography = ">=41.0.0,<42.0.0"
+argon2-cffi = ">=23.1.0,<24.0.0"
+cryptography = ">=41.0.5,<42"
 iso8601 = ">=1.0.2,<3.0.0"
-passlib = {version = ">=1.7.4,<2.0.0", extras = ["argon2"]}
-pycryptodomex = ">=3.12.0,<4.0.0"
+pycryptodomex = ">=3.18.0,<4.0.0"
 
 [package.extras]
-docs = ["Sphinx[docs] (>=6.0.0,<7.0.0)", "sphinx-autodoc-typehints[docs] (>=1.21.0,<2.0.0)", "sphinx-rtd-theme[docs] (>=1.0.0,<2.0.0)"]
+docs = ["Sphinx[docs] (>=6,<8)", "sphinx-autodoc-typehints[docs] (>=1.21.0,<2.0.0)", "sphinx-rtd-theme[docs] (>=1.2.1,<2.0.0)"]
 
 [[package]]
 name = "pytest"
@@ -2057,14 +2054,14 @@ httpx = ">=0.18"
 
 [[package]]
 name = "sentry-sdk"
-version = "1.35.0"
+version = "1.36.0"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "sentry-sdk-1.35.0.tar.gz", hash = "sha256:04e392db9a0d59bd49a51b9e3a92410ac5867556820465057c2ef89a38e953e9"},
-    {file = "sentry_sdk-1.35.0-py2.py3-none-any.whl", hash = "sha256:a7865952701e46d38b41315c16c075367675c48d049b90a4cc2e41991ebc7efa"},
+    {file = "sentry-sdk-1.36.0.tar.gz", hash = "sha256:f32dd16547f2f45e1c71a96fd4a48925e629541f7ddfe3d5d25ef7d5e94eb3c8"},
+    {file = "sentry_sdk-1.36.0-py2.py3-none-any.whl", hash = "sha256:25d574f94fdf72199e331c2401fdac60d01b5be8f32822174c51c3ff0fc2f8cb"},
 ]
 
 [package.dependencies]
