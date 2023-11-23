@@ -18,12 +18,6 @@ try:
 except ImportError:
     logger.info("Could not import uvloop. Using asyncio event loop.")
 
-try:
-    backend = importlib.import_module(f"api.backends.{config.backend}")
-except ModuleNotFoundError:
-    logger.error(f"Could not import api/backends/{config.backend}.py. Exiting.")
-    quit()
-
 
 class CLI(object):
     """
