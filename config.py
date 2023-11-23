@@ -9,6 +9,11 @@ hostnames: list[str] = [
     "127.0.0.1:8000",
 ]
 
+# Static API Configuration
+
+static_api_ignore_routes = ["announcements", "ping", "login"]
+static_api_ignore_repos = ["revanced-api", "revanced-releases-api"]
+
 # GitHub Backend Configuration
 
 owner: str = "revanced"
