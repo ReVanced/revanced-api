@@ -35,6 +35,8 @@ fastpbkdf2 = "^0.2"
 cryptography = "^41.0.5"
 sanic-limiter = { git = "https://github.com/Omegastick/sanic-limiter" }
 sentry-sdk = { extras = ["sanic"], version = "^1.35.0" }
+fire = "^0.5.0"
+loguru = "^0.7.2"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

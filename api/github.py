@@ -20,9 +20,14 @@ from api.backends.github import Github, GithubRepository
 from api.models.github import *
 from config import owner, default_repository
 
-github: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
+from loguru import logger
+import ujson
 
+from cli import CLI
+
+github: Blueprint = Blueprint(os.path.basename(__file__).strip(".py"))
 github_backend: Github = Github()
+cli = CLI()
 
 
 @github.get("/<repo:str>/releases")
@@ -59,6 +64,49 @@ async def list_releases(request: Request, repo: str) -> JSONResponse:
     }
 
     return json(data, status=200)
+
+
+@cli.helper(name="releases")
+async def cli_releases(
+    repository: str, per_page: int = 100, page: int = 1
+) -> dict[str, dict]:
+    """
+    Retrieve a list of releases for a GitHub repository.
+
+    Arguments:
+        - repository (str): The name of the GitHub repository to retrieve releases for.
+        - per_page (int): The number of releases to retrieve per page.
+        - page (int): The page number of the releases to retrieve.
+
+    Returns:
+        - dict: A dictionary containing the list of releases.
+    """
+
+    if repository not in cli.get_filtered_repositories():
+        logger.error(
+            f"Repository {repository} is not a valid repository. Exiting.", exit=True
+        )
+        quit()
+
+    path = cli.get_file_path("/<repo:str>/releases").replace("<repo:str>", repository)
+
+    data = {
+        "releases": await github_backend.list_releases(
+            repository=GithubRepository(owner=owner, name=repository),
+            per_page=per_page,
+            page=page,
+        )
+    }
+
+    if path:
+        with open(f"{path}/index.json", "w") as file:
+            ujson.dump(data, file)
+    else:
+        logger.warning(
+            "Could not find path for releases. Did you generate the scaffolding?"
+        )
+
+    return ujson.dumps(data)
 
 
 @github.get("/<repo:str>/releases/latest")
@@ -133,6 +181,98 @@ async def get_release_by_tag_name(
     return json(data, status=200)
 
 
+@cli.helper(name="release")
+async def cli_release(
+    repository: str, tag: str = "latest", dev: bool = False
+) -> dict[str, dict]:
+    """
+    Retrieve a release for a GitHub repository by its tag name.
+
+    Arguments:
+        - repository (str): The name of the GitHub repository to retrieve the release for.
+        - tag (str): The tag for the release to be retrieved. Defaults to "latest".
+        - dev (bool): Whether or not to retrieve the latest development release. When set to True, the tag argument is ignored.
+
+    Returns:
+        - dict: A dictionary containing the release.
+    """
+
+    if repository not in cli.get_filtered_repositories():
+        logger.error(
+            f"Repository {repository} is not a valid repository. Exiting.", exit=True
+        )
+        quit()
+
+    if dev is True:
+        tag = "latest"
+
+    if tag == "latest" and dev is False:
+        path = cli.get_file_path("/<repo:str>/releases/latest").replace(
+            "<repo:str>", repository
+        )
+        data = {
+            "release": await github_backend.get_latest_release(
+                repository=GithubRepository(owner=owner, name=repository)
+            )
+        }
+        if path:
+            with open(f"{path}/index.json", "w") as file:
+                ujson.dump(data, file)
+        else:
+            logger.warning(
+                "Could not find path for release. Did you generate the scaffolding?"
+            )
+
+        return ujson.dumps(data)
+    elif tag == "latest" and dev is True:
+        path = cli.get_file_path("/<repo:str>/releases/latest").replace(
+            "<repo:str>", repository
+        )
+        path = path.replace("latest", "latest-dev")
+        data = {
+            "release": await github_backend.get_latest_pre_release(
+                repository=GithubRepository(owner=owner, name=repository)
+            )
+        }
+        if path:
+            try:
+                os.mkdir(f"{path}")
+                path = f"{path}"
+            except FileExistsError:
+                pass
+            with open(f"{path}/index.json", "w") as file:
+                ujson.dump(data, file)
+        else:
+            logger.warning(
+                "Could not find path for release. Did you generate the scaffolding?"
+            )
+
+        return ujson.dumps(data)
+    else:
+        path = (
+            cli.get_file_path("/<repo:str>/releases/tag/<tag:str>")
+            .replace("<repo:str>", repository)
+            .replace("<tag:str>", tag)
+        )
+
+        data: dict[str, Release] = {
+            "release": await github_backend.get_release_by_tag_name(
+                repository=GithubRepository(owner=owner, name=repository), tag_name=tag
+            )
+        }
+
+        if path:
+            try:
+                os.mkdir(f"{path}")
+                path = f"{path}"
+            except FileExistsError:
+                pass
+            with open(f"{path}/index.json", "w") as file:
+                ujson.dump(data, file)
+
+        return ujson.dumps(data)
+
+
 @github.get("/<repo:str>/contributors")
 @openapi.definition(
     summary="Retrieve a list of contributors for a repository.",
@@ -159,6 +299,42 @@ async def get_contributors(request: Request, repo: str) -> JSONResponse:
     }
 
     return json(data, status=200)
+
+
+@cli.helper(name="project-contributors")
+async def cli_project_contributors(repository: str):
+    """
+    Retrieve a list of contributors for a repository.
+
+    Returns:
+        - dict: A dictionary containing the list of contributors.
+    """
+
+    if repository not in cli.get_filtered_repositories():
+        logger.error(
+            f"Repository {repository} is not a valid repository. Exiting.", exit=True
+        )
+        quit()
+
+    path = cli.get_file_path("/<repo:str>/contributors").replace(
+        "<repo:str>", repository
+    )
+
+    data = {
+        "contributors": await github_backend.get_contributors(
+            repository=GithubRepository(owner=owner, name=default_repository)
+        )
+    }
+
+    if path:
+        with open(f"{path}/index.json", "w") as file:
+            ujson.dump(data, file)
+    else:
+        logger.warning(
+            "Could not find path for contributors. Did you generate the scaffolding?"
+        )
+
+    return ujson.dumps(data)
 
 
 @github.get("/patches/<tag:str>")
@@ -195,6 +371,52 @@ async def get_patches(request: Request, tag: str) -> JSONResponse:
     return json(data, status=200)
 
 
+@cli.helper(name="patches")
+async def cli_patches(tag: str = "latest", dev=False) -> dict[str, dict]:
+    """
+    Retrieve a list of patches for a release.
+
+    Arguments:
+        - tag (str): The tag for the patches to be retrieved.
+        - dev (bool): Whether or not to retrieve the latest development release. When set to True, the tag argument is ignored.
+
+    Returns:
+        - dict: A dictionary containing the list of patches.
+    """
+
+    path = cli.get_file_path("/patches/<tag:str>").rstrip("<tag:str>")
+
+    data = {
+        "patches": await github_backend.get_patches(
+            repository=GithubRepository(owner=owner, name="revanced-patches"),
+            tag_name=tag,
+            dev=dev,
+        )
+    }
+
+    suffix = ""
+
+    if dev is True:
+        tag = "latest"
+        suffix = "-dev"
+
+    if path:
+        try:
+            os.mkdir(f"{path}/{tag}{suffix}")
+            path = f"{path}/{tag}{suffix}"
+        except FileExistsError:
+            pass
+
+        with open(f"{path}/index.json", "w") as file:
+            ujson.dump(data, file)
+    else:
+        logger.warning(
+            "Could not find path for patches. Did you generate the scaffolding?"
+        )
+
+    return ujson.dumps(data)
+
+
 @github.get("/team/members")
 @openapi.definition(
     summary="Retrieve a list of team members for the Revanced organization.",
@@ -218,3 +440,31 @@ async def get_team_members(request: Request) -> JSONResponse:
     }
 
     return json(data, status=200)
+
+
+@cli.helper(name="team-members")
+async def cli_team_members() -> dict[str, dict]:
+    """
+    Retrieve a list of team members for the Revanced organization.
+
+    Returns:
+        - dict: A dictionary containing the list of team members.
+    """
+
+    path = cli.get_file_path("/team/members")
+
+    data = {
+        "members": await github_backend.get_team_members(
+            repository=GithubRepository(owner=owner, name=default_repository)
+        )
+    }
+
+    if path:
+        with open(f"{path}/index.json", "w") as file:
+            ujson.dump(data, file)
+    else:
+        logger.warning(
+            "Could not find path for team members. Did you generate the scaffolding?"
+        )
+
+    return ujson.dumps(data)
