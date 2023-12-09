@@ -80,7 +80,11 @@ social_links: list[dict[str, str | bool]] = [
     {"name": "GitHub", "url": "https://github.com/revanced", "preferred": False},
     {"name": "X", "url": "https://x.com/revancedapp", "preferred": False},
     {"name": "Discord", "url": "https://revanced.app/discord", "preferred": True},
-    {"name": "Reddit", "url": "https://www.reddit.com/r/revancedapp", "preferred": False},
+    {
+        "name": "Reddit",
+        "url": "https://www.reddit.com/r/revancedapp",
+        "preferred": False,
+    },
     {"name": "Telegram", "url": "https://t.me/app_revanced", "preferred": False},
     {"name": "YouTube", "url": "https://www.youtube.com/@ReVanced", "preferred": False},
 ]
