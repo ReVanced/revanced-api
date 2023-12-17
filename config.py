@@ -25,7 +25,7 @@ api_versions: dict[str, list[str]] = {
         "info",
         "login",
         "ping",
-        "socials",
+        "connections",
         "manager",
     ],
 }
@@ -73,9 +73,9 @@ compat_repositories: list = [
     "revanced-releases-api",
 ]
 
-# Social Links
+# Connection Links
 
-social_links: list[dict[str, str | bool]] = [
+connection_links: list[dict[str, str | bool]] = [
     {"name": "Website", "url": "https://revanced.app", "preferred": True},
     {"name": "GitHub", "url": "https://github.com/revanced", "preferred": False},
     {"name": "Twitter", "url": "https://twitter.com/revancedapp", "preferred": False},
@@ -144,6 +144,6 @@ default_info: dict[str, str | list[str | bool] | bool] = {
         "logo": "https://raw.githubusercontent.com/ReVanced/revanced-branding/main/assets/revanced-logo/revanced-logo.svg"
     },
     "contact": {"email": "contact@revanced.app"},
-    "socials": social_links,
+    "connections": connection_links,
     "donations": {"wallets": wallets, "links": links},
 }
