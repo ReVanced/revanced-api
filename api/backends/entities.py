@@ -107,7 +107,12 @@ class Contributor(dict):
         match contributions, bio, keys:
             case None, None, None:
                 dict.__init__(
-                    self, login=login, avatar_url=avatar_url, html_url=html_url, bio=bio, keys=keys
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    bio=bio,
+                    keys=keys,
                 )
             case int(_), None, None:
                 dict.__init__(
