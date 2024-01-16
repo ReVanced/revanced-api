@@ -20,7 +20,7 @@ for finder, module_name, ispkg in pkgutil.iter_modules(["api"]):
 # Create Blueprint groups for each version
 api = []
 for version, blueprints in versioned_blueprints.items():
-    if version == "old":
+    if version == "old" or version == "v0":
         group = Blueprint.group(*blueprints, url_prefix="/")
     else:
         group = Blueprint.group(*blueprints, version=version, url_prefix="/")
