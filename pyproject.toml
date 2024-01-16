@@ -7,11 +7,11 @@ license = "AGPLv3"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-aiohttp = { version = "^3.8.6", extras = ["speedups"] }
-sanic = { version = "^23.6.0", extras = ["ext"] }
-ujson = "^5.8.0"
-asyncstdlib = "^3.10.9"
+python = ">=3.11,<3.13"
+aiohttp = { version = "^3.9.1", extras = ["speedups"] }
+sanic = { version = "^23.12.1", extras = ["ext"] }
+ujson = "^5.9.0"
+asyncstdlib = "^3.12.0"
 pydantic = "^1.10.13"
 cytoolz = "^0.12.2"
 beautifulsoup4 = "^4.12.2"
@@ -25,16 +25,16 @@ pytest-asyncio = "^0.21.1"
 types-beautifulsoup4 = "^4.12.0.7"
 pytest-md = "^0.2.0"
 pytest-emoji = "^0.2.0"
-coverage = "^7.3.2"
+coverage = "^7.4.0"
 pytest-cov = "^4.1.0"
-pytest = "^7.4.3"
-sqlalchemy = "^2.0.23"
-sanic-beskar = "^2.2.12"
+pytest = "^7.4.4"
+sqlalchemy = "^2.0.25"
+sanic-beskar = "^2.3.2"
 bson = "^0.5.10"
 fastpbkdf2 = "^0.2"
-cryptography = "^41.0.5"
+cryptography = "^41.0.7"
 sanic-limiter = { git = "https://github.com/Omegastick/sanic-limiter" }
-sentry-sdk = { extras = ["sanic"], version = "^1.35.0" }
+sentry-sdk = { extras = ["sanic"], version = "^1.39.2" }
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
