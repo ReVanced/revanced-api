@@ -12,22 +12,9 @@ aiohttp = { version = "^3.9.1", extras = ["speedups"] }
 sanic = { version = "^23.12.1", extras = ["ext"] }
 ujson = "^5.9.0"
 asyncstdlib = "^3.12.0"
-pydantic = "^1.10.13"
 cytoolz = "^0.12.2"
 beautifulsoup4 = "^4.12.2"
-setuptools = "^69.0.3"
 lxml = "^5.1.0"
-mypy = "^1.8.0"
-types-ujson = "^5.9.0.0"
-types-aiofiles = "^23.2.0.20240106"
-sanic-testing = "^23.12.0"
-pytest-asyncio = "^0.23.3"
-types-beautifulsoup4 = "^4.12.0.20240106"
-pytest-md = "^0.2.0"
-pytest-emoji = "^0.2.0"
-coverage = "^7.4.0"
-pytest-cov = "^4.1.0"
-pytest = "^7.4.4"
 sqlalchemy = "^2.0.25"
 sanic-beskar = "^2.3.2"
 bson = "^0.5.10"
@@ -35,6 +22,12 @@ fastpbkdf2 = "^0.2"
 cryptography = "^41.0.7"
 sanic-limiter = { git = "https://github.com/Omegastick/sanic-limiter" }
 sentry-sdk = { extras = ["sanic"], version = "^1.39.2" }
+
+[tool.poetry.dev-dependencies]
+mypy = "^1.8.0"
+types-ujson = "^5.9.0.0"
+types-aiofiles = "^23.2.0.20240106"
+types-beautifulsoup4 = "^4.12.0.20240106"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
