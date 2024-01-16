@@ -5,7 +5,7 @@ import pkgutil
 from api.utils.versioning import get_version
 
 # Dynamically import all modules in the 'api' package, excluding subdirectories
-versioned_blueprints = {}
+versioned_blueprints: dict[str, list] = {}
 for finder, module_name, ispkg in pkgutil.iter_modules(["api"]):
     if not ispkg:
         # Import the module
