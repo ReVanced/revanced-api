@@ -102,13 +102,19 @@ class Contributor(dict):
         html_url: str,
         contributions: Optional[int] = None,
         bio: Optional[str] = None,
+        keys: Optional[str] = None,
     ):
-        match contributions, bio:
-            case None, None:
+        match contributions, bio, keys:
+            case None, None, None:
                 dict.__init__(
-                    self, login=login, avatar_url=avatar_url, html_url=html_url, bio=bio
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    bio=bio,
+                    keys=keys,
                 )
-            case int(_), None:
+            case int(_), None, None:
                 dict.__init__(
                     self,
                     login=login,
@@ -116,7 +122,7 @@ class Contributor(dict):
                     html_url=html_url,
                     contributions=contributions,
                 )
-            case None, str(_):
+            case None, str(_), None:
                 dict.__init__(
                     self,
                     login=login,
@@ -124,7 +130,7 @@ class Contributor(dict):
                     html_url=html_url,
                     bio=bio,
                 )
-            case int(_), str(_):
+            case int(_), str(_), str(_):
                 dict.__init__(
                     self,
                     login=login,
@@ -132,6 +138,16 @@ class Contributor(dict):
                     html_url=html_url,
                     contributions=contributions,
                     bio=bio,
+                    keys=keys,
+                )
+            case None, str(_), str(_):
+                dict.__init__(
+                    self,
+                    login=login,
+                    avatar_url=avatar_url,
+                    html_url=html_url,
+                    bio=bio,
+                    keys=keys,
                 )
             case _:
                 raise ValueError("Invalid arguments")

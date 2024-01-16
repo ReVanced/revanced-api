@@ -1,5 +1,8 @@
 # API Configuration
 
+from typing import Any
+
+
 backend: str = "github"
 redis: dict[str, str | int] = {"host": "localhost", "port": 6379}
 hostnames: list[str] = [
@@ -137,7 +140,7 @@ links: list[dict[str, str | bool]] = [
     },
 ]
 
-default_info: dict[str, str | list[str | bool] | bool] = {
+default_info: dict[str, Any] = {
     "name": "ReVanced",
     "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
     "branding": {
