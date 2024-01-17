@@ -1,7 +1,7 @@
 import asyncio
 import os
 from operator import eq
-from typing import Optional
+from typing import Any, Optional
 
 import ujson
 from aiohttp import ClientResponse
@@ -106,6 +106,11 @@ class Github(Backend):
             lambda key: key in keys,
             contributor,
         )
+
+        if team_view:
+            filter_contributor[
+                "keys"
+            ] = f"{base_url.replace('api.', '')}/{filter_contributor['login']}.gpg"
 
         return Contributor(**filter_contributor)
 
@@ -372,7 +377,7 @@ class Github(Backend):
             list[dict[str, str]]: A JSON object containing the contributors.
         """
 
-        def transform(data: dict, repository: GithubRepository) -> list:
+        def transform(data: dict, repository: GithubRepository) -> dict[str, Any]:
             """Transforms a dictionary from the input list into a list of dictionaries with the desired structure.
 
             Args:
