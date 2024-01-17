@@ -1,5 +1,5 @@
 from api.models.donations import DonationFields
-from api.models.socials import SocialFields
+from api.models.connections import ConnectionFields
 from pydantic import BaseModel
 
 
@@ -28,7 +28,7 @@ class InfoFields(BaseModel):
     about: str
     branding: BrandingFields
     contact: ContactFields
-    socials: list[SocialFields]
+    connections: list[ConnectionFields]
     donations: DonationFields
 
 
