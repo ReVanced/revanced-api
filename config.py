@@ -73,7 +73,6 @@ compat_repositories: list = [
     "revanced-cli",
     "revanced-website",
     "revanced-api",
-    "revanced-releases-api",
 ]
 
 # Social Links
