@@ -6,6 +6,7 @@ h2="2.1.214"
 koin="3.5.3"
 dotenv="6.4.1"
 ktor = "2.3.7"
+ktoml = "0.5.1"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
@@ -34,6 +35,8 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
+ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
 
 [plugins]
 serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

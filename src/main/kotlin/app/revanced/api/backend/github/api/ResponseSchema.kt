@@ -1,49 +1,50 @@
 package app.revanced.api.backend.github.api
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
 class Response {
-    interface IUser {
+    interface IGitHubUser {
         val login: String
         val avatarUrl: String
         val url: String
     }
 
     @Serializable
-    class User (
+    class GitHubUser (
         override val login: String,
         override val avatarUrl: String,
         override val url: String,
         val bio: String?,
-    ) : IUser
+    ) : IGitHubUser
 
-    class Organization {
+    class GitHubOrganization {
         @Serializable
-        class Member(
+        class GitHubMember(
             override val login: String,
             override val avatarUrl: String,
             override val url: String,
-        ) : IUser
+        ) : IGitHubUser
 
-        class Repository {
+        class GitHubRepository {
             @Serializable
-            class Contributor(
+            class GitHubContributor(
                 override val login: String,
                 override val avatarUrl: String,
                 override val url: String,
-            ) : IUser
+                val contributions: Int,
+            ) : IGitHubUser
 
             @Serializable
-            class Release(
+            class GitHubRelease(
                 val tagName: String,
-                val assets: Set<Asset>,
-                val preReleases: Boolean,
+                val assets: Set<GitHubAsset>,
                 val createdAt: String,
                 val body: String
             ) {
                 @Serializable
-                class Asset(
+                class GitHubAsset(
                     val browserDownloadUrl: String
                 )
             }
