@@ -13,12 +13,14 @@ internal object StartAPICommand : Runnable {
     @CommandLine.Option(
         names = ["-h", "--host"],
         description = ["The host address to bind to."],
+        showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
     )
     private var host: String = "0.0.0.0"
 
     @CommandLine.Option(
         names = ["-p", "--port"],
         description = ["The port to listen on."],
+        showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
     )
     private var port: Int = 8080
 
