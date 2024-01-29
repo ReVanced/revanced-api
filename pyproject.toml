@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
-aiohttp = { version = "^3.9.1", extras = ["speedups"] }
+aiohttp = { version = "^3.9.2", extras = ["speedups"] }
 sanic = { version = "^23.12.1", extras = ["ext"] }
 ujson = "^5.9.0"
 pydantic = "^1.10.13"
