@@ -7,8 +7,6 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
 fun main() {
-    Dotenv.load()
-
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", configure = {
         connectionGroupSize = 1
         workerGroupSize = 1

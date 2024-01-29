@@ -37,3 +37,4 @@ out/
 
 ### Project ###
 .env
+configuration.toml

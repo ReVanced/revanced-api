@@ -42,6 +42,10 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.dotenv.kotlin)
+    implementation(libs.ktoml.core)
+    implementation(libs.ktoml.file)
+
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
+
 }
