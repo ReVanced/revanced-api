@@ -21,8 +21,6 @@ ktor-server-core = { module = "io.ktor:ktor-server-core" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt" }
-ktor-server-swagger = { module = "io.ktor:ktor-server-swagger" }
-ktor-server-openapi = { module = "io.ktor:ktor-server-openapi" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors" }
 ktor-server-caching-headers = { module = "io.ktor:ktor-server-caching-headers" }
 ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
