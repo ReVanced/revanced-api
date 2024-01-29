@@ -76,7 +76,10 @@ fun Application.configureRouting() {
                 }
             }
 
-            staticResources("/", "/static/api") { contentType { ContentType.Application.Json } }
+            staticResources("/", "/static/api") {
+                contentType { ContentType.Application.Json }
+                extensions("json")
+            }
         }
 
     }
