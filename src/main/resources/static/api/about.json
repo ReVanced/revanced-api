@@ -1,16 +1,13 @@
 {
   "name": "ReVanced",
   "about": "ReVanced was born out of Vanced's discontinuation and it is our goal to continue the legacy of what Vanced left behind. Thanks to ReVanced Patcher, it's possible to create long-lasting patches for nearly any Android app. ReVanced's patching system is designed to allow patches to work on new versions of the apps automatically with bare minimum maintenance.",
-  "branding":
-  {
+  "branding": {
     "logo": "https://raw.githubusercontent.com/ReVanced/revanced-branding/main/assets/revanced-logo/revanced-logo.svg"
   },
-  "contact":
-  {
+  "contact": {
     "email": "contact@revanced.app"
   },
-  "socials":
-  [
+  "socials": [
     {
       "name": "Website",
       "url": "https://revanced.app",
@@ -18,13 +15,11 @@
     },
     {
       "name": "GitHub",
-      "url": "https://github.com/revanced",
-      "preferred": false
+      "url": "https://github.com/revanced"
     },
     {
       "name": "Twitter",
-      "url": "https://twitter.com/revancedapp",
-      "preferred": false
+      "url": "https://twitter.com/revancedapp"
     },
     {
       "name": "Discord",
@@ -33,29 +28,23 @@
     },
     {
       "name": "Reddit",
-      "url": "https://www.reddit.com/r/revancedapp",
-      "preferred": false
+      "url": "https://www.reddit.com/r/revancedapp"
     },
     {
       "name": "Telegram",
-      "url": "https://t.me/app_revanced",
-      "preferred": false
+      "url": "https://t.me/app_revanced"
     },
     {
       "name": "YouTube",
-      "url": "https://www.youtube.com/@ReVanced",
-      "preferred": false
+      "url": "https://www.youtube.com/@ReVanced"
     }
   ],
-  "donations":
-  {
-    "wallets":
-    [
+  "donations": {
+    "wallets": [
       {
         "network": "Bitcoin",
         "currency_code": "BTC",
-        "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f",
-        "preferred": false
+        "address": "bc1q4x8j6mt27y5gv0q625t8wkr87ruy8fprpy4v3f"
       },
       {
         "network": "Dogecoin",
@@ -66,24 +55,20 @@
       {
         "network": "Ethereum",
         "currency_code": "ETH",
-        "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5",
-        "preferred": false
+        "address": "0x7ab4091e00363654bf84B34151225742cd92FCE5"
       },
       {
         "network": "Litecoin",
         "currency_code": "LTC",
-        "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2",
-        "preferred": false
+        "address": "LbJi8EuoDcwaZvykcKmcrM74jpjde23qJ2"
       },
       {
         "network": "Monero",
         "currency_code": "XMR",
-        "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh",
-        "preferred": false
+        "address": "46YwWDbZD6jVptuk5mLHsuAmh1BnUMSjSNYacozQQEraWSQ93nb2yYVRHoMR6PmFYWEHsLHg9tr1cH5M8Rtn7YaaGQPCjSh"
       }
     ],
-    "links":
-    [
+    "links": [
       {
         "name": "Open Collective",
         "url": "https://opencollective.com/revanced",
@@ -91,8 +76,7 @@
       },
       {
         "name": "GitHub Sponsors",
-        "url": "https://github.com/sponsors/ReVanced",
-        "preferred": false
+        "url": "https://github.com/sponsors/ReVanced"
       }
     ]
   }
