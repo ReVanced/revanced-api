@@ -7,6 +7,7 @@ koin="3.5.3"
 dotenv="6.4.1"
 ktor = "2.3.7"
 ktoml = "0.5.1"
+picocli = "4.7.3"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
@@ -37,6 +38,7 @@ ktor-server-tests = { module = "io.ktor:ktor-server-tests" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
 ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
+picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 
 [plugins]
 serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

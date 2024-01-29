@@ -1,8 +1,7 @@
 package app.revanced.api.plugins
 
-import app.revanced.api.*
 import app.revanced.api.backend.github.GitHubBackend
-import io.ktor.client.utils.EmptyContent.contentType
+import app.revanced.api.schema.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*

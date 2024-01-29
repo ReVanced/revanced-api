@@ -1,16 +1,12 @@
 package app.revanced.api.plugins
 
-import app.revanced.api.APIConfiguration
+import app.revanced.api.schema.APIConfiguration
 import app.revanced.api.backend.github.GitHubBackend
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.source.decodeFromStream
 import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.application.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import java.io.File
 
