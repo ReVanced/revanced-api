@@ -1,4 +1,4 @@
-package app.revanced.api
+package app.revanced.api.schema
 
 import kotlinx.serialization.Serializable
 
@@ -52,4 +52,22 @@ class APIAsset(
 @Serializable
 class APIReleaseVersion(
     val version: String
+)
+
+@Serializable
+class APIAnnouncement(
+    val id: Int,
+    val author: APIUser?,
+    val title: String,
+    val content: APIAnnouncementContent,
+    val channel: String,
+    val createdAt: String,
+    val archivedAt: String?,
+    val level: Int,
+)
+
+@Serializable
+class APIAnnouncementContent(
+    val message: String,
+    val attachmentUrls: Set<String>
 )

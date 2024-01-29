@@ -7,10 +7,16 @@ plugins {
 group = "app.revanced"
 
 application {
-    mainClass.set("app.revanced.api.ApplicationKt")
+    mainClass.set("app.revanced.api.command.MainCommandKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+tasks {
+    processResources {
+        expand("projectVersion" to project.version)
+    }
 }
 
 repositories {
@@ -44,6 +50,7 @@ dependencies {
     implementation(libs.dotenv.kotlin)
     implementation(libs.ktoml.core)
     implementation(libs.ktoml.file)
+    implementation(libs.picocli)
 
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
