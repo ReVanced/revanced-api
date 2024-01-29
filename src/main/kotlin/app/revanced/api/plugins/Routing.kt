@@ -18,32 +18,34 @@ fun Application.configureRouting() {
     routing {
         route("/v${configuration.apiVersion}") {
             route("/patches") {
-                get {
-                    val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
-                    val integrations = configuration.integrationsRepositoryNames.map {
-                        async { backend.getRelease(configuration.organization, it) }
-                    }.awaitAll()
+                route("latest") {
+                    get {
+                        val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
+                        val integrations = configuration.integrationsRepositoryNames.map {
+                            async { backend.getRelease(configuration.organization, it) }
+                        }.awaitAll()
 
-                    val assets = (patches.assets + integrations.flatMap { it.assets }).filter {
-                        it.downloadUrl.endsWith(".apk") || it.downloadUrl.endsWith(".jar")
-                    }.map { APIAsset(it.downloadUrl) }.toSet()
+                        val assets = (patches.assets + integrations.flatMap { it.assets }).filter {
+                            it.downloadUrl.endsWith(".apk") || it.downloadUrl.endsWith(".jar")
+                        }.map { APIAsset(it.downloadUrl) }.toSet()
 
-                    val release = APIRelease(
-                        patches.tag,
-                        patches.createdAt,
-                        patches.releaseNote,
-                        assets
-                    )
+                        val release = APIRelease(
+                            patches.tag,
+                            patches.createdAt,
+                            patches.releaseNote,
+                            assets
+                        )
 
-                    call.respond(release)
-                }
+                        call.respond(release)
+                    }
 
-                get("/version") {
-                    val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
+                    get("/version") {
+                        val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
 
-                    val release = APIReleaseVersion(patches.tag)
+                        val release = APIReleaseVersion(patches.tag)
 
-                    call.respond(release)
+                        call.respond(release)
+                    }
                 }
             }
 
