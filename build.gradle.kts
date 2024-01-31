@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.picocli)
     implementation(libs.kotlinx.datetime)
 
+    testImplementation(libs.mockk)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
 }

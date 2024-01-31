@@ -29,14 +29,14 @@ val globalModule = module {
         Dotenv.load()
     }
     single {
-        val configFilePath = get<Dotenv>().get("CONFIG_FILE_PATH")!!
+        val configFilePath = get<Dotenv>()["CONFIG_FILE_PATH"]
         Toml.decodeFromStream<APIConfiguration>(File(configFilePath).inputStream())
     }
 }
 
 val gitHubBackendModule = module {
     single {
-        val token = get<Dotenv>().get("GITHUB_TOKEN")
+        val token = get<Dotenv>()["GITHUB_TOKEN"]
         GitHubBackend(token)
     } bind Backend::class
 }
@@ -46,9 +46,9 @@ val databaseModule = module {
         val dotenv = get<Dotenv>()
 
         Database.connect(
-            url = dotenv.get("DB_URL"),
-            user = dotenv.get("DB_USER"),
-            password = dotenv.get("DB_PASSWORD"),
+            url = dotenv["DB_URL"],
+            user = dotenv["DB_USER"],
+            password = dotenv["DB_PASSWORD"],
             driver = "org.h2.Driver"
         )
     }
@@ -61,12 +61,12 @@ val authModule = module {
     single {
         val dotenv = get<Dotenv>()
 
-        val jwtSecret = dotenv.get("JWT_SECRET")!!
-        val issuer = dotenv.get("JWT_ISSUER")!!
-        val validityInMin = dotenv.get("JWT_VALIDITY_IN_MIN")!!.toInt()
+        val jwtSecret = dotenv["JWT_SECRET"]
+        val issuer = dotenv["JWT_ISSUER"]
+        val validityInMin = dotenv["JWT_VALIDITY_IN_MIN"].toInt()
 
-        val basicUsername = dotenv.get("BASIC_USERNAME")!!
-        val basicPassword = dotenv.get("BASIC_PASSWORD")!!
+        val basicUsername = dotenv["BASIC_USERNAME"]
+        val basicPassword = dotenv["BASIC_PASSWORD"]
 
         AuthService(issuer, validityInMin, jwtSecret, basicUsername, basicPassword)
     }
