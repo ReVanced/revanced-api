@@ -26,7 +26,10 @@ fun Application.configureDependencies() {
 
 val globalModule = module {
     single {
-        Dotenv.load()
+        Dotenv.configure()
+            .ignoreIfMissing()
+            .systemProperties()
+            .load()
     }
     single {
         val configFilePath = get<Dotenv>()["CONFIG_FILE_PATH"]
