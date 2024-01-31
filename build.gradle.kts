@@ -45,10 +45,13 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.kotlin.datetime)
     implementation(libs.dotenv.kotlin)
     implementation(libs.ktoml.core)
     implementation(libs.ktoml.file)
     implementation(libs.picocli)
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)

@@ -2,6 +2,7 @@ package app.revanced.api.backend
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 /**
@@ -89,7 +90,7 @@ abstract class Backend(
             class BackendRelease(
                 val tag: String,
                 val releaseNote: String,
-                val createdAt: String,
+                val createdAt: LocalDateTime,
                 val assets: Set<BackendAsset>
             ) {
                 /**

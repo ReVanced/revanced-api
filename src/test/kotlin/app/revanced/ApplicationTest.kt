@@ -1,6 +1,6 @@
 package app.revanced
 
-import app.revanced.api.plugins.configureRouting
+import app.revanced.api.modules.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*

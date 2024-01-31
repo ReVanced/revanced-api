@@ -1,4 +1,4 @@
-package app.revanced.api.plugins
+package app.revanced.api.modules
 
 import io.ktor.http.*
 import io.ktor.http.content.*
