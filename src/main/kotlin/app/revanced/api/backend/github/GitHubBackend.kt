@@ -26,6 +26,8 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
 class GitHubBackend(token: String? = null) : Backend({

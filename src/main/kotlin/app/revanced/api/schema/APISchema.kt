@@ -1,11 +1,12 @@
 package app.revanced.api.schema
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
 class APIRelease(
     val version: String,
-    val createdAt: String,
+    val createdAt: LocalDateTime,
     val changelog: String,
     val assets: Set<APIAsset>
 )
@@ -56,18 +57,34 @@ class APIReleaseVersion(
 
 @Serializable
 class APIAnnouncement(
-    val id: Int,
-    val author: APIUser?,
+    val author: String? = null,
     val title: String,
-    val content: APIAnnouncementContent,
-    val channel: String,
-    val createdAt: String,
-    val archivedAt: String?,
-    val level: Int,
+    val content: String? = null,
+    val attachmentUrls: Set<String> = emptySet(),
+    val channel: String? = null,
+    val archivedAt: LocalDateTime? = null,
+    val level: Int = 0
 )
 
 @Serializable
-class APIAnnouncementContent(
-    val message: String,
-    val attachmentUrls: Set<String>
+class APIResponseAnnouncement(
+    val id: Int,
+    val author: String? = null,
+    val title: String,
+    val content: String? = null,
+    val attachmentUrls: Set<String> = emptySet(),
+    val channel: String? = null,
+    val createdAt: LocalDateTime,
+    val archivedAt: LocalDateTime? = null,
+    val level: Int = 0
+)
+
+@Serializable
+class APILatestAnnouncement(
+    val id: Int
+)
+
+@Serializable
+class APIAnnouncementArchivedAt(
+    val archivedAt: LocalDateTime
 )

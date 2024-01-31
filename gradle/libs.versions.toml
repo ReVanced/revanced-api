@@ -1,13 +1,14 @@
 [versions]
-kotlin="1.9.22"
-logback="1.4.14"
-exposed="0.41.1"
-h2="2.1.214"
-koin="3.5.3"
-dotenv="6.4.1"
+kotlin = "1.9.22"
+logback = "1.4.14"
+exposed = "0.41.1"
+h2 = "2.2.224"
+koin = "3.5.3"
+dotenv = "6.4.1"
 ktor = "2.3.7"
 ktoml = "0.5.1"
 picocli = "4.7.3"
+datetime = "0.5.0"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
@@ -31,12 +32,15 @@ h2 = { module = "com.h2database:h2", version.ref = "h2" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
 ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 
 [plugins]
 serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -1,6 +1,6 @@
 package app.revanced.api.command
 
-import app.revanced.api.plugins.*
+import app.revanced.api.modules.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import picocli.CommandLine
@@ -30,11 +30,10 @@ internal object StartAPICommand : Runnable {
             workerGroupSize = 1
             callGroupSize = 1
         }) {
+            configureDependencies()
             configureHTTP()
             configureSerialization()
-            configureDatabases()
             configureSecurity()
-            configureDependencies()
             configureRouting()
         }.start(wait = true)
     }
