@@ -38,16 +38,6 @@ fun Application.configureRouting() {
                 suspend fun PipelineContext<*, ApplicationCall>.channel(block: suspend (String) -> Unit) =
                     block(call.parameters["channel"]!!)
 
-                announcementService.new(
-                    APIAnnouncement(
-                        "author",
-                        "title",
-                        "content",
-                        setOf("https://example.com"),
-                        "channel",
-                        LocalDateTime.now().toKotlinLocalDateTime(),
-                    )
-                )
                 route("/{channel}/latest") {
                     get("/id") { channel { announcementId { latestId(it) } } }
 
