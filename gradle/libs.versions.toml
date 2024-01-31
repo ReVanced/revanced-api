@@ -9,6 +9,7 @@ ktor = "2.3.7"
 ktoml = "0.5.1"
 picocli = "4.7.3"
 datetime = "0.5.0"
+mockk = "1.13.9"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
@@ -41,6 +42,7 @@ ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
 ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
