@@ -6,16 +6,37 @@ plugins {
 
 group = "app.revanced"
 
-application {
-    mainClass.set("app.revanced.api.command.MainCommandKt")
-
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
-}
-
 tasks {
     processResources {
         expand("projectVersion" to project.version)
+    }
+
+    /*
+    Dummy task to hack gradle-semantic-release-plugin to release this project.
+
+    Explanation:
+    SemVer is a standard for versioning libraries.
+    For that reason the semantic-release plugin uses the "publish" task to publish libraries.
+    However, this subproject is not a library, and the "publish" task is not available for this subproject.
+    Because semantic-release is not designed to handle this case, we need to hack it.
+
+    RE: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
+    */
+
+    register<DefaultTask>("publish") {
+        group = "publishing"
+        description = "Dummy task to hack gradle-semantic-release-plugin to release ReVanced API"
+        dependsOn(startShadowScripts)
+    }
+}
+
+application {
+    mainClass.set("app.revanced.api.command.MainCommandKt")
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("${project.name}-${project.version}.jar")
     }
 }
 

@@ -37,4 +37,6 @@ out/
 
 ### Project ###
 .env
+persistence/
 configuration.toml
+.db
