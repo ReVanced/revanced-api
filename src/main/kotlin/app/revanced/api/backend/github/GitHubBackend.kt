@@ -23,6 +23,8 @@ import app.revanced.api.backend.github.api.Response.GitHubOrganization.GitHubMem
 import io.ktor.client.plugins.resources.Resources
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.*
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
@@ -71,11 +73,9 @@ class GitHubBackend(token: String? = null) : Backend({
         return BackendRelease(
             tag = release.tagName,
             releaseNote = release.body,
-            createdAt = release.createdAt,
+            createdAt = release.createdAt.toLocalDateTime(TimeZone.UTC),
             assets = release.assets.map {
-                BackendAsset(
-                    downloadUrl = it.browserDownloadUrl
-                )
+                BackendAsset(downloadUrl = it.browserDownloadUrl)
             }.toSet()
         )
     }
