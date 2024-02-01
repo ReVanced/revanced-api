@@ -1,4 +1,4 @@
-rootProject.name = "app.revanced.revanced-api"
+rootProject.name = "revanced-api"
 
 buildCache {
     local {
