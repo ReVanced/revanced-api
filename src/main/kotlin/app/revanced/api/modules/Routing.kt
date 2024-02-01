@@ -12,8 +12,6 @@ import io.ktor.server.routing.*
 import io.ktor.util.pipeline.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.datetime.toKotlinLocalDateTime
-import java.time.LocalDateTime
 import org.koin.ktor.ext.get as koinGet
 
 fun Application.configureRouting() {

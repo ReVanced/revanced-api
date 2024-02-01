@@ -1,7 +1,6 @@
 package app.revanced.api.backend.github.api
 
-import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.SerialName
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 
@@ -41,7 +40,7 @@ class Response {
             class GitHubRelease(
                 val tagName: String,
                 val assets: Set<GitHubAsset>,
-                val createdAt: LocalDateTime,
+                val createdAt: Instant,
                 val body: String
             ) {
                 @Serializable
