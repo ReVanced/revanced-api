@@ -22,7 +22,6 @@ tasks {
 
     RE: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
     */
-
     register<DefaultTask>("publish") {
         group = "publishing"
         description = "Dummy task to hack gradle-semantic-release-plugin to release ReVanced API"
