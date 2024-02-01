@@ -1,0 +1,41 @@
+[versions]
+kotlin="1.9.22"
+logback="1.4.14"
+exposed="0.41.1"
+h2="2.1.214"
+koin="3.5.3"
+dotenv="6.4.1"
+ktor = "2.3.7"
+
+[libraries]
+ktor-client-core = { module = "io.ktor:ktor-client-core" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
+ktor-client-resources = { module = "io.ktor:ktor-client-resources" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" }
+ktor-server-conditional-headers = { module = "io.ktor:ktor-server-conditional-headers" }
+ktor-server-core = { module = "io.ktor:ktor-server-core" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation" }
+ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
+ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt" }
+ktor-server-swagger = { module = "io.ktor:ktor-server-swagger" }
+ktor-server-openapi = { module = "io.ktor:ktor-server-openapi" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors" }
+ktor-server-caching-headers = { module = "io.ktor:ktor-server-caching-headers" }
+ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
+koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
+ktor-server-tests = { module = "io.ktor:ktor-server-tests" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+
+[plugins]
+serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
