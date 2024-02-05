@@ -8,7 +8,7 @@ class APIRelease(
     val version: String,
     val createdAt: LocalDateTime,
     val changelog: String,
-    val assets: Set<APIAsset>
+    val assets: Set<APIAsset>,
 )
 
 interface APIUser {
@@ -22,7 +22,7 @@ class APIMember(
     override val name: String,
     override val avatarUrl: String,
     override val url: String,
-    val gpgKeysUrl: String
+    val gpgKeysUrl: String,
 ) : APIUser
 
 @Serializable
@@ -36,7 +36,7 @@ class APIContributor(
 @Serializable
 class APIContributable(
     val name: String,
-    val contributors: Set<APIContributor>
+    val contributors: Set<APIContributor>,
 )
 
 @Serializable
@@ -52,7 +52,7 @@ class APIAsset(
 
 @Serializable
 class APIReleaseVersion(
-    val version: String
+    val version: String,
 )
 
 @Serializable
@@ -63,7 +63,7 @@ class APIAnnouncement(
     val attachmentUrls: Set<String> = emptySet(),
     val channel: String? = null,
     val archivedAt: LocalDateTime? = null,
-    val level: Int = 0
+    val level: Int = 0,
 )
 
 @Serializable
@@ -76,15 +76,15 @@ class APIResponseAnnouncement(
     val channel: String? = null,
     val createdAt: LocalDateTime,
     val archivedAt: LocalDateTime? = null,
-    val level: Int = 0
+    val level: Int = 0,
 )
 
 @Serializable
 class APILatestAnnouncement(
-    val id: Int
+    val id: Int,
 )
 
 @Serializable
 class APIAnnouncementArchivedAt(
-    val archivedAt: LocalDateTime
+    val archivedAt: LocalDateTime,
 )

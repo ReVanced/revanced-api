@@ -5,6 +5,7 @@ import io.ktor.resources.*
 class Request {
     @Resource("/users/{username}")
     class User(val username: String)
+
     class Organization {
         @Resource("/orgs/{org}/members")
         class Members(val org: String)

@@ -22,7 +22,7 @@ class AuthService(
                 verifier(
                     JWT.require(Algorithm.HMAC256(jwtSecret))
                         .withIssuer(issuer)
-                        .build()
+                        .build(),
                 )
                 validate { credential -> JWTPrincipal(credential.payload) }
             }

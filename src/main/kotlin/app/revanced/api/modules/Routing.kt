@@ -23,41 +23,68 @@ fun Application.configureRouting() {
     routing {
         route("/v${configuration.apiVersion}") {
             route("/announcements") {
-                suspend fun PipelineContext<*, ApplicationCall>.announcement(
-                    block: AnnouncementService.() -> APIResponseAnnouncement?
-                ) = announcementService.block()?.let { call.respond(it) }
-                    ?: call.respond(HttpStatusCode.NotFound)
+                suspend fun PipelineContext<*, ApplicationCall>.announcement(block: AnnouncementService.() -> APIResponseAnnouncement?) =
+                    announcementService.block()?.let { call.respond(it) }
+                        ?: call.respond(HttpStatusCode.NotFound)
 
-                suspend fun PipelineContext<*, ApplicationCall>.announcementId(
-                    block: AnnouncementService.() -> APILatestAnnouncement?
-                ) = announcementService.block()?.let { call.respond(it) }
-                    ?: call.respond(HttpStatusCode.NotFound)
+                suspend fun PipelineContext<*, ApplicationCall>.announcementId(block: AnnouncementService.() -> APILatestAnnouncement?) =
+                    announcementService.block()?.let { call.respond(it) }
+                        ?: call.respond(HttpStatusCode.NotFound)
 
                 suspend fun PipelineContext<*, ApplicationCall>.channel(block: suspend (String) -> Unit) =
                     block(call.parameters["channel"]!!)
 
                 route("/{channel}/latest") {
-                    get("/id") { channel { announcementId { latestId(it) } } }
+                    get("/id") {
+                        channel {
+                            announcementId {
+                                latestId(it)
+                            }
+                        }
+                    }
 
-                    get { channel { announcement { latest(it) } } }
+                    get {
+                        channel {
+                            announcement {
+                                latest(it)
+                            }
+                        }
+                    }
                 }
 
-                get("/{channel}") { channel { call.respond(announcementService.read(it)) } }
+                get("/{channel}") {
+                    channel {
+                        call.respond(announcementService.read(it))
+                    }
+                }
 
                 route("/latest") {
-                    get("/id") { announcementId { latestId() } }
+                    get("/id") {
+                        announcementId {
+                            latestId()
+                        }
+                    }
 
-                    get { announcement { latest() } }
+                    get {
+                        announcement {
+                            latest()
+                        }
+                    }
                 }
 
-                get { call.respond(announcementService.read()) }
+                get {
+                    call.respond(announcementService.read())
+                }
 
                 authenticate("jwt") {
                     suspend fun PipelineContext<*, ApplicationCall>.id(block: suspend (Int) -> Unit) =
-                        call.parameters["id"]!!.toIntOrNull()?.let { block(it) }
-                            ?: call.respond(HttpStatusCode.BadRequest)
+                        call.parameters["id"]!!.toIntOrNull()?.let {
+                            block(it)
+                        } ?: call.respond(HttpStatusCode.BadRequest)
 
-                    post { announcementService.new(call.receive<APIAnnouncement>()) }
+                    post {
+                        announcementService.new(call.receive<APIAnnouncement>())
+                    }
 
                     post("/{id}/archive") {
                         id {
@@ -66,11 +93,23 @@ fun Application.configureRouting() {
                         }
                     }
 
-                    post("/{id}/unarchive") { id { announcementService.unarchive(it) } }
+                    post("/{id}/unarchive") {
+                        id {
+                            announcementService.unarchive(it)
+                        }
+                    }
 
-                    patch("/{id}") { id { announcementService.update(it, call.receive<APIAnnouncement>()) } }
+                    patch("/{id}") {
+                        id {
+                            announcementService.update(it, call.receive<APIAnnouncement>())
+                        }
+                    }
 
-                    delete("/{id}") { id { announcementService.delete(it) } }
+                    delete("/{id}") {
+                        id {
+                            announcementService.delete(it)
+                        }
+                    }
                 }
             }
 
@@ -78,20 +117,23 @@ fun Application.configureRouting() {
                 route("latest") {
                     get {
                         val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
-                        val integrations = configuration.integrationsRepositoryNames.map {
-                            async { backend.getRelease(configuration.organization, it) }
-                        }.awaitAll()
+                        val integrations =
+                            configuration.integrationsRepositoryNames.map {
+                                async { backend.getRelease(configuration.organization, it) }
+                            }.awaitAll()
 
-                        val assets = (patches.assets + integrations.flatMap { it.assets }).filter {
-                            it.downloadUrl.endsWith(".apk") || it.downloadUrl.endsWith(".jar")
-                        }.map { APIAsset(it.downloadUrl) }.toSet()
+                        val assets =
+                            (patches.assets + integrations.flatMap { it.assets }).filter {
+                                it.downloadUrl.endsWith(".apk") || it.downloadUrl.endsWith(".jar")
+                            }.map { APIAsset(it.downloadUrl) }.toSet()
 
-                        val release = APIRelease(
-                            patches.tag,
-                            patches.createdAt,
-                            patches.releaseNote,
-                            assets
-                        )
+                        val release =
+                            APIRelease(
+                                patches.tag,
+                                patches.createdAt,
+                                patches.releaseNote,
+                                assets,
+                            )
 
                         call.respond(release)
                     }
@@ -112,24 +154,26 @@ fun Application.configureRouting() {
             }
 
             get("/contributors") {
-                val contributors = configuration.contributorsRepositoryNames.map {
-                    async {
-                        APIContributable(
-                            it,
-                            backend.getContributors(configuration.organization, it).map {
-                                APIContributor(it.name, it.avatarUrl, it.url, it.contributions)
-                            }.toSet()
-                        )
-                    }
-                }.awaitAll()
+                val contributors =
+                    configuration.contributorsRepositoryNames.map {
+                        async {
+                            APIContributable(
+                                it,
+                                backend.getContributors(configuration.organization, it).map {
+                                    APIContributor(it.name, it.avatarUrl, it.url, it.contributions)
+                                }.toSet(),
+                            )
+                        }
+                    }.awaitAll()
 
                 call.respond(contributors)
             }
 
             get("/team") {
-                val team = backend.getMembers(configuration.organization).map {
-                    APIMember(it.name, it.avatarUrl, it.url, it.gpgKeysUrl)
-                }
+                val team =
+                    backend.getMembers(configuration.organization).map {
+                        APIMember(it.name, it.avatarUrl, it.url, it.gpgKeysUrl)
+                    }
 
                 call.respond(team)
             }
@@ -140,7 +184,11 @@ fun Application.configureRouting() {
                 }
             }
 
-            authenticate("basic") { get("/token") { call.respond(authService.newToken()) } }
+            authenticate("basic") {
+                get("/token") {
+                    call.respond(authService.newToken())
+                }
+            }
         }
     }
 }

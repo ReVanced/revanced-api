@@ -3,7 +3,6 @@ package app.revanced.api.backend.github.api
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
-
 class Response {
     interface IGitHubUser {
         val login: String
@@ -12,7 +11,7 @@ class Response {
     }
 
     @Serializable
-    class GitHubUser (
+    class GitHubUser(
         override val login: String,
         override val avatarUrl: String,
         override val url: String,
@@ -41,11 +40,11 @@ class Response {
                 val tagName: String,
                 val assets: Set<GitHubAsset>,
                 val createdAt: Instant,
-                val body: String
+                val body: String,
             ) {
                 @Serializable
                 class GitHubAsset(
-                    val browserDownloadUrl: String
+                    val browserDownloadUrl: String,
                 )
             }
         }

@@ -1,11 +1,10 @@
 package app.revanced.api.modules
 
 import app.revanced.api.modules.AnnouncementService.Attachments.announcement
-import app.revanced.api.schema.APIResponseAnnouncement
 import app.revanced.api.schema.APIAnnouncement
 import app.revanced.api.schema.APILatestAnnouncement
+import app.revanced.api.schema.APIResponseAnnouncement
 import kotlinx.datetime.*
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -13,7 +12,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class AnnouncementService(private val database: Database) {
     private object Announcements : IntIdTable() {
@@ -52,7 +51,7 @@ class AnnouncementService(private val database: Database) {
             channel,
             createdAt,
             archivedAt,
-            level
+            level,
         )
     }
 
@@ -107,7 +106,7 @@ class AnnouncementService(private val database: Database) {
 
     fun archive(
         id: Int,
-        archivedAt: LocalDateTime?
+        archivedAt: LocalDateTime?,
     ) = transaction {
         Announcement.findById(id)?.apply {
             this.archivedAt = archivedAt ?: java.time.LocalDateTime.now().toKotlinLocalDateTime()
