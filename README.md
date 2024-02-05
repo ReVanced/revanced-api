@@ -68,8 +68,7 @@ API server for ReVanced.
 ## ❓ About
 
 ReVanced API is a server that is used as the backend for ReVanced.
-ReVanced API powers [ReVanced Manager](https://github.com/ReVanced/revanced-manager) with updates and ReVanced Patches,
-and acts as a data source for [ReVanced Website](https://github.com/ReVanced/revanced-website).
+ReVanced API acts as the data source for [ReVanced Website](https://github.com/ReVanced/revanced-website) and powers [ReVanced Manager](https://github.com/ReVanced/revanced-manager) with updates and ReVanced Patches.
 
 ## 💪 Features
 
