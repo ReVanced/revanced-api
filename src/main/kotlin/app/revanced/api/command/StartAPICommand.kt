@@ -25,11 +25,7 @@ internal object StartAPICommand : Runnable {
     private var port: Int = 8080
 
     override fun run() {
-        embeddedServer(Netty, port, host, configure = {
-            connectionGroupSize = 1
-            workerGroupSize = 1
-            callGroupSize = 1
-        }) {
+        embeddedServer(Netty, port, host) {
             configureDependencies()
             configureHTTP()
             configureSerialization()
