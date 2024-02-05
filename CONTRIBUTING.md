@@ -93,5 +93,5 @@ that your pull request closes in the description of your pull request
 5. Our team will review your pull request and provide feedback. Once your pull request is approved,
 it will be merged into the `dev` branch and will be included in the next release of ReVanced API
 
-❤️ Thank you for considering contributing to ReVanced API,
+❤️ Thank you for considering contributing to ReVanced API,  
 ReVanced
