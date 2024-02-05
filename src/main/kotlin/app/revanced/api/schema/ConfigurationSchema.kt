@@ -13,5 +13,5 @@ class APIConfiguration(
     @SerialName("contributors-repositories")
     val contributorsRepositoryNames: Set<String>,
     @SerialName("api-version")
-    val apiVersion: Int = 1
+    val apiVersion: Int = 1,
 )

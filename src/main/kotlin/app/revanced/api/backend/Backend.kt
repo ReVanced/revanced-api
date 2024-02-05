@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  *  @param httpClientConfig The configuration of the HTTP client.
  */
 abstract class Backend(
-    httpClientConfig: HttpClientConfig<OkHttpConfig>.() -> Unit = {}
+    httpClientConfig: HttpClientConfig<OkHttpConfig>.() -> Unit = {},
 ) {
     protected val client: HttpClient = HttpClient(OkHttp, httpClientConfig)
 
@@ -34,7 +34,7 @@ abstract class Backend(
      * @property members The members of the organization.
      */
     class BackendOrganization(
-        val members: Set<BackendMember>
+        val members: Set<BackendMember>,
     ) {
         /**
          * A member of an organization.
@@ -46,12 +46,12 @@ abstract class Backend(
          * @property gpgKeysUrl The URL to the GPG keys of the member.
          */
         @Serializable
-        class BackendMember (
+        class BackendMember(
             override val name: String,
             override val avatarUrl: String,
             override val url: String,
             val bio: String?,
-            val gpgKeysUrl: String
+            val gpgKeysUrl: String,
         ) : BackendUser
 
         /**
@@ -60,7 +60,7 @@ abstract class Backend(
          * @property contributors The contributors of the repository.
          */
         class BackendRepository(
-            val contributors: Set<BackendContributor>
+            val contributors: Set<BackendContributor>,
         ) {
             /**
              * A contributor of a repository.
@@ -75,7 +75,7 @@ abstract class Backend(
                 override val name: String,
                 override val avatarUrl: String,
                 override val url: String,
-                val contributions: Int
+                val contributions: Int,
             ) : BackendUser
 
             /**
@@ -91,7 +91,7 @@ abstract class Backend(
                 val tag: String,
                 val releaseNote: String,
                 val createdAt: LocalDateTime,
-                val assets: Set<BackendAsset>
+                val assets: Set<BackendAsset>,
             ) {
                 /**
                  * An asset of a release.
@@ -100,7 +100,7 @@ abstract class Backend(
                  */
                 @Serializable
                 class BackendAsset(
-                    val downloadUrl: String
+                    val downloadUrl: String,
                 )
             }
         }

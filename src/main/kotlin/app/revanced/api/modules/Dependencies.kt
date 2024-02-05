@@ -19,7 +19,7 @@ fun Application.configureDependencies() {
             globalModule,
             gitHubBackendModule,
             databaseModule,
-            authModule
+            authModule,
         )
     }
 }
@@ -51,7 +51,7 @@ val databaseModule = module {
             url = dotenv["DB_URL"],
             user = dotenv["DB_USER"],
             password = dotenv["DB_PASSWORD"],
-            driver = "org.h2.Driver"
+            driver = "org.h2.Driver",
         )
     }
     factory<AnnouncementService> {

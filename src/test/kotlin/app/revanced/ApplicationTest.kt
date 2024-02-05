@@ -23,8 +23,8 @@ class ApplicationTest {
                     organization = "ReVanced",
                     patchesRepository = "",
                     integrationsRepositoryNames = setOf(),
-                    contributorsRepositoryNames = setOf()
-                )
+                    contributorsRepositoryNames = setOf(),
+                ),
             ).let(::writeText)
 
             deleteOnExit()
@@ -47,7 +47,7 @@ class ApplicationTest {
             headers {
                 append(
                     HttpHeaders.Authorization,
-                    "Basic ${"${dotenv["BASIC_USERNAME"]}:${dotenv["BASIC_PASSWORD"]}".encodeBase64()}"
+                    "Basic ${"${dotenv["BASIC_USERNAME"]}:${dotenv["BASIC_PASSWORD"]}".encodeBase64()}",
                 )
             }
         }.bodyAsText()
