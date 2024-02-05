@@ -27,7 +27,6 @@ fun Application.configureDependencies() {
 val globalModule = module {
     single {
         Dotenv.configure()
-            .ignoreIfMissing()
             .systemProperties()
             .load()
     }
