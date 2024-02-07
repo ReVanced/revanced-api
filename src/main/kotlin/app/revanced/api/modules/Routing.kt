@@ -2,6 +2,9 @@ package app.revanced.api.modules
 
 import app.revanced.api.backend.Backend
 import app.revanced.api.schema.*
+import app.revanced.library.PatchUtils
+import app.revanced.patcher.PatchBundleLoader
+import com.github.benmanes.caffeine.cache.Caffeine
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,6 +15,8 @@ import io.ktor.server.routing.*
 import io.ktor.util.pipeline.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import java.io.File
+import java.net.URL
 import org.koin.ktor.ext.get as koinGet
 
 fun Application.configureRouting() {
@@ -116,34 +121,70 @@ fun Application.configureRouting() {
             route("/patches") {
                 route("latest") {
                     get {
-                        val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
-                        val integrations =
-                            configuration.integrationsRepositoryNames.map {
-                                async { backend.getRelease(configuration.organization, it) }
-                            }.awaitAll()
+                        val patchesRelease =
+                            backend.getRelease(configuration.organization, configuration.patchesRepository)
+                        val integrationsReleases = configuration.integrationsRepositoryNames.map {
+                            async { backend.getRelease(configuration.organization, it) }
+                        }.awaitAll()
 
-                        val assets =
-                            (patches.assets + integrations.flatMap { it.assets }).filter {
-                                it.downloadUrl.endsWith(".apk") || it.downloadUrl.endsWith(".jar")
-                            }.map { APIAsset(it.downloadUrl) }.toSet()
+                        val assets = (patchesRelease.assets + integrationsReleases.flatMap { it.assets })
+                            .map { APIAsset(it.downloadUrl) }
+                            .filter { it.type != APIAsset.Type.UNKNOWN }
+                            .toSet()
 
-                        val release =
-                            APIRelease(
-                                patches.tag,
-                                patches.createdAt,
-                                patches.releaseNote,
-                                assets,
-                            )
+                        val apiRelease = APIRelease(
+                            patchesRelease.tag,
+                            patchesRelease.createdAt,
+                            patchesRelease.releaseNote,
+                            assets,
+                        )
 
-                        call.respond(release)
+                        call.respond(apiRelease)
                     }
 
                     get("/version") {
-                        val patches = backend.getRelease(configuration.organization, configuration.patchesRepository)
+                        val patchesRelease =
+                            backend.getRelease(configuration.organization, configuration.patchesRepository)
 
-                        val release = APIReleaseVersion(patches.tag)
+                        val apiPatchesRelease = APIReleaseVersion(patchesRelease.tag)
 
-                        call.respond(release)
+                        call.respond(apiPatchesRelease)
+                    }
+
+                    val fileCache = Caffeine
+                        .newBuilder()
+                        .evictionListener<String, File> { _, value, _ -> value?.delete() }
+                        .maximumSize(1)
+                        .build<String, File>()
+
+                    get("/list") {
+                        val patchesRelease =
+                            backend.getRelease(configuration.organization, configuration.patchesRepository)
+
+                        // Get the cached patches file or download and cache a new one.
+                        // The old file is deleted on eviction.
+                        val patchesFile = fileCache.getIfPresent(patchesRelease.tag) ?: run {
+                            val downloadUrl = patchesRelease.assets
+                                .map { APIAsset(it.downloadUrl) }
+                                .find { it.type == APIAsset.Type.PATCHES }
+                                ?.downloadUrl
+
+                            kotlin.io.path.createTempFile().toFile().apply {
+                                outputStream().use { URL(downloadUrl).openStream().copyTo(it) }
+                            }.also {
+                                fileCache.put(patchesRelease.tag, it)
+                                it.deleteOnExit()
+                            }
+                        }
+
+                        call.respondOutputStream(
+                            contentType = ContentType.Application.Json,
+                        ) {
+                            PatchUtils.Json.serialize(
+                                PatchBundleLoader.Jar(patchesFile),
+                                outputStream = this,
+                            )
+                        }
                     }
                 }
             }
