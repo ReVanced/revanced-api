@@ -75,9 +75,9 @@ ReVanced API acts as the data source for [ReVanced Website](https://github.com/R
 Some of the features ReVanced API include:
 
 - 📢 **Announcements**: Push announcements grouped by channels
-- ℹ️ About: Get more information such as a description about, ways to donate to, and links of the hoster of ReVanced API
-- 🧩 Patches: Get the latest updates of ReVanced Patches directly from ReVanced API
-- 👥 Contributors: List all contributors involved in the project
+- ℹ️ **About**: Get more information such as a description about, ways to donate to, and links of the hoster of ReVanced API
+- 🧩 **Patches**: Get the latest updates of ReVanced Patches directly from ReVanced API
+- 👥 **Contributors**: List all contributors involved in the project
 
 ## 🚀 How to get started
 
