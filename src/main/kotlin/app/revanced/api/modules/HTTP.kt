@@ -19,8 +19,6 @@ fun Application.configureHTTP() {
         anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     }
     install(CachingHeaders) {
-        options { _, _ ->
-            CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 5.minutes.inWholeSeconds.toInt()))
-        }
+        options { _, _ -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 5.minutes.inWholeSeconds.toInt())) }
     }
 }

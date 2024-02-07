@@ -21,7 +21,7 @@ tasks {
     Because semantic-release is not designed to handle this case, we need to hack it.
 
     RE: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
-    */
+     */
     register<DefaultTask>("publish") {
         group = "publishing"
         description = "Dummy task to hack gradle-semantic-release-plugin to release ReVanced API"
@@ -41,6 +41,9 @@ ktor {
 
 repositories {
     mavenCentral()
+    google()
+    maven { url = uri("https://jitpack.io") }
+    mavenLocal()
 }
 
 dependencies {
@@ -72,6 +75,9 @@ dependencies {
     implementation(libs.ktoml.file)
     implementation(libs.picocli)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.revanced.patcher)
+    implementation(libs.revanced.library)
+    implementation(libs.caffeine)
 
     testImplementation(libs.mockk)
     testImplementation(libs.ktor.server.tests)

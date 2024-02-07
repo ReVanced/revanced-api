@@ -1,6 +1,7 @@
 package app.revanced.api.schema
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -44,9 +45,20 @@ class APIAsset(
     val downloadUrl: String,
 ) {
     val type = when {
-        downloadUrl.endsWith(".jar") -> "patches"
-        downloadUrl.endsWith(".apk") -> "integrations"
-        else -> "unknown"
+        downloadUrl.endsWith(".jar") -> Type.PATCHES
+        downloadUrl.endsWith(".apk") -> Type.INTEGRATIONS
+        else -> Type.UNKNOWN
+    }
+
+    enum class Type {
+        @SerialName("patches")
+        PATCHES,
+
+        @SerialName("integrations")
+        INTEGRATIONS,
+
+        @SerialName("unknown")
+        UNKNOWN,
     }
 }
 
