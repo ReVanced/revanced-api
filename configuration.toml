@@ -1,0 +1,14 @@
+organization = "revanced"
+patches-repository = "revanced-patches"
+integrations-repositories = [
+    "revanced-integrations"
+]
+contributors-repositories = [
+    "revanced-patcher",
+    "revanced-patches",
+    "revanced-integrations",
+    "revanced-website",
+    "revanced-cli",
+    "revanced-manager",
+]
+api-version = 1

@@ -1,0 +1,5 @@
+organization = "org"
+patches-repository = "patches"
+integrations-repositories = ["integrations"]
+contributors-repositories = ["patches", "integrations"]
+api-version = 1

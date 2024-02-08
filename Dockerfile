@@ -1,19 +1,31 @@
-FROM python:3.11-slim
+FROM azul/zulu-openjdk:latest
 
-ARG GITHUB_TOKEN
-ARG SENTRY_DSN
+ARG CONFIG_FILE_PATH
 
-ENV GITHUB_TOKEN $GITHUB_TOKEN
-ENV SENTRY_DSN $SENTRY_DSN
+ARG DB_URL
+ARG DB_USER
+ARG DB_PASSWORD
 
-WORKDIR /usr/src/app
+ARG JWT_SECRET
+ARG JWT_ISSUER
+ARG JWT_VALIDITY_IN_MIN
 
-COPY . .
+ARG BASIC_USERNAME
+ARG BASIC_PASSWORD
 
-RUN apt update && \
-    apt-get install git build-essential libffi-dev libssl-dev openssl --no-install-recommends -y \
-    && pip install --no-cache-dir -r requirements.txt
+ENV CONFIG_FILE_PATH $CONFIG_FILE_PATH
 
-VOLUME persistence
+ENV DB_URL $DB_URL
+ENV DB_USER $DB_USER
+ENV DB_PASSWORD $DB_PASSWORD
 
-CMD [ "python3", "-m" , "sanic", "app:app", "--fast", "--access-logs", "--motd", "--noisy-exceptions", "-H", "0.0.0.0"]
+ENV JWT_SECRET $JWT_SECRET
+ENV JWT_ISSUER $JWT_ISSUER
+ENV JWT_VALIDITY_IN_MIN $JWT_VALIDITY_IN_MIN
+
+ENV BASIC_USERNAME $BASIC_USERNAME
+ENV BASIC_PASSWORD $BASIC_PASSWORD
+
+COPY build/libs/revanced-api-*.jar revanced-api.jar
+
+CMD java -jar revanced-api.jar start

@@ -58,50 +58,40 @@
    Continuing the legacy of Vanced
 </p>
 
-# 🚀 ReVanced API
+# 👋 Contribution guidelines
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ReVanced/revanced-api/release.yml)
-![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)
+This document describes how to contribute to ReVanced API.
 
-API server for ReVanced.
+## 📖 Resources to help you get started
 
-## ❓ About
+* [Our backlog](https://github.com/orgs/ReVanced/projects/12) is where we keep track of what we're working on
+* [Issues](https://github.com/ReVanced/revanced-api/issues) are where we keep track of bugs and feature requests
 
-ReVanced API is a server that is used as the backend for ReVanced.
-ReVanced API acts as the data source for [ReVanced Website](https://github.com/ReVanced/revanced-website) and powers [ReVanced Manager](https://github.com/ReVanced/revanced-manager) with updates and ReVanced Patches.
+## 🙏 Submitting a feature request
 
-## 💪 Features
+Features can be requested by opening an issue using the
+[Feature request issue template](https://github.com/ReVanced/revanced-api/issues/new?assignees=&labels=Feature+request&projects=&template=feature-request.yml&title=feat%3A+).
 
-Some of the features ReVanced API include:
+> **Note**
+> Requests can be accepted or rejected at the discretion of maintainers of ReVanced API.
+> Good motivation has to be provided for a request to be accepted.
 
-- 📢 **Announcements**: Push announcements grouped by channels
-- ℹ️ **About**: Get more information such as a description about, ways to donate to, and links of the hoster of ReVanced API
-- 🧩 **Patches**: Get the latest updates of ReVanced Patches directly from ReVanced API
-- 👥 **Contributors**: List all contributors involved in the project
+## 🐞 Submitting a bug report
 
-## 🚀 How to get started
+If you encounter a bug while using ReVanced API, open an issue using the
+[Bug report issue template](https://github.com/ReVanced/revanced-api/issues/new?assignees=&labels=Bug+report&projects=&template=bug-report.yml&title=bug%3A+).
 
-1. Clone the repository
-2. Set up the environment variables in a `.env` file using the `.env.example` file as a template
-3. Configure the `configuration.toml` file using the `configuration.toml.example` file as a template
-4. Run the server using `gradlew run --args=start`
+## 📝 How to contribute
 
-## 📚 Everything else
+1. Before contributing, it is recommended to open an issue to discuss your change
+with the maintainers of ReVanced API. This will help you determine whether your change is acceptable
+and whether it is worth your time to implement it
+2. Development happens on the `dev` branch. Fork the repository and create your branch from `dev`
+3. Commit your changes
+4. Submit a pull request to the `dev` branch of the repository and reference issues
+that your pull request closes in the description of your pull request
+5. Our team will review your pull request and provide feedback. Once your pull request is approved,
+it will be merged into the `dev` branch and will be included in the next release of ReVanced API
 
-### 📙 Contributing
-
-Thank you for considering contributing to ReVanced API. You can find the contribution guidelines [here](CONTRIBUTING.md).
-
-### 🛠️ Building
-
-In order to build ReVanced API, follow these steps:
-
-1. Clone the repository
-2. Run `gradlew build` to build the project
-
-## 📜 Licence
-
-ReVanced API is licensed under the GPLv3 licence. Please see the [licence file](LICENSE) for more information.
-[tl;dr](https://www.tldrlegal.com/license/gnu-general-public-license-v3-gpl-3) you may copy, distribute and
-modify ReVanced API as long as you track changes/dates in source files.
-Any modifications to ReVanced API must also be made available under the GPL along with build & install instructions.
+❤️ Thank you for considering contributing to ReVanced API,  
+ReVanced
