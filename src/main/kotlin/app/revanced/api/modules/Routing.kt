@@ -15,7 +15,7 @@ import io.ktor.server.routing.*
 import io.ktor.util.pipeline.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import java.io.File
+import java.io.ByteArrayOutputStream
 import java.net.URL
 import org.koin.ktor.ext.get as koinGet
 
@@ -151,40 +151,37 @@ fun Application.configureRouting() {
                         call.respond(apiPatchesRelease)
                     }
 
-                    val fileCache = Caffeine
+                    val patchesListCache = Caffeine
                         .newBuilder()
-                        .evictionListener<String, File> { _, value, _ -> value?.delete() }
                         .maximumSize(1)
-                        .build<String, File>()
+                        .build<String, ByteArray>()
 
                     get("/list") {
                         val patchesRelease =
                             backend.getRelease(configuration.organization, configuration.patchesRepository)
 
-                        // Get the cached patches file or download and cache a new one.
-                        // The old file is deleted on eviction.
-                        val patchesFile = fileCache.getIfPresent(patchesRelease.tag) ?: run {
+                        val patchesListByteArray = patchesListCache.getIfPresent(patchesRelease.tag) ?: run {
                             val downloadUrl = patchesRelease.assets
                                 .map { APIAsset(it.downloadUrl) }
                                 .find { it.type == APIAsset.Type.PATCHES }
                                 ?.downloadUrl
 
-                            kotlin.io.path.createTempFile().toFile().apply {
+                            val patches = kotlin.io.path.createTempFile().toFile().apply {
                                 outputStream().use { URL(downloadUrl).openStream().copyTo(it) }
+                            }.let { file ->
+                                PatchBundleLoader.Jar(file).also { file.delete() }
+                            }
+
+                            ByteArrayOutputStream().use { stream ->
+                                PatchUtils.Json.serialize(patches, outputStream = stream)
+
+                                stream.toByteArray()
                             }.also {
-                                fileCache.put(patchesRelease.tag, it)
-                                it.deleteOnExit()
+                                patchesListCache.put(patchesRelease.tag, it)
                             }
                         }
 
-                        call.respondOutputStream(
-                            contentType = ContentType.Application.Json,
-                        ) {
-                            PatchUtils.Json.serialize(
-                                PatchBundleLoader.Jar(patchesFile),
-                                outputStream = this,
-                            )
-                        }
+                        call.respondBytes(ContentType.Application.Json) { patchesListByteArray }
                     }
                 }
             }
