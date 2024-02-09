@@ -60,11 +60,11 @@
 
 # 🔒 Security Policy
 
-This document describes how to report security vulnerabilities for ReVanced Manager.
+This document describes how to report security vulnerabilities for ReVanced API.
 
 ## 🚨 Reporting a Vulnerability
 
-Please open an issue in our [advisory tracker](https://github.com/ReVanced/revanced-manager/security/advisories/new) or reach out privately to us on [Discord](https://discord.gg/revanced).
+Please open an issue in our [advisory tracker](https://github.com/ReVanced/revanced-api/security/advisories/new) or reach out privately to us on [Discord](https://discord.gg/revanced).
 
 If a vulnerability is confirmed and accepted, you can join our [Discord](https://discord.gg/revanced) server to receive a special contributor role.
 
@@ -73,3 +73,4 @@ If a vulnerability is confirmed and accepted, you can join our [Discord](https:/
 | Version                                                                                                  | Branch      | Supported          |
 | -------------------------------------------------------------------------------------------------------- | ----------- | ------------------ |
 | ![Static Badge](https://img.shields.io/badge/version-latest-brightgreen?style=for-the-badge)             | dev         | :white_check_mark: |
+| ![Static Badge](https://img.shields.io/badge/version-latest-brightgreen?style=for-the-badge)             | main        | :white_check_mark: |
