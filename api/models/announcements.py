@@ -21,14 +21,17 @@ class AnnouncementResponseModel(dict):
             id=announcement.id,
             author=announcement.author,
             title=announcement.title,
-            content=ContentFields(
-                message=announcement.message,
-                attachment_urls=[
-                    attachment.attachment_url for attachment in announcement.attachments
-                ],
-            )
-            if announcement.message or announcement.attachments
-            else None,
+            content=(
+                ContentFields(
+                    message=announcement.message,
+                    attachment_urls=[
+                        attachment.attachment_url
+                        for attachment in announcement.attachments
+                    ],
+                )
+                if announcement.message or announcement.attachments
+                else None
+            ),
             channel=announcement.channel,
             created_at=str(announcement.created_at),
             level=announcement.level,
