@@ -79,41 +79,55 @@ compat_repositories: list = [
 # Social Links
 
 social_links: list[dict[str, str, str, str | bool]] = [
-    {"name": "Website",
+    {
+        "name": "Website",
         "url": "https://revanced.app",
         "icon_light": "https://revanced.app/favicon.ico",
         "icon_dark": "https://revanced.app/favicon.ico",
-        "preferred": True},
-    {"name": "Discord",
+        "preferred": True,
+    },
+    {
+        "name": "Discord",
         "url": "https://revanced.app/discord",
         "icon_light": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
         "icon_dark": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
-        "preferred": True},
-    {"name": "Reddit",
+        "preferred": True,
+    },
+    {
+        "name": "Reddit",
         "url": "https://www.reddit.com/r/revancedapp",
         "icon_light": "https://www.redditstatic.com/shreddit/assets/favicon/192x192.png",
         "icon_dark": "https://www.redditstatic.com/shreddit/assets/favicon/192x192.png",
-        "preferred": False },
-    {"name": "Twitter",
+        "preferred": False,
+    },
+    {
+        "name": "Twitter",
         "url": "https://twitter.com/revancedapp",
         "icon_light": "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png",
         "icon_dark": "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png",
-        "preferred": False},
-    {"name": "Telegram",
+        "preferred": False,
+    },
+    {
+        "name": "Telegram",
         "url": "https://t.me/app_revanced",
         "icon_light": "https://web.telegram.org/k/assets/img/android-chrome-192x192.png",
         "icon_dark": "https://web.telegram.org/k/assets/img/android-chrome-192x192.png",
-        "preferred": False},
-    {"name": "GitHub",
+        "preferred": False,
+    },
+    {
+        "name": "GitHub",
         "url": "https://github.com/revanced",
         "icon_light": "https://github.githubassets.com/favicons/favicon.svg",
         "icon_dark": "https://github.githubassets.com/favicons/favicon-dark.svg",
-        "preferred": False},
-    {"name": "YouTube",
+        "preferred": False,
+    },
+    {
+        "name": "YouTube",
         "url": "https://www.youtube.com/@ReVanced",
         "icon_light": "https://www.youtube.com/s/desktop/3ee2b817/img/favicon_144x144.png",
         "icon_dark": "https://www.youtube.com/s/desktop/3ee2b817/img/favicon_144x144.png",
-        "preferred": False},
+        "preferred": False,
+    },
 ]
 
 # Donation info
