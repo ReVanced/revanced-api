@@ -89,8 +89,8 @@ social_links: list[dict[str, str, str, str | bool]] = [
     {
         "name": "Discord",
         "url": "https://discord.gg/revanced",
-        "icon_light": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
-        "icon_dark": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
+        "icon_light": "https://discord.com/assets/images/favicon.ico",
+        "icon_dark": "https://discord.com/assets/images/favicon.ico",
         "preferred": True,
     },
     {
@@ -110,8 +110,8 @@ social_links: list[dict[str, str, str, str | bool]] = [
     {
         "name": "Twitter",
         "url": "https://twitter.com/revancedapp",
-        "icon_light": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
-        "icon_dark": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
+        "icon_light": "https://abs.twimg.com/responsive-web/client-web/icon-default-large.9ab12c3a.png",
+        "icon_dark": "https://abs.twimg.com/responsive-web/client-web/icon-default-large.9ab12c3a.png",
         "preferred": False,
     },
     {
