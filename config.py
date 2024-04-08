@@ -103,8 +103,8 @@ social_links: list[dict[str, str, str, str | bool]] = [
     {
         "name": "Twitter",
         "url": "https://twitter.com/revancedapp",
-        "icon_light": "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png",
-        "icon_dark": "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png",
+        "icon_light": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
+        "icon_dark": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
         "preferred": False,
     },
     {
@@ -116,16 +116,16 @@ social_links: list[dict[str, str, str, str | bool]] = [
     },
     {
         "name": "GitHub",
-        "url": "https://github.com/revanced",
+        "url": "https://github.com/ReVanced",
         "icon_light": "https://github.githubassets.com/favicons/favicon.svg",
         "icon_dark": "https://github.githubassets.com/favicons/favicon-dark.svg",
         "preferred": False,
     },
     {
         "name": "YouTube",
-        "url": "https://www.youtube.com/@ReVanced",
-        "icon_light": "https://www.youtube.com/s/desktop/3ee2b817/img/favicon_144x144.png",
-        "icon_dark": "https://www.youtube.com/s/desktop/3ee2b817/img/favicon_144x144.png",
+        "url": "https://youtube.com/@ReVanced",
+        "icon_light": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_192x192.png",
+        "icon_dark": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_192x192.png",
         "preferred": False,
     },
 ]
