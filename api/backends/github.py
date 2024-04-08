@@ -108,9 +108,9 @@ class Github(Backend):
         )
 
         if team_view:
-            filter_contributor[
-                "keys"
-            ] = f"{base_url.replace('api.', '')}/{filter_contributor['login']}.gpg"
+            filter_contributor["keys"] = (
+                f"{base_url.replace('api.', '')}/{filter_contributor['login']}.gpg"
+            )
 
         return Contributor(**filter_contributor)
 
@@ -136,7 +136,9 @@ class Github(Backend):
         Returns:
             list[Release]: A list of Release objects.
         """
-        list_releases_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases?per_page={per_page}&page={page}"
+        list_releases_endpoint: str = (
+            f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases?per_page={per_page}&page={page}"
+        )
         response: ClientResponse = await http_get(
             headers=self.headers, url=list_releases_endpoint
         )
@@ -162,7 +164,9 @@ class Github(Backend):
         Returns:
             Release: The Release object representing the retrieved release.
         """
-        release_by_tag_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases/tags/{tag_name}"
+        release_by_tag_endpoint: str = (
+            f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases/tags/{tag_name}"
+        )
         response: ClientResponse = await http_get(
             headers=self.headers, url=release_by_tag_endpoint
         )
@@ -181,7 +185,9 @@ class Github(Backend):
         Returns:
             Release: The latest release for the given repository.
         """
-        latest_release_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases/latest"
+        latest_release_endpoint: str = (
+            f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases/latest"
+        )
         response: ClientResponse = await http_get(
             headers=self.headers, url=latest_release_endpoint
         )
@@ -200,7 +206,9 @@ class Github(Backend):
         Returns:
             Release: The latest pre-release for the given repository.
         """
-        list_releases_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases?per_page=10&page=1"
+        list_releases_endpoint: str = (
+            f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/releases?per_page=10&page=1"
+        )
         response: ClientResponse = await http_get(
             headers=self.headers, url=list_releases_endpoint
         )
@@ -223,7 +231,9 @@ class Github(Backend):
             list[Contributor]: A list of contributors for the given repository.
         """
 
-        contributors_endpoint: str = f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
+        contributors_endpoint: str = (
+            f"{self.repositories_rest_endpoint}/{repository.owner}/{repository.name}/contributors"
+        )
         response: ClientResponse = await http_get(
             headers=self.headers, url=contributors_endpoint
         )
