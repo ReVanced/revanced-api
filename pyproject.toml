@@ -30,6 +30,9 @@ types-ujson = "^5.9.0.0"
 types-aiofiles = "^23.2.0.20240106"
 types-beautifulsoup4 = "^4.12.0.20240106"
 
+[tool.poetry.group.dev.dependencies]
+setuptools = "^69.2.0"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 filterwarnings = [
