@@ -8,8 +8,6 @@ class SocialFields(BaseModel):
 
     name: str
     url: str
-    icon_light: str
-    icon_dark: str
     preferred: bool
 
 
