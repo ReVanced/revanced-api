@@ -91,6 +91,7 @@ social_links: list[dict[str, str, str, str | bool]] = [
         "url": "https://discord.gg/revanced",
         # Icon is also at https://discord.com/assets/images/favicon.ico
         # but that url fails to load from an Android embedded web view (unknown why).
+        # this 'website-files' url is what Discord uses in their own root index.html, and it loads on Android without issues.
         "icon_light": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
         "icon_dark": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/6266bc493fb42d4e27bb8393_847541504914fd33810e70a0ea73177e.ico",
         "preferred": True,
