@@ -9,6 +9,7 @@ Routes:
     - GET /patches/<tag:str>: Retrieve a list of patches for a given release tag.
 
 """
+
 import os
 from sanic import Blueprint, Request
 from sanic.response import JSONResponse, json

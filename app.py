@@ -75,9 +75,9 @@ async def add_cache_control(_, response):
 
 @app.on_response
 async def add_csp(_, response):
-    response.headers[
-        "Content-Security-Policy"
-    ] = "default-src  * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    response.headers["Content-Security-Policy"] = (
+        "default-src  * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    )
 
 
 app.static(
