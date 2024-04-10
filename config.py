@@ -86,7 +86,7 @@ social_links: list[dict[str, str, str, str | bool]] = [
     },
     {
         "name": "Discord",
-        "url": "https://discord.gg/revanced",
+        "url": "https://revanced.app/discord",
         "preferred": True,
     },
     {
