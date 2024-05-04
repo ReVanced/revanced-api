@@ -103,6 +103,7 @@ class Contributor(dict):
         contributions: Optional[int] = None,
         bio: Optional[str] = None,
         keys: Optional[str] = None,
+        key_id: Optional[str] = None,
     ):
         match contributions, bio, keys:
             case None, None, None:
@@ -129,6 +130,7 @@ class Contributor(dict):
                     avatar_url=avatar_url,
                     html_url=html_url,
                     bio=bio,
+                    key_id=key_id,
                 )
             case int(_), str(_), str(_):
                 dict.__init__(

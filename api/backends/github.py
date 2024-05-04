@@ -98,7 +98,7 @@ class Github(Backend):
     ) -> Contributor:
         match team_view:
             case True:
-                keys = {"login", "avatar_url", "html_url", "bio"}
+                keys = {"login", "avatar_url", "html_url", "bio", "key_id"}
             case _:
                 keys = {"login", "avatar_url", "html_url", "contributions"}
 
@@ -106,11 +106,6 @@ class Github(Backend):
             lambda key: key in keys,
             contributor,
         )
-
-        if team_view:
-            filter_contributor["keys"] = (
-                f"{base_url.replace('api.', '')}/{filter_contributor['login']}.gpg"
-            )
 
         return Contributor(**filter_contributor)
 
@@ -313,6 +308,18 @@ class Github(Backend):
                 user_data_response,
             )
         )
+
+        for index, user in enumerate(user_data):
+            response: ClientResponse = await http_get(
+                headers=self.headers, url=f"{base_url}/users/{user['login']}/gpg_keys"
+            )
+            output = await response.json()
+
+            if len(output) is not 0:
+                user_data[index]["key_id"] = output[0]["key_id"]
+            else:
+                user_data[index]["key_id"] = ""
+
         team_members: list[Contributor] = await asyncio.gather(
             *map(
                 lambda member: self.__assemble_contributor(member, team_view=True),
