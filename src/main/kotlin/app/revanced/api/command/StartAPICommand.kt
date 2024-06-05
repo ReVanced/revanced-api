@@ -1,6 +1,7 @@
 package app.revanced.api.command
 
-import app.revanced.api.modules.*
+import app.revanced.api.configuration.*
+import app.revanced.api.configuration.routing.configureRouting
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import picocli.CommandLine
@@ -27,7 +28,7 @@ internal object StartAPICommand : Runnable {
     override fun run() {
         embeddedServer(Netty, port, host) {
             configureDependencies()
-            configureHTTP()
+            configureHTTP(allowedHost = host)
             configureSerialization()
             configureSecurity()
             configureRouting()

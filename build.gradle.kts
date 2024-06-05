@@ -11,21 +11,11 @@ tasks {
         expand("projectVersion" to project.version)
     }
 
-    /*
-    Dummy task to hack gradle-semantic-release-plugin to release this project.
-
-    Explanation:
-    SemVer is a standard for versioning libraries.
-    For that reason the semantic-release plugin uses the "publish" task to publish libraries.
-    However, this subproject is not a library, and the "publish" task is not available for this subproject.
-    Because semantic-release is not designed to handle this case, we need to hack it.
-
-    RE: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
-     */
+    // Needed by gradle-semantic-release-plugin.
+    // Tracking: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
     register<DefaultTask>("publish") {
         group = "publishing"
-        description = "Dummy task to hack gradle-semantic-release-plugin to release ReVanced API"
-        dependsOn(startShadowScripts)
+        dependsOn(shadowJar)
     }
 }
 
@@ -42,8 +32,15 @@ ktor {
 repositories {
     mavenCentral()
     google()
-    maven { url = uri("https://jitpack.io") }
     mavenLocal()
+    maven {
+        // A repository must be specified for some reason. "registry" is a dummy.
+        url = uri("https://maven.pkg.github.com/revanced/registry")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -78,8 +75,4 @@ dependencies {
     implementation(libs.revanced.patcher)
     implementation(libs.revanced.library)
     implementation(libs.caffeine)
-
-    testImplementation(libs.mockk)
-    testImplementation(libs.ktor.server.tests)
-    testImplementation(libs.kotlin.test.junit)
 }

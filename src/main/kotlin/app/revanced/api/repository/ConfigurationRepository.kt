@@ -1,10 +1,10 @@
-package app.revanced.api.schema
+package app.revanced.api.repository
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class APIConfiguration(
+internal class ConfigurationRepository(
     val organization: String,
     @SerialName("patches-repository")
     val patchesRepository: String,

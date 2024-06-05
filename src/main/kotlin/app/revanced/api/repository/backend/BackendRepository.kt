@@ -1,4 +1,4 @@
-package app.revanced.api.backend
+package app.revanced.api.repository.backend
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  *
  *  @param httpClientConfig The configuration of the HTTP client.
  */
-abstract class Backend(
+abstract class BackendRepository internal constructor(
     httpClientConfig: HttpClientConfig<OkHttpConfig>.() -> Unit = {},
 ) {
     protected val client: HttpClient = HttpClient(OkHttp, httpClientConfig)
@@ -114,7 +114,7 @@ abstract class Backend(
      * @param tag The tag of the release. If null, the latest release is returned.
      * @return The release.
      */
-    abstract suspend fun getRelease(
+    abstract suspend fun release(
         owner: String,
         repository: String,
         tag: String? = null,
@@ -127,7 +127,7 @@ abstract class Backend(
      * @param repository The name of the repository.
      * @return The contributors.
      */
-    abstract suspend fun getContributors(owner: String, repository: String): Set<BackendOrganization.BackendRepository.BackendContributor>
+    abstract suspend fun contributors(owner: String, repository: String): Set<BackendOrganization.BackendRepository.BackendContributor>
 
     /**
      * Get the members of an organization.
@@ -135,5 +135,5 @@ abstract class Backend(
      * @param organization The name of the organization.
      * @return The members.
      */
-    abstract suspend fun getMembers(organization: String): Set<BackendOrganization.BackendMember>
+    abstract suspend fun members(organization: String): Set<BackendOrganization.BackendMember>
 }
