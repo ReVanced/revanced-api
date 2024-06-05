@@ -7,7 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.get as koinGet
 
-internal fun Route.configurePatchesRoute() = route("/patches") {
+internal fun Route.patchesRoute() = route("patches") {
     val patchesService = koinGet<PatchesService>()
 
     route("latest") {
@@ -15,11 +15,11 @@ internal fun Route.configurePatchesRoute() = route("/patches") {
             call.respond(patchesService.latestRelease())
         }
 
-        get("/version") {
+        get("version") {
             call.respond(patchesService.latestVersion())
         }
 
-        get("/list") {
+        get("list") {
             call.respondBytes(ContentType.Application.Json) { patchesService.list() }
         }
     }

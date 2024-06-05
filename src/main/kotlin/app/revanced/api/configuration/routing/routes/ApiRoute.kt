@@ -10,31 +10,31 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.get
 
-internal fun Route.configureRootRoute() {
+internal fun Route.rootRoute() {
     val apiService = get<ApiService>()
     val authService = get<AuthService>()
 
-    get("/contributors") {
+    get("contributors") {
         call.respond(apiService.contributors())
     }
 
-    get("/team") {
+    get("team") {
         call.respond(apiService.team())
     }
 
-    route("/ping") {
+    route("ping") {
         handle {
             call.respond(HttpStatusCode.NoContent)
         }
     }
 
     authenticate("basic") {
-        get("/token") {
+        get("token") {
             call.respond(authService.newToken())
         }
     }
 
-    staticResources("/", "/static/api") {
+    staticResources("/", "/app/revanced/api/static") {
         contentType { ContentType.Application.Json }
         extensions("json")
     }

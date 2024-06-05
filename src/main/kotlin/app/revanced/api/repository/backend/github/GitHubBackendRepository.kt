@@ -13,52 +13,14 @@ import app.revanced.api.repository.backend.github.api.Response
 import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubMember
 import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubContributor
 import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubRelease
+import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.cache.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.resources.*
-import io.ktor.client.plugins.resources.Resources
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.*
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNamingStrategy
 
-@OptIn(ExperimentalSerializationApi::class)
-class GitHubBackendRepository(token: String? = null) : BackendRepository({
-    install(HttpCache)
-    install(Resources)
-    install(ContentNegotiation) {
-        json(
-            Json {
-                ignoreUnknownKeys = true
-                namingStrategy = JsonNamingStrategy.SnakeCase
-            },
-        )
-    }
-
-    defaultRequest { url("https://api.github.com") }
-
-    token?.let {
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    BearerTokens(
-                        accessToken = it,
-                        refreshToken = "", // Required dummy value
-                    )
-                }
-
-                sendWithoutRequest { true }
-            }
-        }
-    }
-}) {
+class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
     override suspend fun release(
         owner: String,
         repository: String,
