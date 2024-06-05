@@ -39,4 +39,3 @@ out/
 .env
 persistence/
 configuration.toml
-.db
