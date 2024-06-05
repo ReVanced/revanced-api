@@ -36,9 +36,7 @@ import java.io.File
 fun Application.configureDependencies() {
     val globalModule = module {
         single {
-            Dotenv.configure()
-                .systemProperties()
-                .load()
+            Dotenv.configure().load()
         }
         factory { params ->
             val defaultRequestUri: String = params.get<String>()
@@ -80,7 +78,7 @@ fun Application.configureDependencies() {
                             )
                         }
 
-                        get<Dotenv>()["GITHUB_TOKEN"]?.let {
+                        get<Dotenv>()["BACKEND_API_TOKEN"]?.let {
                             install(Auth) {
                                 bearer {
                                     loadTokens {

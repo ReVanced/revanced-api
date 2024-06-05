@@ -1,31 +1,19 @@
-FROM azul/zulu-openjdk:latest
+# Build the application
+FROM gradle:latest AS build
 
-ARG CONFIG_FILE_PATH
+ARG GITHUB_ACTOR
+ARG GITHUB_TOKEN
 
-ARG DB_URL
-ARG DB_USER
-ARG DB_PASSWORD
+ENV GITHUB_ACTOR $GITHUB_ACTOR
+ENV GITHUB_TOKEN $GITHUB_TOKEN
 
-ARG JWT_SECRET
-ARG JWT_ISSUER
-ARG JWT_VALIDITY_IN_MIN
+WORKDIR /app
+COPY . .
+RUN gradle publish --no-daemon
 
-ARG BASIC_USERNAME
-ARG BASIC_PASSWORD
+# Build the runtime container
+FROM eclipse-temurin:latest
 
-ENV CONFIG_FILE_PATH $CONFIG_FILE_PATH
-
-ENV DB_URL $DB_URL
-ENV DB_USER $DB_USER
-ENV DB_PASSWORD $DB_PASSWORD
-
-ENV JWT_SECRET $JWT_SECRET
-ENV JWT_ISSUER $JWT_ISSUER
-ENV JWT_VALIDITY_IN_MIN $JWT_VALIDITY_IN_MIN
-
-ENV BASIC_USERNAME $BASIC_USERNAME
-ENV BASIC_PASSWORD $BASIC_PASSWORD
-
-COPY build/libs/revanced-api-*.jar revanced-api.jar
-
-CMD java -jar revanced-api.jar start
+WORKDIR /app
+COPY --from=build /app/build/libs/revanced-api-*.jar revanced-api.jar
+CMD java -jar revanced-api.jar $COMMAND

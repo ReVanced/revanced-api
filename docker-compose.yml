@@ -1,23 +1,13 @@
-version: "3.8"
-
 services:
   revanced-api:
     container_name: revanced-api
     image: ghcr.io/revanced/revanced-api:latest
     volumes:
-      - /data/revanced-api/persistence:/persistence
-      - /data/revanced-api/configuration.toml:/configuration.toml
+      - /data/revanced-api/persistence:/app/persistence
+      - /data/revanced-api/.env:/app/.env
+      - /data/revanced-api/configuration.toml:/app/configuration.toml
     environment:
-      - CONFIG_FILE_PATH=configuration.toml
-      - GITHUB_TOKEN=
-      - DB_URL=jdbc:h2:./persistence/revanced-api
-      - DB_USER=
-      - DB_PASSWORD=
-      - JWT_SECRET=
-      - JWT_ISSUER=
-      - JWT_VALIDITY_IN_MIN=5
-      - BASIC_USERNAME=
-      - BASIC_PASSWORD=
+      - COMMAND=start
     ports:
-      - 127.0.0.1:8080:8000
+      - localhost:8080:8080
     restart: unless-stopped

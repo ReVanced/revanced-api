@@ -19,7 +19,7 @@ internal object StartAPICommand : Runnable {
         description = ["The host address to bind to."],
         showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
     )
-    private var host: String = "0.0.0.0"
+    private var host: String = "127.0.0.1"
 
     @CommandLine.Option(
         names = ["-p", "--port"],
