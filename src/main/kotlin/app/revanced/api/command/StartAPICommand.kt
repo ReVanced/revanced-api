@@ -6,7 +6,7 @@ import app.revanced.api.configuration.configureSecurity
 import app.revanced.api.configuration.configureSerialization
 import app.revanced.api.configuration.routing.configureRouting
 import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.jetty.*
 import picocli.CommandLine
 
 @CommandLine.Command(
@@ -29,7 +29,7 @@ internal object StartAPICommand : Runnable {
     private var port: Int = 8080
 
     override fun run() {
-        embeddedServer(Netty, port, host) {
+        embeddedServer(Jetty, port, host) {
             configureDependencies()
             configureHTTP(allowedHost = host)
             configureSerialization()

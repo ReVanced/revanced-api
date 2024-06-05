@@ -28,7 +28,7 @@ ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors" }
 ktor-server-caching-headers = { module = "io.ktor:ktor-server-caching-headers" }
 ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
-ktor-server-netty = { module = "io.ktor:ktor-server-netty" }
+ktor-server-jetty = { module = "io.ktor:ktor-server-jetty" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }

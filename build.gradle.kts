@@ -17,6 +17,11 @@ tasks {
         group = "publishing"
         dependsOn(startShadowScripts)
     }
+
+    shadowJar {
+        // Needed for Jetty to work.
+        mergeServiceFiles()
+    }
 }
 
 application {
@@ -57,7 +62,7 @@ dependencies {
     implementation(libs.ktor.server.cors)
     implementation(libs.ktor.server.caching.headers)
     implementation(libs.ktor.server.host.common)
-    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.jetty)
     implementation(libs.ktor.server.conditional.headers)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
