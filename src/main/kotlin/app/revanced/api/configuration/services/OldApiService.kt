@@ -25,20 +25,21 @@ internal class OldApiService(private val client: HttpClient) {
             headers {
                 appendAll(
                     call.request.headers.filter { key, _ ->
-                        !key.equals(
-                            HttpHeaders.ContentType,
-                            ignoreCase = true,
-                        ) &&
-                            !key.equals(
-                                HttpHeaders.ContentLength,
-                                ignoreCase = true,
-                            ) &&
-                            !key.equals(HttpHeaders.Host, ignoreCase = true)
+                        !(
+                            key.equals(HttpHeaders.ContentType, ignoreCase = true) ||
+                                key.equals(HttpHeaders.ContentLength, ignoreCase = true) ||
+                                key.equals(HttpHeaders.Host, ignoreCase = true)
+                            )
                     },
                 )
             }
-            if (call.request.httpMethod == HttpMethod.Post) {
-                body = ByteArrayContent(byteArray, call.request.contentType())
+
+            when (call.request.httpMethod) {
+                HttpMethod.Post,
+                HttpMethod.Put,
+                HttpMethod.Patch,
+                HttpMethod.Delete,
+                -> body = ByteArrayContent(byteArray, call.request.contentType())
             }
         }
 
