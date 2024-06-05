@@ -1,4 +1,4 @@
-package app.revanced.api.repository.backend
+package app.revanced.api.configuration.repository.backend
 
 import io.ktor.client.*
 import kotlinx.datetime.LocalDateTime

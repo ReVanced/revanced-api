@@ -1,6 +1,6 @@
 package app.revanced.api.configuration.routing.routes
 
-import app.revanced.api.services.PatchesService
+import app.revanced.api.configuration.services.PatchesService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*

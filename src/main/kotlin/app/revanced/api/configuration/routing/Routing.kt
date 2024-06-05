@@ -1,10 +1,10 @@
 package app.revanced.api.configuration.routing
 
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.routing.routes.announcementsRoute
 import app.revanced.api.configuration.routing.routes.oldApiRoute
 import app.revanced.api.configuration.routing.routes.patchesRoute
 import app.revanced.api.configuration.routing.routes.rootRoute
-import app.revanced.api.repository.ConfigurationRepository
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.get

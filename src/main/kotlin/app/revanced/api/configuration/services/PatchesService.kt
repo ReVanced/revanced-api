@@ -1,10 +1,10 @@
-package app.revanced.api.services
+package app.revanced.api.configuration.services
 
-import app.revanced.api.repository.ConfigurationRepository
-import app.revanced.api.repository.backend.BackendRepository
-import app.revanced.api.schema.APIAsset
-import app.revanced.api.schema.APIRelease
-import app.revanced.api.schema.APIReleaseVersion
+import app.revanced.api.configuration.repository.ConfigurationRepository
+import app.revanced.api.configuration.repository.backend.BackendRepository
+import app.revanced.api.configuration.schema.APIAsset
+import app.revanced.api.configuration.schema.APIRelease
+import app.revanced.api.configuration.schema.APIReleaseVersion
 import app.revanced.library.PatchUtils
 import app.revanced.patcher.PatchBundleLoader
 import com.github.benmanes.caffeine.cache.Caffeine

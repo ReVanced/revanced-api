@@ -1,4 +1,4 @@
-package app.revanced.api.repository
+package app.revanced.api.configuration.services
 
 import io.ktor.client.*
 import io.ktor.client.request.*

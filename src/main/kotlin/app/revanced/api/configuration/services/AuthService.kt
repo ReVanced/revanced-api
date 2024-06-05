@@ -1,4 +1,4 @@
-package app.revanced.api.services
+package app.revanced.api.configuration.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm

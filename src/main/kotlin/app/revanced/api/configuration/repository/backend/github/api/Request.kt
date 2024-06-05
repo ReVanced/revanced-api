@@ -1,4 +1,4 @@
-package app.revanced.api.repository.backend.github.api
+package app.revanced.api.configuration.repository.backend.github.api
 
 import io.ktor.resources.*
 
