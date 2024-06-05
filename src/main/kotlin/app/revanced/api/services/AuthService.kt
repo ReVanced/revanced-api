@@ -38,10 +38,8 @@ internal class AuthService(
         }
     }
 
-    fun newToken(): String {
-        return JWT.create()
-            .withIssuer(issuer)
-            .withExpiresAt(Date(System.currentTimeMillis() + validityInMin.minutes.inWholeMilliseconds))
-            .sign(Algorithm.HMAC256(jwtSecret))
-    }
+    fun newToken(): String = JWT.create()
+        .withIssuer(issuer)
+        .withExpiresAt(Date(System.currentTimeMillis() + validityInMin.minutes.inWholeMilliseconds))
+        .sign(Algorithm.HMAC256(jwtSecret))
 }

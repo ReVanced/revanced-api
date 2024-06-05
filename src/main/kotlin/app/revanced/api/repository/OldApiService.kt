@@ -28,10 +28,12 @@ internal class OldApiService(private val client: HttpClient) {
                         !key.equals(
                             HttpHeaders.ContentType,
                             ignoreCase = true,
-                        ) && !key.equals(
-                            HttpHeaders.ContentLength,
-                            ignoreCase = true,
-                        ) && !key.equals(HttpHeaders.Host, ignoreCase = true)
+                        ) &&
+                            !key.equals(
+                                HttpHeaders.ContentLength,
+                                ignoreCase = true,
+                            ) &&
+                            !key.equals(HttpHeaders.Host, ignoreCase = true)
                     },
                 )
             }
@@ -51,7 +53,8 @@ internal class OldApiService(private val client: HttpClient) {
                         !key.equals(
                             HttpHeaders.ContentType,
                             ignoreCase = true,
-                        ) && !key.equals(HttpHeaders.ContentLength, ignoreCase = true)
+                        ) &&
+                            !key.equals(HttpHeaders.ContentLength, ignoreCase = true)
                     },
                 )
             }
