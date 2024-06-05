@@ -15,7 +15,7 @@ tasks {
     // Tracking: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
     register<DefaultTask>("publish") {
         group = "publishing"
-        dependsOn(shadowJar)
+        dependsOn(startShadowScripts)
     }
 }
 

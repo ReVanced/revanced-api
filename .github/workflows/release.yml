@@ -6,10 +6,6 @@ on:
     branches:
       - main
       - dev
-  pull_request:
-    branches:
-      - main
-      - dev
 
 jobs:
   release:
@@ -44,6 +40,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          fingerprint: ${{ env.GPG_FINGERPRINT }}
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
@@ -51,39 +54,30 @@ jobs:
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          image: tonistiigi/binfmt:latest
-          platforms: all
 
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Extract metadata for the Docker image
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=${{ startsWith(github.ref, 'refs/heads/main') }}
+            suffix=-${{ github.sha }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GH_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=${{ startsWith(github.ref, 'refs/heads/main') }}
-            suffix=-${{ github.sha }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@v5
         with:
-          build-args: GH_TOKEN=${{ secrets.GH_TOKEN }}
-          context: .
-          file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64/v8
-          cache-to: type=gha,mode=max,ignore-error=true
+          platforms: linux/amd64,linux/arm64
           cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
