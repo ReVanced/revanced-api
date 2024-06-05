@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.22"
+kotlin = "2.0.0"
 logback = "1.4.14"
 exposed = "0.41.1"
 h2 = "2.2.224"
@@ -7,11 +7,10 @@ koin = "3.5.3"
 dotenv = "6.4.1"
 ktor = "2.3.7"
 ktoml = "0.5.1"
-picocli = "4.7.3"
+picocli = "4.7.5"
 datetime = "0.5.0"
-mockk = "1.13.9"
-revanced-patcher = "19.2.0"
-revanced-library = "1.5.0"
+revanced-patcher = "19.3.1"
+revanced-library = "2.3.0"
 caffeine = "3.1.8"
 
 [libraries]
@@ -39,13 +38,10 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
 exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
-ktor-server-tests = { module = "io.ktor:ktor-server-tests" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
 ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 revanced-patcher = { module = "app.revanced:revanced-patcher", version.ref = "revanced-patcher" }
 revanced-library = { module = "app.revanced:revanced-library", version.ref = "revanced-library" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }

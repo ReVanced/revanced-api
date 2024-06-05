@@ -1,18 +1,18 @@
-package app.revanced.api.backend.github
+package app.revanced.api.repository.backend.github
 
-import app.revanced.api.backend.Backend
-import app.revanced.api.backend.Backend.BackendOrganization.BackendMember
-import app.revanced.api.backend.Backend.BackendOrganization.BackendRepository.BackendContributor
-import app.revanced.api.backend.Backend.BackendOrganization.BackendRepository.BackendRelease
-import app.revanced.api.backend.Backend.BackendOrganization.BackendRepository.BackendRelease.BackendAsset
-import app.revanced.api.backend.github.api.Request
-import app.revanced.api.backend.github.api.Request.Organization.Members
-import app.revanced.api.backend.github.api.Request.Organization.Repository.Contributors
-import app.revanced.api.backend.github.api.Request.Organization.Repository.Releases
-import app.revanced.api.backend.github.api.Response
-import app.revanced.api.backend.github.api.Response.GitHubOrganization.GitHubMember
-import app.revanced.api.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubContributor
-import app.revanced.api.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubRelease
+import app.revanced.api.repository.backend.BackendRepository
+import app.revanced.api.repository.backend.BackendRepository.BackendOrganization.BackendMember
+import app.revanced.api.repository.backend.BackendRepository.BackendOrganization.BackendRepository.BackendContributor
+import app.revanced.api.repository.backend.BackendRepository.BackendOrganization.BackendRepository.BackendRelease
+import app.revanced.api.repository.backend.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.BackendAsset
+import app.revanced.api.repository.backend.github.api.Request
+import app.revanced.api.repository.backend.github.api.Request.Organization.Members
+import app.revanced.api.repository.backend.github.api.Request.Organization.Repository.Contributors
+import app.revanced.api.repository.backend.github.api.Request.Organization.Repository.Releases
+import app.revanced.api.repository.backend.github.api.Response
+import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubMember
+import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubContributor
+import app.revanced.api.repository.backend.github.api.Response.GitHubOrganization.GitHubRepository.GitHubRelease
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
@@ -30,7 +30,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 
 @OptIn(ExperimentalSerializationApi::class)
-class GitHubBackend(token: String? = null) : Backend({
+class GitHubBackendRepository(token: String? = null) : BackendRepository({
     install(HttpCache)
     install(Resources)
     install(ContentNegotiation) {
@@ -59,7 +59,7 @@ class GitHubBackend(token: String? = null) : Backend({
         }
     }
 }) {
-    override suspend fun getRelease(
+    override suspend fun release(
         owner: String,
         repository: String,
         tag: String?,
@@ -80,7 +80,7 @@ class GitHubBackend(token: String? = null) : Backend({
         )
     }
 
-    override suspend fun getContributors(
+    override suspend fun contributors(
         owner: String,
         repository: String,
     ): Set<BackendContributor> {
@@ -96,7 +96,7 @@ class GitHubBackend(token: String? = null) : Backend({
         }.toSet()
     }
 
-    override suspend fun getMembers(organization: String): Set<BackendMember> {
+    override suspend fun members(organization: String): Set<BackendMember> {
         // Get the list of members of the organization.
         val members: Set<GitHubMember> = client.get(Members(organization)).body()
 

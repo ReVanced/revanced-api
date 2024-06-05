@@ -1,15 +1,14 @@
-package app.revanced.api.modules
+package app.revanced.api.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import org.koin.ktor.ext.get
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
-class AuthService(
+internal class AuthService(
     private val issuer: String,
     private val validityInMin: Int,
     private val jwtSecret: String,
@@ -45,9 +44,4 @@ class AuthService(
             .withExpiresAt(Date(System.currentTimeMillis() + validityInMin.minutes.inWholeMilliseconds))
             .sign(Algorithm.HMAC256(jwtSecret))
     }
-}
-
-fun Application.configureSecurity() {
-    val configureSecurity = get<AuthService>().configureSecurity
-    configureSecurity()
 }
