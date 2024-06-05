@@ -1,8 +1,8 @@
 package app.revanced.api.configuration.routing.routes
 
-import app.revanced.api.schema.APIAnnouncement
-import app.revanced.api.schema.APIAnnouncementArchivedAt
-import app.revanced.api.services.AnnouncementService
+import app.revanced.api.configuration.schema.APIAnnouncement
+import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
+import app.revanced.api.configuration.services.AnnouncementService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

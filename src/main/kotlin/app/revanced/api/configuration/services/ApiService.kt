@@ -1,10 +1,10 @@
-package app.revanced.api.services
+package app.revanced.api.configuration.services
 
-import app.revanced.api.repository.ConfigurationRepository
-import app.revanced.api.repository.backend.BackendRepository
-import app.revanced.api.schema.APIContributable
-import app.revanced.api.schema.APIContributor
-import app.revanced.api.schema.APIMember
+import app.revanced.api.configuration.repository.ConfigurationRepository
+import app.revanced.api.configuration.repository.backend.BackendRepository
+import app.revanced.api.configuration.schema.APIContributable
+import app.revanced.api.configuration.schema.APIContributor
+import app.revanced.api.configuration.schema.APIMember
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

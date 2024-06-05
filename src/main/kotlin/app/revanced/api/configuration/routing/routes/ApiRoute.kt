@@ -1,7 +1,7 @@
 package app.revanced.api.configuration.routing.routes
 
-import app.revanced.api.services.ApiService
-import app.revanced.api.services.AuthService
+import app.revanced.api.configuration.services.ApiService
+import app.revanced.api.configuration.services.AuthService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

@@ -1,8 +1,8 @@
-package app.revanced.api.services
+package app.revanced.api.configuration.services
 
-import app.revanced.api.repository.AnnouncementRepository
-import app.revanced.api.schema.APIAnnouncement
-import app.revanced.api.schema.APILatestAnnouncement
+import app.revanced.api.configuration.repository.AnnouncementRepository
+import app.revanced.api.configuration.schema.APIAnnouncement
+import app.revanced.api.configuration.schema.APILatestAnnouncement
 import kotlinx.datetime.LocalDateTime
 
 internal class AnnouncementService(

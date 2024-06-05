@@ -1,9 +1,9 @@
-package app.revanced.api.repository
+package app.revanced.api.configuration.repository
 
-import app.revanced.api.repository.AnnouncementRepository.AttachmentTable.announcement
-import app.revanced.api.schema.APIAnnouncement
-import app.revanced.api.schema.APILatestAnnouncement
-import app.revanced.api.schema.APIResponseAnnouncement
+import app.revanced.api.configuration.repository.AnnouncementRepository.AttachmentTable.announcement
+import app.revanced.api.configuration.schema.APIAnnouncement
+import app.revanced.api.configuration.schema.APILatestAnnouncement
+import app.revanced.api.configuration.schema.APIResponseAnnouncement
 import kotlinx.datetime.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

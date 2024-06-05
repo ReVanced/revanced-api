@@ -1,14 +1,14 @@
 package app.revanced.api.configuration
 
-import app.revanced.api.repository.AnnouncementRepository
-import app.revanced.api.repository.ConfigurationRepository
-import app.revanced.api.repository.OldApiService
-import app.revanced.api.repository.backend.BackendRepository
-import app.revanced.api.repository.backend.github.GitHubBackendRepository
-import app.revanced.api.services.AnnouncementService
-import app.revanced.api.services.ApiService
-import app.revanced.api.services.AuthService
-import app.revanced.api.services.PatchesService
+import app.revanced.api.configuration.repository.AnnouncementRepository
+import app.revanced.api.configuration.repository.ConfigurationRepository
+import app.revanced.api.configuration.repository.backend.BackendRepository
+import app.revanced.api.configuration.repository.backend.github.GitHubBackendRepository
+import app.revanced.api.configuration.services.AnnouncementService
+import app.revanced.api.configuration.services.ApiService
+import app.revanced.api.configuration.services.AuthService
+import app.revanced.api.configuration.services.OldApiService
+import app.revanced.api.configuration.services.PatchesService
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.source.decodeFromStream
 import io.github.cdimascio.dotenv.Dotenv

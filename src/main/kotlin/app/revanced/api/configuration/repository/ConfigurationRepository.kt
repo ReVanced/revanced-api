@@ -1,4 +1,4 @@
-package app.revanced.api.repository
+package app.revanced.api.configuration.repository
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
