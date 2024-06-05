@@ -8,7 +8,7 @@ import org.koin.ktor.ext.get
 internal fun Route.oldApiRoute() {
     val oldApiService = get<OldApiService>()
 
-    route(Regex("(v2|tools|contributor).*")) {
+    route(Regex("/(v2|tools|contributors).*")) {
         handle {
             oldApiService.proxy(call)
         }
