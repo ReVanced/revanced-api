@@ -1,20 +1,17 @@
 package app.revanced.api.repository.backend
 
 import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 /**
  *  The backend of the application used to get data for the API.
  *
- *  @param httpClientConfig The configuration of the HTTP client.
+ *  @param client The HTTP client to use for requests.
  */
 abstract class BackendRepository internal constructor(
-    httpClientConfig: HttpClientConfig<OkHttpConfig>.() -> Unit = {},
+    protected val client: HttpClient,
 ) {
-    protected val client: HttpClient = HttpClient(OkHttp, httpClientConfig)
-
     /**
      * A user.
      *

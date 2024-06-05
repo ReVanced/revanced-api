@@ -12,11 +12,11 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.koin.ktor.ext.get as koinGet
 
-internal fun Route.configureAnnouncementsRoute() = route("/announcements") {
+internal fun Route.announcementsRoute() = route("announcements") {
     val announcementService = koinGet<AnnouncementService>()
 
-    route("/{channel}/latest") {
-        get("/id") {
+    route("{channel}/latest") {
+        get("id") {
             val channel: String by call.parameters
 
             call.respond(
@@ -33,14 +33,14 @@ internal fun Route.configureAnnouncementsRoute() = route("/announcements") {
         }
     }
 
-    get("/{channel}") {
+    get("{channel}") {
         val channel: String by call.parameters
 
         call.respond(announcementService.all(channel))
     }
 
-    route("/latest") {
-        get("/id") {
+    route("latest") {
+        get("id") {
             call.respond(announcementService.latestId() ?: return@get call.respond(HttpStatusCode.NotFound))
         }
 
@@ -58,26 +58,26 @@ internal fun Route.configureAnnouncementsRoute() = route("/announcements") {
             announcementService.new(call.receive<APIAnnouncement>())
         }
 
-        post("/{id}/archive") {
+        post("{id}/archive") {
             val id: Int by call.parameters
             val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
 
             announcementService.archive(id, archivedAt)
         }
 
-        post("/{id}/unarchive") {
+        post("{id}/unarchive") {
             val id: Int by call.parameters
 
             announcementService.unarchive(id)
         }
 
-        patch("/{id}") {
+        patch("{id}") {
             val id: Int by call.parameters
 
             announcementService.update(id, call.receive<APIAnnouncement>())
         }
 
-        delete("/{id}") {
+        delete("{id}") {
             val id: Int by call.parameters
 
             announcementService.delete(id)
