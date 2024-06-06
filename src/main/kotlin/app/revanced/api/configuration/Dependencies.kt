@@ -33,7 +33,9 @@ import org.koin.ktor.plugin.Koin
 import java.io.File
 
 @OptIn(ExperimentalSerializationApi::class)
-fun Application.configureDependencies() {
+fun Application.configureDependencies(
+    configFile: File,
+) {
     val globalModule = module {
         single {
             Dotenv.configure().load()
@@ -99,11 +101,8 @@ fun Application.configureDependencies() {
             )
         }
 
-        single {
-            val configFilePath = get<Dotenv>()["CONFIG_FILE_PATH"]
-            val configFile = File(configFilePath).inputStream()
-
-            Toml.decodeFromStream<ConfigurationRepository>(configFile)
+        single<ConfigurationRepository> {
+            Toml.decodeFromStream(configFile.inputStream())
         }
 
         singleOf(::AnnouncementRepository)
