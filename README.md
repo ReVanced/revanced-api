@@ -61,7 +61,7 @@
 # 🚀 ReVanced API
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ReVanced/revanced-api/release.yml)
-![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)
+![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)
 
 API server for ReVanced.
 
