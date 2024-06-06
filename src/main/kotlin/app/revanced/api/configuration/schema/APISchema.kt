@@ -23,8 +23,14 @@ class APIMember(
     override val name: String,
     override val avatarUrl: String,
     override val url: String,
-    val gpgKeysUrl: String,
+    val gpgKey: APIGpgKey?,
 ) : APIUser
+
+@Serializable
+class APIGpgKey(
+    val id: String,
+    val url: String,
+)
 
 @Serializable
 class APIContributor(

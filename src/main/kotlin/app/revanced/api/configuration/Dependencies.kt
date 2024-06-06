@@ -1,9 +1,9 @@
 package app.revanced.api.configuration
 
 import app.revanced.api.configuration.repository.AnnouncementRepository
+import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.repository.backend.BackendRepository
-import app.revanced.api.configuration.repository.backend.github.GitHubBackendRepository
+import app.revanced.api.configuration.repository.GitHubBackendRepository
 import app.revanced.api.configuration.services.AnnouncementService
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthService

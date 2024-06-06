@@ -1,10 +1,8 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.repository.backend.BackendRepository
-import app.revanced.api.configuration.schema.APIContributable
-import app.revanced.api.configuration.schema.APIContributor
-import app.revanced.api.configuration.schema.APIMember
+import app.revanced.api.configuration.schema.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -27,7 +25,21 @@ internal class ApiService(
         }
     }.awaitAll()
 
-    suspend fun team() = backendRepository.members(configurationRepository.organization).map {
-        APIMember(it.name, it.avatarUrl, it.url, it.gpgKeysUrl)
+    suspend fun team() = backendRepository.members(configurationRepository.organization).map { member ->
+        APIMember(
+            member.name,
+            member.avatarUrl,
+            member.url,
+            if (member.gpgKeys.ids.isNotEmpty()) {
+                APIGpgKey(
+                    // Must choose one of the GPG keys, because it does not make sense to have multiple GPG keys for the API.
+                    member.gpgKeys.ids.first(),
+                    member.gpgKeys.url,
+                )
+            } else {
+                null
+            },
+
+        )
     }
 }

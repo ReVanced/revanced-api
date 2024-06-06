@@ -1,9 +1,9 @@
 package app.revanced.api.configuration.routing.routes
 
+import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.schema.APIAnnouncement
 import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
 import app.revanced.api.configuration.services.AnnouncementService
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
@@ -19,17 +19,13 @@ internal fun Route.announcementsRoute() = route("announcements") {
         get("id") {
             val channel: String by call.parameters
 
-            call.respond(
-                announcementService.latestId(channel) ?: return@get call.respond(HttpStatusCode.NotFound),
-            )
+            call.respondOrNotFound(announcementService.latestId(channel))
         }
 
         get {
             val channel: String by call.parameters
 
-            call.respond(
-                announcementService.latest(channel) ?: return@get call.respond(HttpStatusCode.NotFound),
-            )
+            call.respondOrNotFound(announcementService.latest(channel))
         }
     }
 
@@ -41,11 +37,11 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
     route("latest") {
         get("id") {
-            call.respond(announcementService.latestId() ?: return@get call.respond(HttpStatusCode.NotFound))
+            call.respondOrNotFound(announcementService.latestId())
         }
 
         get {
-            call.respond(announcementService.latest() ?: return@get call.respond(HttpStatusCode.NotFound))
+            call.respondOrNotFound(announcementService.latest())
         }
     }
 
@@ -73,8 +69,9 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
         patch("{id}") {
             val id: Int by call.parameters
+            val announcement = call.receive<APIAnnouncement>()
 
-            announcementService.update(id, call.receive<APIAnnouncement>())
+            announcementService.update(id, announcement)
         }
 
         delete("{id}") {

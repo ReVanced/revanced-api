@@ -1,8 +1,7 @@
-package app.revanced.api.configuration.repository.backend
+package app.revanced.api.configuration.repository
 
 import io.ktor.client.*
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.Serializable
 
 /**
  *  The backend of the application used to get data for the API.
@@ -40,7 +39,7 @@ abstract class BackendRepository internal constructor(
          * @property avatarUrl The URL to the avatar of the member.
          * @property url The URL to the profile of the member.
          * @property bio The bio of the member.
-         * @property gpgKeysUrl The URL to the GPG keys of the member.
+         * @property gpgKeys The GPG key of the member.
          */
         @Serializable
         class BackendMember(
@@ -48,8 +47,19 @@ abstract class BackendRepository internal constructor(
             override val avatarUrl: String,
             override val url: String,
             val bio: String?,
-            val gpgKeysUrl: String,
-        ) : BackendUser
+            val gpgKeys: GpgKeys,
+        ) : BackendUser {
+            /**
+             * The GPG keys of a member.
+             *
+             * @property ids The IDs of the GPG keys.
+             * @property url The URL to the GPG master key.
+             */
+            class GpgKeys(
+                val ids: Set<String>,
+                val url: String,
+            )
+        }
 
         /**
          * A repository of an organization.
@@ -67,7 +77,6 @@ abstract class BackendRepository internal constructor(
              * @property url The URL to the profile of the contributor.
              * @property contributions The number of contributions of the contributor.
              */
-            @Serializable
             class BackendContributor(
                 override val name: String,
                 override val avatarUrl: String,
@@ -83,7 +92,6 @@ abstract class BackendRepository internal constructor(
              * @property createdAt The date and time the release was created.
              * @property releaseNote The release note of the release.
              */
-            @Serializable
             class BackendRelease(
                 val tag: String,
                 val releaseNote: String,
@@ -95,7 +103,6 @@ abstract class BackendRepository internal constructor(
                  *
                  * @property downloadUrl The URL to download the asset.
                  */
-                @Serializable
                 class BackendAsset(
                     val downloadUrl: String,
                 )

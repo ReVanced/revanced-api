@@ -1,7 +1,7 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.repository.backend.BackendRepository
 import app.revanced.api.configuration.schema.APIAsset
 import app.revanced.api.configuration.schema.APIRelease
 import app.revanced.api.configuration.schema.APIReleaseVersion
