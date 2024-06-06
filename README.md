@@ -99,7 +99,7 @@ so before you can pull the image, you need to [authenticate to the Container reg
 3. Create a `docker-compose.yml` file using [docker-compose.example.yml](docker-compose.example.yml) as a template
 4. Run `docker-compose up -d` to start the server
 
-### 🐳 Docker CLI
+### 💻 Docker CLI
 
 1. Create an `.env` file using [.env.example](.env.example) as a template
 2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
