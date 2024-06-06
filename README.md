@@ -126,7 +126,7 @@ To deploy ReVanced API standalone, you can either use the pre-built executable o
 
 ### 📦 Pre-built executable
 
-1. [Download](https://github.com/ReVanced/revanced-patches/releases/latest) ReVanced API to a folder
+1. [Download](https://github.com/ReVanced/revanced-api/releases/latest) ReVanced API to a folder
 2. In the same folder, create an `.env` file using [.env.example](.env.example) as a template
 3. In the same folder, create a `configuration.toml` file
 using [configuration.example.toml](configuration.example.toml) as a template
