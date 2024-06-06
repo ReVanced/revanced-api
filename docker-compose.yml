@@ -9,5 +9,5 @@ services:
     environment:
       - COMMAND=start
     ports:
-      - localhost:8080:8080
+      - localhost:8888:8888
     restart: unless-stopped

@@ -26,7 +26,7 @@ internal object StartAPICommand : Runnable {
         description = ["The port to listen on."],
         showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
     )
-    private var port: Int = 8080
+    private var port: Int = 8888
 
     override fun run() {
         embeddedServer(Jetty, port, host) {
