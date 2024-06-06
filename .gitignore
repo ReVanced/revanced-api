@@ -39,3 +39,4 @@ out/
 .env
 persistence/
 configuration.toml
+docker-compose.yml
