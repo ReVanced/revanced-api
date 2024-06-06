@@ -41,7 +41,6 @@ abstract class BackendRepository internal constructor(
          * @property bio The bio of the member.
          * @property gpgKeys The GPG key of the member.
          */
-        @Serializable
         class BackendMember(
             override val name: String,
             override val avatarUrl: String,
@@ -111,6 +110,19 @@ abstract class BackendRepository internal constructor(
     }
 
     /**
+     * The rate limit of the backend.
+     *
+     * @property limit The limit of the rate limit.
+     * @property remaining The remaining requests of the rate limit.
+     * @property reset The date and time the rate limit resets.
+     */
+    class BackendRateLimit(
+        val limit: Int,
+        val remaining: Int,
+        val reset: LocalDateTime,
+    )
+
+    /**
      * Get a release of a repository.
      *
      * @param owner The owner of the repository.
@@ -140,4 +152,11 @@ abstract class BackendRepository internal constructor(
      * @return The members.
      */
     abstract suspend fun members(organization: String): Set<BackendOrganization.BackendMember>
+
+    /**
+     * Get the rate limit of the backend.
+     *
+     * @return The rate limit.
+     */
+    abstract suspend fun rateLimit(): BackendRateLimit?
 }
