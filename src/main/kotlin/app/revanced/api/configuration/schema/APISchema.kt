@@ -106,3 +106,10 @@ class APILatestAnnouncement(
 class APIAnnouncementArchivedAt(
     val archivedAt: LocalDateTime,
 )
+
+@Serializable
+class APIRateLimit(
+    val limit: Int,
+    val remaining: Int,
+    val reset: LocalDateTime,
+)

@@ -42,4 +42,8 @@ internal class ApiService(
 
         )
     }
+
+    suspend fun rateLimit() = backendRepository.rateLimit()?.let {
+        APIRateLimit(it.limit, it.remaining, it.reset)
+    }
 }

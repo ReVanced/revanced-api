@@ -1,5 +1,6 @@
 package app.revanced.api.configuration.routing.routes
 
+import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthService
 import io.ktor.http.*
@@ -26,6 +27,10 @@ internal fun Route.rootRoute() {
         handle {
             call.respond(HttpStatusCode.NoContent)
         }
+    }
+
+    get("backend/rate_limit") {
+        call.respondOrNotFound(apiService.rateLimit())
     }
 
     authenticate("basic") {
