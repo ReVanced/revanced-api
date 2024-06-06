@@ -126,6 +126,8 @@ To deploy ReVanced API standalone, you can either use the pre-built executable o
 
 ### 📦 Pre-built executable
 
+A Java Runtime Environment (JRE) must be installed.
+
 1. [Download](https://github.com/ReVanced/revanced-api/releases/latest) ReVanced API to a folder
 2. In the same folder, create an `.env` file using [.env.example](.env.example) as a template
 3. In the same folder, create a `configuration.toml` file
@@ -133,6 +135,8 @@ using [configuration.example.toml](configuration.example.toml) as a template
 4. Run `java -jar revanced-api.jar start` to start the server
 
 ### 🛠️ From source
+
+A Java Development Kit (JDK) and Git must be installed.
 
 1. Run `git clone git@github.com:ReVanced/revanced-api.git` to clone the repository
 2. Copy [.env.example](.env.example) to `.env` and fill in the required values
@@ -147,7 +151,7 @@ Thank you for considering contributing to ReVanced API. You can find the contrib
 
 ### 🛠️ Building
 
-In order to build ReVanced API, Java Development Kit (JDK) and Git must be installed first.  
+To build ReVanced API, a Java Development Kit (JDK) and Git must be installed.  
 Follow the steps below to build ReVanced API:
 
 1. Run `git clone git@github.com:ReVanced/revanced-api.git` to clone the repository
