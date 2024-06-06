@@ -6,6 +6,7 @@ import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
 import app.revanced.api.configuration.services.AnnouncementService
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -15,69 +16,78 @@ import org.koin.ktor.ext.get as koinGet
 internal fun Route.announcementsRoute() = route("announcements") {
     val announcementService = koinGet<AnnouncementService>()
 
-    route("{channel}/latest") {
-        get("id") {
+    rateLimit(RateLimitName("weak")) {
+        route("{channel}/latest") {
+            get("id") {
+                val channel: String by call.parameters
+
+                call.respondOrNotFound(announcementService.latestId(channel))
+            }
+
+            get {
+                val channel: String by call.parameters
+
+                call.respondOrNotFound(announcementService.latest(channel))
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
+        get("{channel}") {
             val channel: String by call.parameters
 
-            call.respondOrNotFound(announcementService.latestId(channel))
+            call.respond(announcementService.all(channel))
         }
+    }
+    rateLimit(RateLimitName("strong")) {
+        route("latest") {
+            get("id") {
+                call.respondOrNotFound(announcementService.latestId())
+            }
 
+            get {
+                call.respondOrNotFound(announcementService.latest())
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
         get {
-            val channel: String by call.parameters
-
-            call.respondOrNotFound(announcementService.latest(channel))
+            call.respond(announcementService.all())
         }
     }
 
-    get("{channel}") {
-        val channel: String by call.parameters
+    rateLimit(RateLimitName("strong")) {
+        authenticate("jwt") {
+            post {
+                announcementService.new(call.receive<APIAnnouncement>())
+            }
 
-        call.respond(announcementService.all(channel))
-    }
+            post("{id}/archive") {
+                val id: Int by call.parameters
+                val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
 
-    route("latest") {
-        get("id") {
-            call.respondOrNotFound(announcementService.latestId())
-        }
+                announcementService.archive(id, archivedAt)
+            }
 
-        get {
-            call.respondOrNotFound(announcementService.latest())
-        }
-    }
+            post("{id}/unarchive") {
+                val id: Int by call.parameters
 
-    get {
-        call.respond(announcementService.all())
-    }
+                announcementService.unarchive(id)
+            }
 
-    authenticate("jwt") {
-        post {
-            announcementService.new(call.receive<APIAnnouncement>())
-        }
+            patch("{id}") {
+                val id: Int by call.parameters
+                val announcement = call.receive<APIAnnouncement>()
 
-        post("{id}/archive") {
-            val id: Int by call.parameters
-            val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
+                announcementService.update(id, announcement)
+            }
 
-            announcementService.archive(id, archivedAt)
-        }
+            delete("{id}") {
+                val id: Int by call.parameters
 
-        post("{id}/unarchive") {
-            val id: Int by call.parameters
-
-            announcementService.unarchive(id)
-        }
-
-        patch("{id}") {
-            val id: Int by call.parameters
-            val announcement = call.receive<APIAnnouncement>()
-
-            announcementService.update(id, announcement)
-        }
-
-        delete("{id}") {
-            val id: Int by call.parameters
-
-            announcementService.delete(id)
+                announcementService.delete(id)
+            }
         }
     }
 }
