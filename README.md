@@ -104,7 +104,6 @@ so before you can pull the image, you need to [authenticate to the Container reg
 1. Create an `.env` file using [.env.example](.env.example) as a template
 2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
 3. Start the container using the following command:
-
    ```shell
    docker run -d --name revanced-api \
     # Mount the .env file
@@ -115,6 +114,9 @@ so before you can pull the image, you need to [authenticate to the Container reg
     -v $(pwd)/persistence:/app/persistence \
     # Expose the port 8888
     -p 8888:8888 \
+    # Use the start command to start the server
+    -e COMMAND=start \
+    # Pull the image from the GitHub Container registry
     ghcr.io/revanced/revanced-api:latest
    ```
 
