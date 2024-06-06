@@ -8,6 +8,7 @@ import app.revanced.api.configuration.routing.configureRouting
 import io.ktor.server.engine.*
 import io.ktor.server.jetty.*
 import picocli.CommandLine
+import java.io.File
 
 @CommandLine.Command(
     name = "start",
@@ -28,9 +29,16 @@ internal object StartAPICommand : Runnable {
     )
     private var port: Int = 8888
 
+    @CommandLine.Option(
+        names = ["-c", "--config"],
+        description = ["The path to the configuration file."],
+        showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
+    )
+    private var configFile = File("configuration.toml")
+
     override fun run() {
         embeddedServer(Jetty, port, host) {
-            configureDependencies()
+            configureDependencies(configFile)
             configureHTTP(allowedHost = host)
             configureSerialization()
             configureSecurity()
