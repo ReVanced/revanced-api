@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.ktor)
     alias(libs.plugins.serilization)
+    `maven-publish`
+    signing
 }
 
 group = "app.revanced"
@@ -13,9 +15,8 @@ tasks {
 
     // Needed by gradle-semantic-release-plugin.
     // Tracking: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
-    register<DefaultTask>("publish") {
-        group = "publishing"
-        dependsOn(startShadowScripts)
+    publish {
+        dependsOn(shadowJar)
     }
 
     shadowJar {
@@ -80,4 +81,23 @@ dependencies {
     implementation(libs.revanced.patcher)
     implementation(libs.revanced.library)
     implementation(libs.caffeine)
+}
+
+// The maven-publish plugin is necessary to make signing work.
+publishing {
+    repositories {
+        mavenLocal()
+    }
+
+    publications {
+        create<MavenPublication>("revanced-api-publication") {
+            from(components["java"])
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+
+    sign(publishing.publications["revanced-api-publication"])
 }

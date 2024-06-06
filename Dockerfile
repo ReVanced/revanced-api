@@ -9,7 +9,7 @@ ENV GITHUB_TOKEN $GITHUB_TOKEN
 
 WORKDIR /app
 COPY . .
-RUN gradle publish --no-daemon
+RUN gradle startShadowScript --no-daemon
 
 # Build the runtime container
 FROM eclipse-temurin:latest

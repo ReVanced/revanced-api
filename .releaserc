@@ -32,7 +32,7 @@
       {
         "assets": [
           {
-            "path": "build/libs/*.jar"
+            "path": "build/libs/*"
           }
         ],
         successComment: false
