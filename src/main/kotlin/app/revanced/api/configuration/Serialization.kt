@@ -13,6 +13,7 @@ fun Application.configureSerialization() {
         json(
             Json {
                 namingStrategy = JsonNamingStrategy.SnakeCase
+                explicitNulls = false
             },
         )
     }
