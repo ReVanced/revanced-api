@@ -1,4 +1,4 @@
-package app.revanced.api.configuration.routing.routes
+package app.revanced.api.configuration.routes
 
 import app.revanced.api.configuration.services.OldApiService
 import io.ktor.server.application.*
