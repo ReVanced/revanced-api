@@ -4,17 +4,29 @@ import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.schema.APIAnnouncement
 import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
 import app.revanced.api.configuration.services.AnnouncementService
+import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import kotlin.time.Duration.Companion.minutes
 import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.announcementsRoute() = route("announcements") {
     val announcementService = koinGet<AnnouncementService>()
+
+    install(CachingHeaders) {
+        options { _, _ ->
+            CachingOptions(
+                CacheControl.MaxAge(maxAgeSeconds = 1.minutes.inWholeSeconds.toInt()),
+            )
+        }
+    }
 
     rateLimit(RateLimitName("weak")) {
         route("{channel}/latest") {
@@ -39,6 +51,7 @@ internal fun Route.announcementsRoute() = route("announcements") {
             call.respond(announcementService.all(channel))
         }
     }
+
     rateLimit(RateLimitName("strong")) {
         route("latest") {
             get("id") {

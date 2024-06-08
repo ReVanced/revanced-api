@@ -1,28 +1,20 @@
 package app.revanced.api.configuration
 
-import io.ktor.http.*
-import io.ktor.http.content.*
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.ratelimit.*
+import org.koin.ktor.ext.get
 import kotlin.time.Duration.Companion.minutes
 
-fun Application.configureHTTP(
-    allowedHost: String,
-) {
+fun Application.configureHTTP() {
+    val configurationRepository = get<ConfigurationRepository>()
+
     install(CORS) {
-        allowMethod(HttpMethod.Options)
-        allowMethod(HttpMethod.Put)
-        allowMethod(HttpMethod.Delete)
-        allowMethod(HttpMethod.Patch)
-        allowHeader(HttpHeaders.Authorization)
-        allowHost(allowedHost)
+        allowHost(host = configurationRepository.host)
     }
-    install(CachingHeaders) {
-        options { _, _ -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 5.minutes.inWholeSeconds.toInt())) }
-    }
+
     install(RateLimit) {
         register(RateLimitName("weak")) {
             rateLimiter(limit = 30, refillPeriod = 2.minutes)

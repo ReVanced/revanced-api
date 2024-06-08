@@ -14,4 +14,5 @@ internal class ConfigurationRepository(
     val contributorsRepositoryNames: Set<String>,
     @SerialName("api-version")
     val apiVersion: Int = 1,
+    val host: String,
 )
