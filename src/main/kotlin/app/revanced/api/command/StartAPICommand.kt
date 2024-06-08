@@ -1,10 +1,6 @@
 package app.revanced.api.command
 
-import app.revanced.api.configuration.configureDependencies
-import app.revanced.api.configuration.configureHTTP
-import app.revanced.api.configuration.configureRouting
-import app.revanced.api.configuration.configureSecurity
-import app.revanced.api.configuration.configureSerialization
+import app.revanced.api.configuration.*
 import io.ktor.server.engine.*
 import io.ktor.server.jetty.*
 import picocli.CommandLine
@@ -42,6 +38,7 @@ internal object StartAPICommand : Runnable {
             configureHTTP()
             configureSerialization()
             configureSecurity()
+            configureOpenAPI()
             configureRouting()
         }.start(wait = true)
     }

@@ -1,14 +1,22 @@
 package app.revanced.api.configuration.routes
 
+import app.revanced.api.configuration.installCache
+import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.schema.APIAnnouncement
 import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
+import app.revanced.api.configuration.schema.APIResponseAnnouncement
+import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import app.revanced.api.configuration.services.AnnouncementService
+import io.bkbn.kompendium.core.metadata.DeleteInfo
+import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PatchInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -20,49 +28,9 @@ import org.koin.ktor.ext.get as koinGet
 internal fun Route.announcementsRoute() = route("announcements") {
     val announcementService = koinGet<AnnouncementService>()
 
-    install(CachingHeaders) {
-        options { _, _ ->
-            CachingOptions(
-                CacheControl.MaxAge(maxAgeSeconds = 1.minutes.inWholeSeconds.toInt()),
-            )
-        }
-    }
+    installCache(5.minutes)
 
-    rateLimit(RateLimitName("weak")) {
-        route("{channel}/latest") {
-            get("id") {
-                val channel: String by call.parameters
-
-                call.respondOrNotFound(announcementService.latestId(channel))
-            }
-
-            get {
-                val channel: String by call.parameters
-
-                call.respondOrNotFound(announcementService.latest(channel))
-            }
-        }
-    }
-
-    rateLimit(RateLimitName("strong")) {
-        get("{channel}") {
-            val channel: String by call.parameters
-
-            call.respond(announcementService.all(channel))
-        }
-    }
-
-    rateLimit(RateLimitName("strong")) {
-        route("latest") {
-            get("id") {
-                call.respondOrNotFound(announcementService.latestId())
-            }
-
-            get {
-                call.respondOrNotFound(announcementService.latest())
-            }
-        }
-    }
+    installAnnouncementsRouteDocumentation()
 
     rateLimit(RateLimitName("strong")) {
         get {
@@ -71,36 +39,332 @@ internal fun Route.announcementsRoute() = route("announcements") {
     }
 
     rateLimit(RateLimitName("strong")) {
+        route("{channel}/latest") {
+            installLatestChannelAnnouncementRouteDocumentation()
+
+            get {
+                val channel: String by call.parameters
+
+                call.respondOrNotFound(announcementService.latest(channel))
+            }
+
+            route("id") {
+                installLatestChannelAnnouncementIdRouteDocumentation()
+
+                get {
+                    val channel: String by call.parameters
+
+                    call.respondOrNotFound(announcementService.latestId(channel))
+                }
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
+        route("{channel}") {
+            installChannelAnnouncementsRouteDocumentation()
+
+            get {
+                val channel: String by call.parameters
+
+                call.respond(announcementService.all(channel))
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
+        route("latest") {
+            installLatestAnnouncementRouteDocumentation()
+
+            get {
+                call.respondOrNotFound(announcementService.latest())
+            }
+
+            route("id") {
+                installLatestAnnouncementIdRouteDocumentation()
+
+                get {
+                    call.respondOrNotFound(announcementService.latestId())
+                }
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
         authenticate("jwt") {
-            post {
-                announcementService.new(call.receive<APIAnnouncement>())
+            post<APIAnnouncement> { announcement ->
+                announcementService.new(announcement)
             }
 
-            post("{id}/archive") {
-                val id: Int by call.parameters
-                val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
+            route("{id}") {
+                installAnnouncementIdRouteDocumentation()
 
-                announcementService.archive(id, archivedAt)
+                patch<APIAnnouncement> { announcement ->
+                    val id: Int by call.parameters
+
+                    announcementService.update(id, announcement)
+                }
+
+                delete {
+                    val id: Int by call.parameters
+
+                    announcementService.delete(id)
+                }
+
+                route("archive") {
+                    installAnnouncementArchiveRouteDocumentation()
+
+                    post {
+                        val id: Int by call.parameters
+                        val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
+
+                        announcementService.archive(id, archivedAt)
+                    }
+                }
+
+                route("unarchive") {
+                    installAnnouncementUnarchiveRouteDocumentation()
+
+                    post {
+                        val id: Int by call.parameters
+
+                        announcementService.unarchive(id)
+                    }
+                }
             }
+        }
+    }
+}
 
-            post("{id}/unarchive") {
-                val id: Int by call.parameters
+private fun Route.installLatestAnnouncementRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
 
-                announcementService.unarchive(id)
-            }
+    get = GetInfo.builder {
+        description("Get the latest announcement")
+        summary("Get latest announcement")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The latest announcement")
+            responseType<APIResponseAnnouncement>()
+        }
+        canRespond {
+            responseCode(HttpStatusCode.NotFound)
+            description("No announcement exists")
+            responseType<Unit>()
+        }
+    }
+}
 
-            patch("{id}") {
-                val id: Int by call.parameters
-                val announcement = call.receive<APIAnnouncement>()
+private fun Route.installLatestAnnouncementIdRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
 
-                announcementService.update(id, announcement)
-            }
+    get = GetInfo.builder {
+        description("Get the id of the latest announcement")
+        summary("Get id of latest announcement")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The id of the latest announcement")
+            responseType<APIResponseAnnouncementId>()
+        }
+        canRespond {
+            responseCode(HttpStatusCode.NotFound)
+            description("No announcement exists")
+            responseType<Unit>()
+        }
+    }
+}
 
-            delete("{id}") {
-                val id: Int by call.parameters
+private fun Route.installChannelAnnouncementsRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
 
-                announcementService.delete(id)
-            }
+    parameters = listOf(
+        Parameter(
+            name = "channel",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.STRING,
+            description = "The channel to get the announcements from",
+            required = true,
+        ),
+    )
+
+    get = GetInfo.builder {
+        description("Get the announcements from a channel")
+        summary("Get announcements from channel")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The announcements in the channel")
+            responseType<Set<APIResponseAnnouncement>>()
+        }
+    }
+}
+
+private fun Route.installAnnouncementArchiveRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    parameters = listOf(
+        Parameter(
+            name = "id",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.INT,
+            description = "The id of the announcement to archive",
+            required = true,
+        ),
+        Parameter(
+            name = "archivedAt",
+            `in` = Parameter.Location.query,
+            schema = TypeDefinition.STRING,
+            description = "The date and time the announcement to be archived",
+            required = false,
+        ),
+    )
+
+    post = PostInfo.builder {
+        description("Archive an announcement")
+        summary("Archive announcement")
+        response {
+            description("When the announcement was archived")
+            responseCode(HttpStatusCode.OK)
+            responseType<Unit>()
+        }
+    }
+}
+
+private fun Route.installAnnouncementUnarchiveRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    parameters = listOf(
+        Parameter(
+            name = "id",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.INT,
+            description = "The id of the announcement to unarchive",
+            required = true,
+        ),
+    )
+
+    post = PostInfo.builder {
+        description("Unarchive an announcement")
+        summary("Unarchive announcement")
+        response {
+            description("When announcement was unarchived")
+            responseCode(HttpStatusCode.OK)
+            responseType<Unit>()
+        }
+    }
+}
+
+private fun Route.installAnnouncementIdRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    parameters = listOf(
+        Parameter(
+            name = "id",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.INT,
+            description = "The id of the announcement to update",
+            required = true,
+        ),
+    )
+
+    patch = PatchInfo.builder {
+        description("Update an announcement")
+        summary("Update announcement")
+        request {
+            requestType<APIAnnouncement>()
+            description("The new announcement")
+        }
+        response {
+            description("When announcement was updated")
+            responseCode(HttpStatusCode.OK)
+            responseType<Unit>()
+        }
+    }
+
+    delete = DeleteInfo.builder {
+        description("Delete an announcement")
+        summary("Delete announcement")
+        response {
+            description("When the announcement was deleted")
+            responseCode(HttpStatusCode.OK)
+            responseType<Unit>()
+        }
+    }
+}
+
+private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    get = GetInfo.builder {
+        description("Get the announcements")
+        summary("Get announcement")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The announcements")
+            responseType<Set<APIResponseAnnouncement>>()
+        }
+    }
+}
+
+private fun Route.installLatestChannelAnnouncementRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    parameters = listOf(
+        Parameter(
+            name = "channel",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.STRING,
+            description = "The channel to get the latest announcement from",
+            required = true,
+        ),
+    )
+
+    get = GetInfo.builder {
+        description("Get the latest announcement from a channel")
+        summary("Get latest channel announcement")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The latest announcement in the channel")
+            responseType<APIResponseAnnouncement>()
+        }
+        canRespond {
+            responseCode(HttpStatusCode.NotFound)
+            description("The channel does not exist")
+            responseType<Unit>()
+        }
+    }
+}
+
+private fun Route.installLatestChannelAnnouncementIdRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    parameters = listOf(
+        Parameter(
+            name = "channel",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.STRING,
+            description = "The channel to get the latest announcement id from",
+            required = true,
+        ),
+    )
+
+    get = GetInfo.builder {
+        description("Get the id of the latest announcement from a channel")
+        summary("Get id of latest announcement from channel")
+        response {
+            responseCode(HttpStatusCode.OK)
+            mediaTypes("application/json")
+            description("The id of the latest announcement from the channel")
+            responseType<APIResponseAnnouncementId>()
+        }
+        canRespond {
+            responseCode(HttpStatusCode.NotFound)
+            description("The channel does not exist")
+            responseType<Unit>()
         }
     }
 }

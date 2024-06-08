@@ -2,8 +2,8 @@ package app.revanced.api.configuration.repository
 
 import app.revanced.api.configuration.repository.AnnouncementRepository.AttachmentTable.announcement
 import app.revanced.api.configuration.schema.APIAnnouncement
-import app.revanced.api.configuration.schema.APILatestAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncement
+import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import kotlinx.datetime.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -42,6 +42,8 @@ internal class AnnouncementRepository(private val database: Database) {
         announcement.delete()
     }
 
+    // TODO: These are inefficient, but I'm not sure how to make them more efficient.
+
     fun latest() = transaction {
         AnnouncementEntity.all().maxByOrNull { it.createdAt }?.toApi()
     }
@@ -52,13 +54,13 @@ internal class AnnouncementRepository(private val database: Database) {
 
     fun latestId() = transaction {
         AnnouncementEntity.all().maxByOrNull { it.createdAt }?.id?.value?.let {
-            APILatestAnnouncement(it)
+            APIResponseAnnouncementId(it)
         }
     }
 
     fun latestId(channel: String) = transaction {
         AnnouncementEntity.find { AnnouncementTable.channel eq channel }.maxByOrNull { it.createdAt }?.id?.value?.let {
-            APILatestAnnouncement(it)
+            APIResponseAnnouncementId(it)
         }
     }
 

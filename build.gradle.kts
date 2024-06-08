@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.ktor.server.jetty)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
+    implementation("io.bkbn:kompendium-core:latest.release")
     implementation(libs.h2)
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
