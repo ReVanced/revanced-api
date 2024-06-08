@@ -39,7 +39,7 @@ internal object StartAPICommand : Runnable {
     override fun run() {
         embeddedServer(Jetty, port, host) {
             configureDependencies(configFile)
-            configureHTTP(allowedHost = host)
+            configureHTTP()
             configureSerialization()
             configureSecurity()
             configureRouting()

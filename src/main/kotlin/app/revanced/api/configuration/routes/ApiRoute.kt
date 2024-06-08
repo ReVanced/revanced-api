@@ -4,17 +4,21 @@ import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthService
 import io.ktor.http.*
+import io.ktor.http.content.CachingOptions
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.http.content.*
+import io.ktor.server.plugins.cachingheaders.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.koin.ktor.ext.get
+import kotlin.time.Duration.Companion.days
+import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.rootRoute() {
-    val apiService = get<ApiService>()
-    val authService = get<AuthService>()
+    val apiService = koinGet<ApiService>()
+    val authService = koinGet<AuthService>()
 
     rateLimit(RateLimitName("strong")) {
         authenticate("basic") {
@@ -23,16 +27,38 @@ internal fun Route.rootRoute() {
             }
         }
 
-        get("contributors") {
-            call.respond(apiService.contributors())
+        route("contributors") {
+            install(CachingHeaders) {
+                options { _, _ ->
+                    CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 1.days.inWholeSeconds.toInt()))
+                }
+            }
+
+            get {
+                call.respond(apiService.contributors())
+            }
         }
 
-        get("team") {
-            call.respond(apiService.team())
+        route("team") {
+            install(CachingHeaders) {
+                options { _, _ ->
+                    CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 1.days.inWholeSeconds.toInt()))
+                }
+            }
+
+            get {
+                call.respond(apiService.team())
+            }
         }
     }
 
     route("ping") {
+        install(CachingHeaders) {
+            options { _, _ ->
+                CachingOptions(CacheControl.NoCache(null))
+            }
+        }
+
         handle {
             call.respond(HttpStatusCode.NoContent)
         }
