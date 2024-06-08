@@ -3,6 +3,14 @@ package app.revanced.api.command
 import picocli.CommandLine
 import java.util.*
 
+internal val applicationVersion = MainCommand::class.java.getResourceAsStream(
+    "/app/revanced/api/version.properties",
+)?.use { stream ->
+    Properties().apply {
+        load(stream)
+    }.getProperty("version")
+} ?: "v0.0.0"
+
 fun main(args: Array<String>) {
     CommandLine(MainCommand).execute(*args).let(System::exit)
 }
@@ -10,15 +18,7 @@ fun main(args: Array<String>) {
 private object CLIVersionProvider : CommandLine.IVersionProvider {
     override fun getVersion() =
         arrayOf(
-            MainCommand::class.java.getResourceAsStream(
-                "/app/revanced/api/version.properties",
-            )?.use { stream ->
-                Properties().apply {
-                    load(stream)
-                }.let {
-                    "ReVanced API v${it.getProperty("version")}"
-                }
-            } ?: "ReVanced API",
+            "ReVanced API $applicationVersion",
         )
 }
 

@@ -98,7 +98,7 @@ class APIResponseAnnouncement(
 )
 
 @Serializable
-class APILatestAnnouncement(
+class APIResponseAnnouncementId(
     val id: Int,
 )
 
