@@ -19,7 +19,7 @@ internal fun Application.configureOpenAPI() {
         spec = {
             OpenApiSpec(
                 info = Info(
-                    title = "Revanced API",
+                    title = "ReVanced API",
                     version = applicationVersion,
                     description = "API server for ReVanced.",
                     contact = Contact(
