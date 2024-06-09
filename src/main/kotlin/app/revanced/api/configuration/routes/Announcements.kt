@@ -299,7 +299,7 @@ private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRou
 
     get = GetInfo.builder {
         description("Get the announcements")
-        summary("Get announcement")
+        summary("Get announcements")
         response {
             responseCode(HttpStatusCode.OK)
             mediaTypes("application/json")
