@@ -42,12 +42,12 @@ internal fun Application.configureOpenAPI() {
             ).apply {
                 servers += Server(
                     url = URI("https://api.revanced.app"),
-                    description = "ReVanced API server.",
+                    description = "ReVanced API server",
                 )
 
                 servers += Server(
                     url = URI("http://localhost:8888"),
-                    description = "Local ReVanced API server.",
+                    description = "Local ReVanced API server",
                 )
             }
         }
