@@ -11,5 +11,5 @@ services:
     environment:
       - COMMAND=start
     ports:
-      - localhost:8888:8888
+      - 8888:8888
     restart: unless-stopped
