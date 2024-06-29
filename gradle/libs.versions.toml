@@ -1,5 +1,5 @@
 [versions]
-kompendium-core = "latest.release"
+kompendium-core = "3.14.4"
 kotlin = "2.0.0"
 logback = "1.4.14"
 exposed = "0.41.1"
