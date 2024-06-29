@@ -1,14 +1,13 @@
 package app.revanced.api.configuration.schema
 
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class APIRelease(
     val version: String,
     val createdAt: LocalDateTime,
-    val changelog: String,
+    val description: String,
     val assets: Set<APIAsset>,
 )
 
@@ -49,23 +48,15 @@ class APIContributable(
 @Serializable
 class APIAsset(
     val downloadUrl: String,
-) {
-    val type = when {
-        downloadUrl.endsWith(".jar") -> Type.PATCHES
-        downloadUrl.endsWith(".apk") -> Type.INTEGRATIONS
-        else -> Type.UNKNOWN
-    }
+    val signatureDownloadUrl: String,
+    // TODO: Remove this eventually when integrations are merged into patches.
+    val type: APIAssetType,
+)
 
-    enum class Type {
-        @SerialName("patches")
-        PATCHES,
-
-        @SerialName("integrations")
-        INTEGRATIONS,
-
-        @SerialName("unknown")
-        UNKNOWN,
-    }
+@Serializable
+enum class APIAssetType {
+    PATCHES,
+    INTEGRATION,
 }
 
 @Serializable
@@ -112,4 +103,10 @@ class APIRateLimit(
     val limit: Int,
     val remaining: Int,
     val reset: LocalDateTime,
+)
+
+@Serializable
+class APIAssetPublicKeys(
+    val patchesPublicKey: String,
+    val integrationsPublicKey: String,
 )

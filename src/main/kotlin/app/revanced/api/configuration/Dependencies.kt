@@ -4,6 +4,7 @@ import app.revanced.api.configuration.repository.AnnouncementRepository
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.repository.GitHubBackendRepository
+import app.revanced.api.configuration.services.*
 import app.revanced.api.configuration.services.AnnouncementService
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthService
@@ -130,6 +131,7 @@ fun Application.configureDependencies(
             )
         }
         singleOf(::AnnouncementService)
+        singleOf(::SignatureService)
         singleOf(::PatchesService)
         singleOf(::ApiService)
     }

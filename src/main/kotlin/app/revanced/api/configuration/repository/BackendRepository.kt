@@ -4,7 +4,7 @@ import io.ktor.client.*
 import kotlinx.datetime.LocalDateTime
 
 /**
- *  The backend of the application used to get data for the API.
+ *  The backend of the API used to get data.
  *
  *  @param client The HTTP client to use for requests.
  */
@@ -97,12 +97,18 @@ abstract class BackendRepository internal constructor(
                 val createdAt: LocalDateTime,
                 val assets: Set<BackendAsset>,
             ) {
+                companion object {
+                    fun Set<BackendAsset>.first(assetRegex: Regex) = first { assetRegex.containsMatchIn(it.name) }
+                }
+
                 /**
                  * An asset of a release.
                  *
+                 * @property name The name of the asset.
                  * @property downloadUrl The URL to download the asset.
                  */
                 class BackendAsset(
+                    val name: String,
                     val downloadUrl: String,
                 )
             }
