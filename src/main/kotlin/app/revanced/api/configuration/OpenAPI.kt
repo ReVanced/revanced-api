@@ -16,40 +16,37 @@ import java.net.URI
 
 internal fun Application.configureOpenAPI() {
     install(NotarizedApplication()) {
-        spec = {
-            OpenApiSpec(
-                info = Info(
-                    title = "ReVanced API",
-                    version = applicationVersion,
-                    description = "API server for ReVanced.",
-                    contact = Contact(
-                        name = "ReVanced",
-                        url = URI("https://revanced.app"),
-                        email = "contact@revanced.app",
-                    ),
-                    license = License(
-                        name = "AGPLv3",
-                        url = URI("https://github.com/ReVanced/revanced-api/blob/main/LICENSE"),
-                    ),
+        spec = OpenApiSpec(
+            info = Info(
+                title = "ReVanced API",
+                version = applicationVersion,
+                description = "API server for ReVanced.",
+                contact = Contact(
+                    name = "ReVanced",
+                    url = URI("https://revanced.app"),
+                    email = "contact@revanced.app",
                 ),
-                components = Components(
-                    securitySchemes = mutableMapOf(
-                        "bearer" to BearerAuth(),
-                        "basic" to BasicAuth(),
-                    ),
+                license = License(
+                    name = "AGPLv3",
+                    url = URI("https://github.com/ReVanced/revanced-api/blob/main/LICENSE"),
                 ),
+            ),
+            components = Components(
+                securitySchemes = mutableMapOf(
+                    "bearer" to BearerAuth(),
+                    "basic" to BasicAuth(),
+                ),
+            ),
+        ).apply {
+            servers += Server(
+                url = URI("https://api.revanced.app"),
+                description = "ReVanced API server",
+            )
 
-            ).apply {
-                servers += Server(
-                    url = URI("https://api.revanced.app"),
-                    description = "ReVanced API server",
-                )
-
-                servers += Server(
-                    url = URI("http://localhost:8888"),
-                    description = "Local ReVanced API server",
-                )
-            }
+            servers += Server(
+                url = URI("http://localhost:8888"),
+                description = "Local ReVanced API server",
+            )
         }
 
         schemaConfigurator = KotlinXSchemaConfigurator()
