@@ -6,6 +6,8 @@ services:
       - /data/revanced-api/persistence:/app/persistence
       - /data/revanced-api/.env:/app/.env
       - /data/revanced-api/configuration.toml:/app/configuration.toml
+      - /data/revanced-api/patches-public-key.asc:/app/patches-public-key.asc
+      - /data/revanced-api/integrations-public-key.asc:/app/integrations-public-key.asc
     environment:
       - COMMAND=start
     ports:

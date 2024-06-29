@@ -65,9 +65,10 @@ dependencies {
     implementation(libs.ktor.server.rate.limit)
     implementation(libs.ktor.server.host.common)
     implementation(libs.ktor.server.jetty)
+    implementation(libs.ktor.server.call.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
-    implementation("io.bkbn:kompendium-core:latest.release")
+    implementation(libs.kompendium.core)
     implementation(libs.h2)
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
@@ -82,6 +83,8 @@ dependencies {
     implementation(libs.revanced.patcher)
     implementation(libs.revanced.library)
     implementation(libs.caffeine)
+    implementation(libs.bouncy.castle.provider)
+    implementation(libs.bouncy.castle.pgp)
 }
 
 // The maven-publish plugin is necessary to make signing work.

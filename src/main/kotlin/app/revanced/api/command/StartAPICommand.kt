@@ -39,6 +39,7 @@ internal object StartAPICommand : Runnable {
             configureSerialization()
             configureSecurity()
             configureOpenAPI()
+            configureLogging()
             configureRouting()
         }.start(wait = true)
     }

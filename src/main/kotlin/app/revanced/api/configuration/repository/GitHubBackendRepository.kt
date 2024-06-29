@@ -35,7 +35,10 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
             releaseNote = release.body,
             createdAt = release.createdAt.toLocalDateTime(TimeZone.UTC),
             assets = release.assets.map {
-                BackendAsset(downloadUrl = it.browserDownloadUrl)
+                BackendAsset(
+                    name = it.name,
+                    downloadUrl = it.browserDownloadUrl,
+                )
             }.toSet(),
         )
     }
@@ -156,6 +159,7 @@ class GitHubOrganization {
         ) {
             @Serializable
             class GitHubAsset(
+                val name: String,
                 val browserDownloadUrl: String,
             )
         }
