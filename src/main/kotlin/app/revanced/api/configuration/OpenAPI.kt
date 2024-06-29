@@ -42,11 +42,6 @@ internal fun Application.configureOpenAPI() {
                 url = URI("https://api.revanced.app"),
                 description = "ReVanced API server",
             )
-
-            servers += Server(
-                url = URI("http://localhost:8888"),
-                description = "Local ReVanced API server",
-            )
         }
 
         schemaConfigurator = KotlinXSchemaConfigurator()

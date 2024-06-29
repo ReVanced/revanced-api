@@ -16,6 +16,7 @@ fun Application.configureSerialization() {
                 serializersModule = KompendiumSerializersModule.module
                 namingStrategy = JsonNamingStrategy.SnakeCase
                 explicitNulls = false
+                encodeDefaults = true
             },
         )
     }
