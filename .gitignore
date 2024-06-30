@@ -40,3 +40,5 @@ out/
 persistence/
 configuration.toml
 docker-compose.yml
+patches-public-key.asc
+integrations-public-key.asc
