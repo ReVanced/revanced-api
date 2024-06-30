@@ -19,7 +19,8 @@ import java.io.File
  * @property integrations The source of the integrations.
  * @property contributorsRepositoryNames The names of the repositories to get contributors from.
  * @property apiVersion The version to use for the API.
- * @property host The host of the API to configure CORS.
+ * @property cors The CORS configuration.
+ * @property endpoint The endpoint of the API.
  */
 @Serializable
 internal class ConfigurationRepository(
@@ -30,7 +31,8 @@ internal class ConfigurationRepository(
     val contributorsRepositoryNames: Set<String>,
     @SerialName("api-version")
     val apiVersion: Int = 1,
-    val host: String,
+    val cors: Cors,
+    val endpoint: String,
 ) {
     /**
      * An asset configuration.
@@ -58,6 +60,19 @@ internal class ConfigurationRepository(
         @Serializable(with = FileSerializer::class)
         @SerialName("public-key-file")
         val publicKeyFile: File,
+    )
+
+    /**
+     * The CORS configuration.
+     *
+     * @property host The host of the API to configure CORS.
+     * @property subDomains The subdomains to allow for CORS.
+     */
+    @Serializable
+    internal class Cors(
+        val host: String,
+        @SerialName("sub-domains")
+        val subDomains: List<String>,
     )
 }
 

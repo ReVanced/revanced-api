@@ -1,6 +1,7 @@
 package app.revanced.api.configuration
 
 import app.revanced.api.command.applicationVersion
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.oas.OpenApiSpec
@@ -12,9 +13,12 @@ import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.security.BearerAuth
 import io.bkbn.kompendium.oas.server.Server
 import io.ktor.server.application.*
+import org.koin.ktor.ext.get
 import java.net.URI
 
 internal fun Application.configureOpenAPI() {
+    val configurationRepository = get<ConfigurationRepository>()
+
     install(NotarizedApplication()) {
         spec = OpenApiSpec(
             info = Info(
@@ -39,7 +43,7 @@ internal fun Application.configureOpenAPI() {
             ),
         ).apply {
             servers += Server(
-                url = URI("https://api.revanced.app"),
+                url = URI(configurationRepository.endpoint),
                 description = "ReVanced API server",
             )
         }
