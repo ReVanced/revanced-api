@@ -8,6 +8,8 @@ import app.revanced.library.PatchUtils
 import app.revanced.patcher.PatchBundleLoader
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.ktor.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.net.URL
 
@@ -73,36 +75,38 @@ internal class PatchesService(
             configurationRepository.patches.repository,
         )
 
-        return patchesListCache.get(patchesRelease.tag) {
-            val patchesDownloadUrl = patchesRelease.assets
-                .first(configurationRepository.patches.assetRegex).downloadUrl
+        return withContext(Dispatchers.IO) {
+            patchesListCache.get(patchesRelease.tag) {
+                val patchesDownloadUrl = patchesRelease.assets
+                    .first(configurationRepository.patches.assetRegex).downloadUrl
 
-            val signatureDownloadUrl = patchesRelease.assets
-                .first(configurationRepository.patches.signatureAssetRegex).downloadUrl
+                val signatureDownloadUrl = patchesRelease.assets
+                    .first(configurationRepository.patches.signatureAssetRegex).downloadUrl
 
-            val patchesFile = kotlin.io.path.createTempFile().toFile().apply {
-                outputStream().use { URL(patchesDownloadUrl).openStream().copyTo(it) }
-            }
+                val patchesFile = kotlin.io.path.createTempFile().toFile().apply {
+                    outputStream().use { URL(patchesDownloadUrl).openStream().copyTo(it) }
+                }
 
-            val patches = if (
-                signatureService.verify(
-                    patchesFile,
-                    signatureDownloadUrl,
-                    configurationRepository.patches.publicKeyFile,
-                )
-            ) {
-                PatchBundleLoader.Jar(patchesFile)
-            } else {
-                // Use an empty set of patches if the signature is invalid.
-                emptySet()
-            }
+                val patches = if (
+                    signatureService.verify(
+                        patchesFile,
+                        signatureDownloadUrl,
+                        configurationRepository.patches.publicKeyFile,
+                    )
+                ) {
+                    PatchBundleLoader.Jar(patchesFile)
+                } else {
+                    // Use an empty set of patches if the signature is invalid.
+                    emptySet()
+                }
 
-            patchesFile.delete()
+                patchesFile.delete()
 
-            ByteArrayOutputStream().use { stream ->
-                PatchUtils.Json.serialize(patches, outputStream = stream)
+                ByteArrayOutputStream().use { stream ->
+                    PatchUtils.Json.serialize(patches, outputStream = stream)
 
-                stream.toByteArray()
+                    stream.toByteArray()
+                }
             }
         }
     }

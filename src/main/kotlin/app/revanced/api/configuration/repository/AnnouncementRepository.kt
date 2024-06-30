@@ -4,6 +4,8 @@ import app.revanced.api.configuration.repository.AnnouncementRepository.Attachme
 import app.revanced.api.configuration.schema.APIAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncementId
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -11,16 +13,18 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 internal class AnnouncementRepository(private val database: Database) {
     init {
-        transaction {
-            SchemaUtils.create(AnnouncementTable, AttachmentTable)
+        runBlocking {
+            transaction {
+                SchemaUtils.create(AnnouncementTable, AttachmentTable)
+            }
         }
     }
 
-    fun all() = transaction {
+    suspend fun all() = transaction {
         buildSet {
             AnnouncementEntity.all().forEach { announcement ->
                 add(announcement.toApi())
@@ -28,7 +32,7 @@ internal class AnnouncementRepository(private val database: Database) {
         }
     }
 
-    fun all(channel: String) = transaction {
+    suspend fun all(channel: String) = transaction {
         buildSet {
             AnnouncementEntity.find { AnnouncementTable.channel eq channel }.forEach { announcement ->
                 add(announcement.toApi())
@@ -36,7 +40,7 @@ internal class AnnouncementRepository(private val database: Database) {
         }
     }
 
-    fun delete(id: Int) = transaction {
+    suspend fun delete(id: Int) = transaction {
         val announcement = AnnouncementEntity.findById(id) ?: return@transaction
 
         announcement.delete()
@@ -44,27 +48,27 @@ internal class AnnouncementRepository(private val database: Database) {
 
     // TODO: These are inefficient, but I'm not sure how to make them more efficient.
 
-    fun latest() = transaction {
+    suspend fun latest() = transaction {
         AnnouncementEntity.all().maxByOrNull { it.createdAt }?.toApi()
     }
 
-    fun latest(channel: String) = transaction {
+    suspend fun latest(channel: String) = transaction {
         AnnouncementEntity.find { AnnouncementTable.channel eq channel }.maxByOrNull { it.createdAt }?.toApi()
     }
 
-    fun latestId() = transaction {
+    suspend fun latestId() = transaction {
         AnnouncementEntity.all().maxByOrNull { it.createdAt }?.id?.value?.let {
             APIResponseAnnouncementId(it)
         }
     }
 
-    fun latestId(channel: String) = transaction {
+    suspend fun latestId(channel: String) = transaction {
         AnnouncementEntity.find { AnnouncementTable.channel eq channel }.maxByOrNull { it.createdAt }?.id?.value?.let {
             APIResponseAnnouncementId(it)
         }
     }
 
-    fun archive(
+    suspend fun archive(
         id: Int,
         archivedAt: LocalDateTime?,
     ) = transaction {
@@ -73,13 +77,13 @@ internal class AnnouncementRepository(private val database: Database) {
         }
     }
 
-    fun unarchive(id: Int) = transaction {
+    suspend fun unarchive(id: Int) = transaction {
         AnnouncementEntity.findById(id)?.apply {
             archivedAt = null
         }
     }
 
-    fun new(new: APIAnnouncement) = transaction {
+    suspend fun new(new: APIAnnouncement) = transaction {
         AnnouncementEntity.new announcement@{
             author = new.author
             title = new.title
@@ -98,7 +102,7 @@ internal class AnnouncementRepository(private val database: Database) {
         }
     }
 
-    fun update(id: Int, new: APIAnnouncement) = transaction {
+    suspend fun update(id: Int, new: APIAnnouncement) = transaction {
         AnnouncementEntity.findById(id)?.apply {
             author = new.author
             title = new.title
@@ -117,7 +121,8 @@ internal class AnnouncementRepository(private val database: Database) {
         }
     }
 
-    private fun <T> transaction(block: Transaction.() -> T) = transaction(database, block)
+    private suspend fun <T> transaction(statement: Transaction.() -> T) =
+        newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
 
     private object AnnouncementTable : IntIdTable() {
         val author = varchar("author", 32).nullable()
