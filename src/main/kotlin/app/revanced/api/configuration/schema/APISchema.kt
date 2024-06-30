@@ -50,11 +50,11 @@ class APIAsset(
     val downloadUrl: String,
     val signatureDownloadUrl: String,
     // TODO: Remove this eventually when integrations are merged into patches.
-    val type: APIAssetType,
+    val name: APIAssetName,
 )
 
 @Serializable
-enum class APIAssetType {
+enum class APIAssetName {
     PATCHES,
     INTEGRATION,
 }

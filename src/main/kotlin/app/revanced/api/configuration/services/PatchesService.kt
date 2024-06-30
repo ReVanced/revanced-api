@@ -31,20 +31,20 @@ internal class PatchesService(
 
         fun ConfigurationRepository.AssetConfiguration.asset(
             release: BackendRepository.BackendOrganization.BackendRepository.BackendRelease,
-            assetType: APIAssetType,
+            assetName: APIAssetName,
         ) = APIAsset(
             release.assets.first(assetRegex).downloadUrl,
             release.assets.first(signatureAssetRegex).downloadUrl,
-            assetType,
+            assetName,
         )
 
         val patchesAsset = configurationRepository.patches.asset(
             patchesRelease,
-            APIAssetType.PATCHES,
+            APIAssetName.PATCHES,
         )
         val integrationsAsset = configurationRepository.integrations.asset(
             integrationsRelease,
-            APIAssetType.INTEGRATION,
+            APIAssetName.INTEGRATION,
         )
 
         return APIRelease(
