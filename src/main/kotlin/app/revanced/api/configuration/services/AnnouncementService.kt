@@ -8,28 +8,28 @@ import kotlinx.datetime.LocalDateTime
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
 ) {
-    fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)
-    fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()
+    suspend fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)
+    suspend fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()
 
-    fun latest(channel: String) = announcementRepository.latest(channel)
-    fun latest() = announcementRepository.latest()
+    suspend fun latest(channel: String) = announcementRepository.latest(channel)
+    suspend fun latest() = announcementRepository.latest()
 
-    fun all(channel: String) = announcementRepository.all(channel)
-    fun all() = announcementRepository.all()
+    suspend fun all(channel: String) = announcementRepository.all(channel)
+    suspend fun all() = announcementRepository.all()
 
-    fun new(new: APIAnnouncement) {
+    suspend fun new(new: APIAnnouncement) {
         announcementRepository.new(new)
     }
-    fun archive(id: Int, archivedAt: LocalDateTime?) {
+    suspend fun archive(id: Int, archivedAt: LocalDateTime?) {
         announcementRepository.archive(id, archivedAt)
     }
-    fun unarchive(id: Int) {
+    suspend fun unarchive(id: Int) {
         announcementRepository.unarchive(id)
     }
-    fun update(id: Int, new: APIAnnouncement) {
+    suspend fun update(id: Int, new: APIAnnouncement) {
         announcementRepository.update(id, new)
     }
-    fun delete(id: Int) {
+    suspend fun delete(id: Int) {
         announcementRepository.delete(id)
     }
 }
