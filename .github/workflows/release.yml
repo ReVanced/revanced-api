@@ -1,100 +1,67 @@
 name: Release
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-      - dev
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - dev
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          # Make sure the release step uses its own credentials:
-          # https://github.com/cycjimmy/semantic-release-action#private-packages
-          persist-credentials: false
-          fetch-depth: 0
+    release:
+        name: Release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  # Make sure the release step uses its own credentials:
+                  # https://github.com/cycjimmy/semantic-release-action#private-packages
+                  persist-credentials: false
+                  fetch-depth: 0
 
-      - name: Cache Gradle
-        uses: burrunan/gradle-cache-action@v1
+            - name: Cache Gradle
+              uses: burrunan/gradle-cache-action@v1
 
-      - name: Build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew startShadowScripts clean
+            - name: Build
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: ./gradlew startShadowScripts clean
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "lts/*"
+                  cache: "npm"
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          fingerprint: ${{ env.GPG_FINGERPRINT }}
+            - name: Import GPG key
+              uses: crazy-max/ghaction-import-gpg@v6
+              with:
+                  gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                  passphrase: ${{ secrets.GPG_PASSPHRASE }}
+                  fingerprint: ${{ env.GPG_FINGERPRINT }}
 
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
-        run: npm exec semantic-release
+            - name: Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
+              run: npm exec semantic-release
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
+            - name: Set Portainer stack webhook URL based on branch
+              run: |
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    PORTAINER_WEBHOOK_URL=${{ secrets.PORTAINER_WEBHOOK_MAIN_URL }}
+                  else
+                    PORTAINER_WEBHOOK_URL=${{ secrets.PORTAINER_WEBHOOK_DEV_URL }}
+                  fi
+                  echo "PORTAINER_WEBHOOK_URL=$PORTAINER_WEBHOOK_URL" >> $GITHUB_ENV
 
-      - name: Extract metadata for the Docker image
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=${{ startsWith(github.ref, 'refs/heads/main') }}
-            suffix=-${{ github.sha }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max,ignore-error=true
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          build-args: |
-            GITHUB_ACTOR=${{ github.actor }}
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Portainer stack webhook URL based on branch
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            PORTAINER_WEBHOOK_URL=${{ secrets.PORTAINER_WEBHOOK_MAIN_URL }}
-          else
-            PORTAINER_WEBHOOK_URL=${{ secrets.PORTAINER_WEBHOOK_DEV_URL }}
-          fi
-          echo "PORTAINER_WEBHOOK_URL=$PORTAINER_WEBHOOK_URL" >> $GITHUB_ENV
-
-      - name: Trigger Portainer stack update
-        uses: newarifrh/portainer-service-webhook@v1
-        with:
-          webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}
+            - name: Trigger Portainer stack update
+              uses: newarifrh/portainer-service-webhook@v1
+              with:
+                  webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}

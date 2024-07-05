@@ -8,9 +8,30 @@
   ],
   "plugins": [
     [
-      "@semantic-release/commit-analyzer", {
+      "@codedependant/semantic-release-docker",
+      {
+        "dockerImage": "revanced-api",
+        "dockerRegistry": "ghcr.io",
+        "dockerProject": "revanced",
+        "dockerPlatform": [
+          "linux/amd64",
+          "linux/arm64/v8"
+        ],
+        "dockerBuildFlags": {
+          "pull": null,
+          "target": "release"
+        }
+      }
+    ],
+    [
+      "@semantic-release/commit-analyzer",
+      {
         "releaseRules": [
-          { "type": "build", "scope": "Needs bump", "release": "patch" }
+          {
+            "type": "build",
+            "scope": "Needs bump",
+            "release": "patch"
+          }
         ]
       }
     ],
@@ -23,7 +44,7 @@
         "assets": [
           "README.md",
           "CHANGELOG.md",
-          "gradle.properties",
+          "gradle.properties"
         ]
       }
     ],
@@ -35,14 +56,19 @@
             "path": "build/libs/*"
           }
         ],
-        successComment: false
+        "successComment": false
       }
     ],
     [
       "@saithodev/semantic-release-backmerge",
       {
-        backmergeBranches: [{"from": "main", "to": "dev"}],
-        clearWorkspace: true
+        "backmergeBranches": [
+          {
+            "from": "main",
+            "to": "dev"
+          }
+        ],
+        "clearWorkspace": true
       }
     ]
   ]
