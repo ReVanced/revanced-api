@@ -60,8 +60,18 @@ jobs:
                     PORTAINER_WEBHOOK_URL=${{ secrets.PORTAINER_WEBHOOK_DEV_URL }}
                   fi
                   echo "PORTAINER_WEBHOOK_URL=$PORTAINER_WEBHOOK_URL" >> $GITHUB_ENV
-
             - name: Trigger Portainer stack update
               uses: newarifrh/portainer-service-webhook@v1
               with:
                   webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}
+
+            - name: Purge outdated images
+              uses: snok/container-retention-policy@v3.0.0
+              with:
+                  account: revanced
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  image-names: "revanced-api"
+                  image-tags: "*"
+                  keep-n-most-recent: 5
+                  cut-off: 3M
+                  dry-run: true
