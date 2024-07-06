@@ -11,11 +11,7 @@
       "@semantic-release/commit-analyzer",
       {
         "releaseRules": [
-          {
-            "type": "build",
-            "scope": "Needs bump",
-            "release": "patch"
-          }
+          { "type": "build", "scope": "Needs bump", "release": "patch" }
         ]
       }
     ],
