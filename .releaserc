@@ -8,22 +8,6 @@
   ],
   "plugins": [
     [
-      "@codedependant/semantic-release-docker",
-      {
-        "dockerImage": "revanced-api",
-        "dockerRegistry": "ghcr.io",
-        "dockerProject": "revanced",
-        "dockerPlatform": [
-          "linux/amd64",
-          "linux/arm64/v8"
-        ],
-        "dockerBuildFlags": {
-          "pull": null,
-          "target": "release"
-        }
-      }
-    ],
-    [
       "@semantic-release/commit-analyzer",
       {
         "releaseRules": [
@@ -57,6 +41,22 @@
           }
         ],
         "successComment": false
+      }
+    ],
+    [
+      "@codedependant/semantic-release-docker",
+      {
+        "dockerImage": "revanced-api",
+        "dockerRegistry": "ghcr.io",
+        "dockerProject": "revanced",
+        "dockerPlatform": [
+          "linux/amd64",
+          "linux/arm64/v8"
+        ],
+        "dockerBuildFlags": {
+          "pull": null,
+          "target": "release"
+        }
       }
     ],
     [

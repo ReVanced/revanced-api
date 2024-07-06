@@ -68,10 +68,8 @@ jobs:
             - name: Purge outdated images
               uses: snok/container-retention-policy@v3.0.0
               with:
-                  account: revanced
+                  account: ${{ github.actor }}
                   token: ${{ secrets.GITHUB_TOKEN }}
                   image-names: "revanced-api"
-                  image-tags: "*"
                   keep-n-most-recent: 5
                   cut-off: 3M
-                  dry-run: true
