@@ -48,11 +48,7 @@
         "dockerPlatform": [
           "linux/amd64",
           "linux/arm64/v8"
-        ],
-        "dockerBuildFlags": {
-          "pull": null,
-          "target": "release"
-        }
+        ]
       }
     ],
     [
