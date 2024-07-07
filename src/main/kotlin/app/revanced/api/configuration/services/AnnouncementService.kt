@@ -9,11 +9,11 @@ import kotlinx.datetime.LocalDateTime
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
 ) {
-    suspend fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)
-    suspend fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()
+    fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)?.toApi()
+    fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()?.toApi()
 
-    suspend fun latest(channel: String) = announcementRepository.latest(channel)?.toApi()
-    suspend fun latest() = announcementRepository.latest()?.toApi()
+    fun latest(channel: String) = announcementRepository.latest(channel)?.toApi()
+    fun latest() = announcementRepository.latest()?.toApi()
 
     suspend fun all(channel: String) = announcementRepository.all(channel).map { it.toApi() }
     suspend fun all() = announcementRepository.all().map { it.toApi() }
@@ -45,4 +45,6 @@ internal class AnnouncementService(
         archivedAt,
         level,
     )
+
+    private fun Int.toApi() = APIResponseAnnouncementId(this)
 }

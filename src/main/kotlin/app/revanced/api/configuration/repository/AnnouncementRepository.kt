@@ -1,7 +1,6 @@
 package app.revanced.api.configuration.repository
 
 import app.revanced.api.configuration.schema.APIAnnouncement
-import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -10,7 +9,6 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
@@ -18,10 +16,26 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 
 internal class AnnouncementRepository {
+    // This is better than doing a maxByOrNull { it.id }.
+    private var latestAnnouncement: Announcement? = null
+    private val latestAnnouncementByChannel = mutableMapOf<String, Announcement>()
+
+    private fun updateLatestAnnouncement(new: Announcement) {
+        if (latestAnnouncement?.id?.value == new.id.value) {
+            latestAnnouncement = new
+            latestAnnouncementByChannel[new.channel ?: return] = new
+        }
+    }
+
     init {
         runBlocking {
             transaction {
                 SchemaUtils.create(Announcements, Attachments)
+
+                // Initialize the latest announcement.
+                latestAnnouncement = Announcement.all().onEach {
+                    latestAnnouncementByChannel[it.channel ?: return@onEach] = it
+                }.maxByOrNull { it.id } ?: return@transaction
             }
         }
     }
@@ -38,29 +52,27 @@ internal class AnnouncementRepository {
         val announcement = Announcement.findById(id) ?: return@transaction
 
         announcement.delete()
-    }
 
-    // TODO: These are inefficient, but I'm not sure how to make them more efficient.
+        // In case the latest announcement was deleted, query the new latest announcement again.
+        if (latestAnnouncement?.id?.value == id) {
+            latestAnnouncement = Announcement.all().maxByOrNull { it.id }
 
-    suspend fun latest() = transaction {
-        Announcement.all().maxByOrNull { it.id }?.load(Announcement::attachments)
-    }
-
-    suspend fun latest(channel: String) = transaction {
-        Announcement.find { Announcements.channel eq channel }.maxByOrNull { it.id }?.load(Announcement::attachments)
-    }
-
-    suspend fun latestId() = transaction {
-        Announcement.all().maxByOrNull { it.id }?.id?.value?.let {
-            APIResponseAnnouncementId(it)
+            // If no latest announcement was found, remove it from the channel map.
+            if (latestAnnouncement == null) {
+                latestAnnouncementByChannel.remove(announcement.channel)
+            } else {
+                latestAnnouncementByChannel[latestAnnouncement!!.channel ?: return@transaction] = latestAnnouncement!!
+            }
         }
     }
 
-    suspend fun latestId(channel: String) = transaction {
-        Announcement.find { Announcements.channel eq channel }.maxByOrNull { it.id }?.id?.value?.let {
-            APIResponseAnnouncementId(it)
-        }
-    }
+    fun latest() = latestAnnouncement
+
+    fun latest(channel: String) = latestAnnouncementByChannel[channel]
+
+    fun latestId() = latest()?.id?.value
+
+    fun latestId(channel: String) = latest(channel)?.id?.value
 
     suspend fun archive(
         id: Int,
@@ -68,13 +80,13 @@ internal class AnnouncementRepository {
     ) = transaction {
         Announcement.findByIdAndUpdate(id) {
             it.archivedAt = archivedAt ?: java.time.LocalDateTime.now().toKotlinLocalDateTime()
-        }
+        }?.also(::updateLatestAnnouncement)
     }
 
     suspend fun unarchive(id: Int) = transaction {
         Announcement.findByIdAndUpdate(id) {
             it.archivedAt = null
-        }
+        }?.also(::updateLatestAnnouncement)
     }
 
     suspend fun new(new: APIAnnouncement) = transaction {
@@ -94,7 +106,7 @@ internal class AnnouncementRepository {
                     }
                 }
             }.awaitAll()
-        }
+        }.also(::updateLatestAnnouncement)
     }
 
     suspend fun update(id: Int, new: APIAnnouncement) = transaction {
@@ -120,7 +132,7 @@ internal class AnnouncementRepository {
                     }
                 }
             }.awaitAll()
-        }
+        }?.also(::updateLatestAnnouncement)
     }
 
     private suspend fun <T> transaction(statement: suspend Transaction.() -> T) =
