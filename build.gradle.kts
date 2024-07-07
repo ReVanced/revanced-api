@@ -13,8 +13,8 @@ tasks {
         expand("projectVersion" to project.version)
     }
 
-    // Needed by gradle-semantic-release-plugin.
-    // Tracking: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435
+    // Used by gradle-semantic-release-plugin.
+    // Tracking: https://github.com/KengoTODA/gradle-semantic-release-plugin/issues/435.
     publish {
         dependsOn(shadowJar)
     }
