@@ -1,47 +1,41 @@
 package app.revanced.api.configuration.repository
 
-import app.revanced.api.configuration.repository.AnnouncementRepository.AttachmentTable.announcement
 import app.revanced.api.configuration.schema.APIAnnouncement
-import app.revanced.api.configuration.schema.APIResponseAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 
-internal class AnnouncementRepository(private val database: Database) {
+internal class AnnouncementRepository {
     init {
         runBlocking {
             transaction {
-                SchemaUtils.create(AnnouncementTable, AttachmentTable)
+                SchemaUtils.create(Announcements, Attachments)
             }
         }
     }
 
     suspend fun all() = transaction {
-        buildSet {
-            AnnouncementEntity.all().forEach { announcement ->
-                add(announcement.toApi())
-            }
-        }
+        Announcement.all()
     }
 
     suspend fun all(channel: String) = transaction {
-        buildSet {
-            AnnouncementEntity.find { AnnouncementTable.channel eq channel }.forEach { announcement ->
-                add(announcement.toApi())
-            }
-        }
+        Announcement.find { Announcements.channel eq channel }
     }
 
     suspend fun delete(id: Int) = transaction {
-        val announcement = AnnouncementEntity.findById(id) ?: return@transaction
+        val announcement = Announcement.findById(id) ?: return@transaction
 
         announcement.delete()
     }
@@ -49,21 +43,21 @@ internal class AnnouncementRepository(private val database: Database) {
     // TODO: These are inefficient, but I'm not sure how to make them more efficient.
 
     suspend fun latest() = transaction {
-        AnnouncementEntity.all().maxByOrNull { it.createdAt }?.toApi()
+        Announcement.all().maxByOrNull { it.id }?.load(Announcement::attachments)
     }
 
     suspend fun latest(channel: String) = transaction {
-        AnnouncementEntity.find { AnnouncementTable.channel eq channel }.maxByOrNull { it.createdAt }?.toApi()
+        Announcement.find { Announcements.channel eq channel }.maxByOrNull { it.id }?.load(Announcement::attachments)
     }
 
     suspend fun latestId() = transaction {
-        AnnouncementEntity.all().maxByOrNull { it.createdAt }?.id?.value?.let {
+        Announcement.all().maxByOrNull { it.id }?.id?.value?.let {
             APIResponseAnnouncementId(it)
         }
     }
 
     suspend fun latestId(channel: String) = transaction {
-        AnnouncementEntity.find { AnnouncementTable.channel eq channel }.maxByOrNull { it.createdAt }?.id?.value?.let {
+        Announcement.find { Announcements.channel eq channel }.maxByOrNull { it.id }?.id?.value?.let {
             APIResponseAnnouncementId(it)
         }
     }
@@ -72,106 +66,98 @@ internal class AnnouncementRepository(private val database: Database) {
         id: Int,
         archivedAt: LocalDateTime?,
     ) = transaction {
-        AnnouncementEntity.findById(id)?.apply {
-            this.archivedAt = archivedAt ?: java.time.LocalDateTime.now().toKotlinLocalDateTime()
+        Announcement.findByIdAndUpdate(id) {
+            it.archivedAt = archivedAt ?: java.time.LocalDateTime.now().toKotlinLocalDateTime()
         }
     }
 
     suspend fun unarchive(id: Int) = transaction {
-        AnnouncementEntity.findById(id)?.apply {
-            archivedAt = null
+        Announcement.findByIdAndUpdate(id) {
+            it.archivedAt = null
         }
     }
 
     suspend fun new(new: APIAnnouncement) = transaction {
-        AnnouncementEntity.new announcement@{
+        Announcement.new {
             author = new.author
             title = new.title
             content = new.content
             channel = new.channel
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             archivedAt = new.archivedAt
             level = new.level
         }.also { newAnnouncement ->
-            new.attachmentUrls.map {
-                AttachmentEntity.new {
-                    url = it
-                    announcement = newAnnouncement
+            new.attachmentUrls.map { newUrl ->
+                suspendedTransactionAsync {
+                    Attachment.new {
+                        url = newUrl
+                        announcement = newAnnouncement
+                    }
                 }
-            }
+            }.awaitAll()
         }
     }
 
     suspend fun update(id: Int, new: APIAnnouncement) = transaction {
-        AnnouncementEntity.findById(id)?.apply {
-            author = new.author
-            title = new.title
-            content = new.content
-            channel = new.channel
-            archivedAt = new.archivedAt
-            level = new.level
-
-            attachments.forEach(AttachmentEntity::delete)
-            new.attachmentUrls.map {
-                AttachmentEntity.new {
-                    url = it
-                    announcement = this@apply
+        Announcement.findByIdAndUpdate(id) {
+            it.author = new.author
+            it.title = new.title
+            it.content = new.content
+            it.channel = new.channel
+            it.archivedAt = new.archivedAt
+            it.level = new.level
+        }?.also { newAnnouncement ->
+            newAnnouncement.attachments.map {
+                suspendedTransactionAsync {
+                    it.delete()
                 }
-            }
+            }.awaitAll()
+
+            new.attachmentUrls.map { newUrl ->
+                suspendedTransactionAsync {
+                    Attachment.new {
+                        url = newUrl
+                        announcement = newAnnouncement
+                    }
+                }
+            }.awaitAll()
         }
     }
 
-    private suspend fun <T> transaction(statement: Transaction.() -> T) =
-        newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
+    private suspend fun <T> transaction(statement: suspend Transaction.() -> T) =
+        newSuspendedTransaction(Dispatchers.IO, statement = statement)
 
-    private object AnnouncementTable : IntIdTable() {
+    private object Announcements : IntIdTable() {
         val author = varchar("author", 32).nullable()
         val title = varchar("title", 64)
         val content = text("content").nullable()
         val channel = varchar("channel", 16).nullable()
-        val createdAt = datetime("createdAt")
+        val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
         val archivedAt = datetime("archivedAt").nullable()
         val level = integer("level")
     }
 
-    private object AttachmentTable : IntIdTable() {
+    private object Attachments : IntIdTable() {
         val url = varchar("url", 256)
-        val announcement = reference("announcement", AnnouncementTable, onDelete = ReferenceOption.CASCADE)
+        val announcement = reference("announcement", Announcements, onDelete = ReferenceOption.CASCADE)
     }
 
-    class AnnouncementEntity(id: EntityID<Int>) : IntEntity(id) {
-        companion object : IntEntityClass<AnnouncementEntity>(AnnouncementTable)
+    class Announcement(id: EntityID<Int>) : IntEntity(id) {
+        companion object : IntEntityClass<Announcement>(Announcements)
 
-        var author by AnnouncementTable.author
-        var title by AnnouncementTable.title
-        var content by AnnouncementTable.content
-        val attachments by AttachmentEntity referrersOn announcement
-        var channel by AnnouncementTable.channel
-        var createdAt by AnnouncementTable.createdAt
-        var archivedAt by AnnouncementTable.archivedAt
-        var level by AnnouncementTable.level
-
-        fun toApi() = APIResponseAnnouncement(
-            id.value,
-            author,
-            title,
-            content,
-            attachmentUrls = buildSet {
-                attachments.forEach {
-                    add(it.url)
-                }
-            },
-            channel,
-            createdAt,
-            archivedAt,
-            level,
-        )
+        var author by Announcements.author
+        var title by Announcements.title
+        var content by Announcements.content
+        val attachments by Attachment referrersOn Attachments.announcement
+        var channel by Announcements.channel
+        var createdAt by Announcements.createdAt
+        var archivedAt by Announcements.archivedAt
+        var level by Announcements.level
     }
 
-    class AttachmentEntity(id: EntityID<Int>) : IntEntity(id) {
-        companion object : IntEntityClass<AttachmentEntity>(AttachmentTable)
+    class Attachment(id: EntityID<Int>) : IntEntity(id) {
+        companion object : IntEntityClass<Attachment>(Attachments)
 
-        var url by AttachmentTable.url
-        var announcement by AnnouncementEntity referencedOn AttachmentTable.announcement
+        var url by Attachments.url
+        var announcement by Announcement referencedOn Attachments.announcement
     }
 }

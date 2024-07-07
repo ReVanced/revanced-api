@@ -30,7 +30,8 @@ abstract class BackendRepository internal constructor(
      * @property members The members of the organization.
      */
     class BackendOrganization(
-        val members: Set<BackendMember>,
+        // Using a list instead of a set because set semantics are unnecessary here.
+        val members: List<BackendMember>,
     ) {
         /**
          * A member of an organization.
@@ -55,7 +56,8 @@ abstract class BackendRepository internal constructor(
              * @property url The URL to the GPG master key.
              */
             class GpgKeys(
-                val ids: Set<String>,
+                // Using a list instead of a set because set semantics are unnecessary here.
+                val ids: List<String>,
                 val url: String,
             )
         }
@@ -66,7 +68,8 @@ abstract class BackendRepository internal constructor(
          * @property contributors The contributors of the repository.
          */
         class BackendRepository(
-            val contributors: Set<BackendContributor>,
+            // Using a list instead of a set because set semantics are unnecessary here.
+            val contributors: List<BackendContributor>,
         ) {
             /**
              * A contributor of a repository.
@@ -95,10 +98,11 @@ abstract class BackendRepository internal constructor(
                 val tag: String,
                 val releaseNote: String,
                 val createdAt: LocalDateTime,
-                val assets: Set<BackendAsset>,
+                // Using a list instead of a set because set semantics are unnecessary here.
+                val assets: List<BackendAsset>,
             ) {
                 companion object {
-                    fun Set<BackendAsset>.first(assetRegex: Regex) = first { assetRegex.containsMatchIn(it.name) }
+                    fun List<BackendAsset>.first(assetRegex: Regex) = first { assetRegex.containsMatchIn(it.name) }
                 }
 
                 /**
@@ -149,7 +153,7 @@ abstract class BackendRepository internal constructor(
      * @param repository The name of the repository.
      * @return The contributors.
      */
-    abstract suspend fun contributors(owner: String, repository: String): Set<BackendOrganization.BackendRepository.BackendContributor>
+    abstract suspend fun contributors(owner: String, repository: String): List<BackendOrganization.BackendRepository.BackendContributor>
 
     /**
      * Get the members of an organization.
@@ -157,7 +161,7 @@ abstract class BackendRepository internal constructor(
      * @param organization The name of the organization.
      * @return The members.
      */
-    abstract suspend fun members(organization: String): Set<BackendOrganization.BackendMember>
+    abstract suspend fun members(organization: String): List<BackendOrganization.BackendMember>
 
     /**
      * Get the rate limit of the backend.

@@ -8,7 +8,8 @@ class APIRelease(
     val version: String,
     val createdAt: LocalDateTime,
     val description: String,
-    val assets: Set<APIAsset>,
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val assets: List<APIAsset>,
 )
 
 interface APIUser {
@@ -42,7 +43,8 @@ class APIContributor(
 @Serializable
 class APIContributable(
     val name: String,
-    val contributors: Set<APIContributor>,
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val contributors: List<APIContributor>,
 )
 
 @Serializable
@@ -69,7 +71,8 @@ class APIAnnouncement(
     val author: String? = null,
     val title: String,
     val content: String? = null,
-    val attachmentUrls: Set<String> = emptySet(),
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val attachmentUrls: List<String> = emptyList(),
     val channel: String? = null,
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
@@ -81,7 +84,8 @@ class APIResponseAnnouncement(
     val author: String? = null,
     val title: String,
     val content: String? = null,
-    val attachmentUrls: Set<String> = emptySet(),
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val attachmentUrls: List<String> = emptyList(),
     val channel: String? = null,
     val createdAt: LocalDateTime,
     val archivedAt: LocalDateTime? = null,

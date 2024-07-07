@@ -39,15 +39,15 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
                     name = it.name,
                     downloadUrl = it.browserDownloadUrl,
                 )
-            }.toSet(),
+            },
         )
     }
 
     override suspend fun contributors(
         owner: String,
         repository: String,
-    ): Set<BackendContributor> {
-        val contributors: Set<GitHubContributor> = client.get(
+    ): List<BackendContributor> {
+        val contributors: List<GitHubContributor> = client.get(
             Contributors(
                 owner,
                 repository,
@@ -61,12 +61,12 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
                 url = it.htmlUrl,
                 contributions = it.contributions,
             )
-        }.toSet()
+        }
     }
 
-    override suspend fun members(organization: String): Set<BackendMember> {
+    override suspend fun members(organization: String): List<BackendMember> {
         // Get the list of members of the organization.
-        val members: Set<GitHubOrganization.GitHubMember> = client.get(Organization.Members(organization)).body()
+        val members: List<GitHubOrganization.GitHubMember> = client.get(Organization.Members(organization)).body()
 
         return coroutineScope {
             members.map { member ->
@@ -78,7 +78,7 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
                         },
                         async {
                             // Get the GPG key of the user.
-                            client.get(User.GpgKeys(member.login)).body<Set<GitHubUser.GitHubGpgKey>>()
+                            client.get(User.GpgKeys(member.login)).body<List<GitHubUser.GitHubGpgKey>>()
                         },
                     )
                 }
@@ -87,7 +87,7 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
             val user = responses[0] as GitHubUser
 
             @Suppress("UNCHECKED_CAST")
-            val gpgKeys = responses[1] as Set<GitHubUser.GitHubGpgKey>
+            val gpgKeys = responses[1] as List<GitHubUser.GitHubGpgKey>
 
             BackendMember(
                 name = user.login,
@@ -96,11 +96,11 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
                 bio = user.bio,
                 gpgKeys =
                 BackendMember.GpgKeys(
-                    ids = gpgKeys.map { it.keyId }.toSet(),
+                    ids = gpgKeys.map { it.keyId },
                     url = "https://api.github.com/users/${user.login}.gpg",
                 ),
             )
-        }.toSet()
+        }
     }
 
     override suspend fun rateLimit(): BackendRateLimit {
@@ -153,7 +153,8 @@ class GitHubOrganization {
         @Serializable
         class GitHubRelease(
             val tagName: String,
-            val assets: Set<GitHubAsset>,
+            // Using a list instead of a set because set semantics are unnecessary here.
+            val assets: List<GitHubAsset>,
             val createdAt: Instant,
             val body: String,
         ) {

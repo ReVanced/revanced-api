@@ -19,11 +19,11 @@ internal class ApiService(
                     it,
                     backendRepository.contributors(configurationRepository.organization, it).map {
                         APIContributor(it.name, it.avatarUrl, it.url, it.contributions)
-                    }.toSet(),
+                    },
                 )
             }
         }
-    }.awaitAll().toSet()
+    }.awaitAll()
 
     suspend fun team() = backendRepository.members(configurationRepository.organization).map { member ->
         APIMember(
@@ -41,7 +41,7 @@ internal class ApiService(
             },
 
         )
-    }.toSet()
+    }
 
     suspend fun rateLimit() = backendRepository.rateLimit()?.let {
         APIRateLimit(it.limit, it.remaining, it.reset)

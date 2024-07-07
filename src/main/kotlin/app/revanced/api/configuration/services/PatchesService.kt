@@ -51,7 +51,7 @@ internal class PatchesService(
             patchesRelease.tag,
             patchesRelease.createdAt,
             patchesRelease.releaseNote,
-            setOf(patchesAsset, integrationsAsset),
+            listOf(patchesAsset, integrationsAsset),
         )
     }
 

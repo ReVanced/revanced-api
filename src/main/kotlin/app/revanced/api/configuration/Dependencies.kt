@@ -27,6 +27,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.parameter.parameterArrayOf
 import org.koin.dsl.module
@@ -41,6 +42,7 @@ fun Application.configureDependencies(
         single {
             Dotenv.configure().load()
         }
+
         factory { params ->
             val defaultRequestUri: String = params.get<String>()
             val configBlock = params.getOrNull<(HttpClientConfig<OkHttpConfig>.() -> Unit)>() ?: {}
@@ -54,17 +56,6 @@ fun Application.configureDependencies(
     }
 
     val repositoryModule = module {
-        single {
-            val dotenv = get<Dotenv>()
-
-            Database.connect(
-                url = dotenv["DB_URL"],
-                user = dotenv["DB_USER"],
-                password = dotenv["DB_PASSWORD"],
-                driver = "org.h2.Driver",
-            )
-        }
-
         single<BackendRepository> {
             GitHubBackendRepository(
                 get {
@@ -106,7 +97,17 @@ fun Application.configureDependencies(
             Toml.decodeFromStream(configFile.inputStream())
         }
 
-        singleOf(::AnnouncementRepository)
+        single {
+            val dotenv = get<Dotenv>()
+
+            TransactionManager.defaultDatabase = Database.connect(
+                url = dotenv["DB_URL"],
+                user = dotenv["DB_USER"],
+                password = dotenv["DB_PASSWORD"],
+            )
+
+            AnnouncementRepository()
+        }
     }
 
     val serviceModule = module {
