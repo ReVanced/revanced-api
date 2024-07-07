@@ -67,7 +67,7 @@ jobs:
           webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}
 
       - name: Purge outdated images
-        uses: snok/container-retention-policy@v3.0.0
+        uses: snok/container-retention-policy@v3
         with:
           account: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
