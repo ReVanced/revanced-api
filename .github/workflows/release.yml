@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
@@ -52,39 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
         run: npm exec semantic-release
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Extract metadata for the Docker image
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=${{ startsWith(github.ref, 'refs/heads/main') }}
-            suffix=-${{ github.sha }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max,ignore-error=true
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          build-args: |
-            GITHUB_ACTOR=${{ github.actor }}
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
       - name: Set Portainer stack webhook URL based on branch
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
@@ -98,3 +65,12 @@ jobs:
         uses: newarifrh/portainer-service-webhook@v1
         with:
           webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}
+
+      - name: Purge outdated images
+        uses: snok/container-retention-policy@v3
+        with:
+          account: ${{ github.actor }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: "revanced-api"
+          keep-n-most-recent: 5
+          cut-off: 3M

@@ -23,7 +23,7 @@
         "assets": [
           "README.md",
           "CHANGELOG.md",
-          "gradle.properties",
+          "gradle.properties"
         ]
       }
     ],
@@ -35,14 +35,26 @@
             "path": "build/libs/*"
           }
         ],
-        successComment: false
+        "successComment": false
+      }
+    ],
+    [
+      "@codedependant/semantic-release-docker",
+      {
+        "dockerImage": "revanced-api",
+        "dockerRegistry": "ghcr.io",
+        "dockerProject": "revanced",
+        "dockerPlatform": [
+          "linux/amd64",
+          "linux/arm64/v8"
+        ]
       }
     ],
     [
       "@saithodev/semantic-release-backmerge",
       {
-        backmergeBranches: [{"from": "main", "to": "dev"}],
-        clearWorkspace: true
+        "backmergeBranches": [{"from": "main", "to": "dev"}],
+        "clearWorkspace": true
       }
     ]
   ]
