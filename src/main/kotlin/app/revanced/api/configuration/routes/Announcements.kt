@@ -92,6 +92,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
     rateLimit(RateLimitName("strong")) {
         authenticate("jwt") {
+            installAnnouncementRouteDocumentation()
+
             post<APIAnnouncement> { announcement ->
                 announcementService.new(announcement)
             }
@@ -132,6 +134,24 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     }
                 }
             }
+        }
+    }
+}
+
+private fun Route.installAnnouncementRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Announcements")
+
+    post = PostInfo.builder {
+        description("Create a new announcement")
+        summary("Create announcement")
+        request {
+            requestType<APIAnnouncement>()
+            description("The new announcement")
+        }
+        response {
+            description("When the announcement was created")
+            responseCode(HttpStatusCode.OK)
+            responseType<Unit>()
         }
     }
 }
