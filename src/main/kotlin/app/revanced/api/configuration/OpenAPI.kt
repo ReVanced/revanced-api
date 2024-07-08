@@ -9,7 +9,6 @@ import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
-import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.security.BearerAuth
 import io.bkbn.kompendium.oas.server.Server
 import io.ktor.server.application.*
@@ -38,7 +37,6 @@ internal fun Application.configureOpenAPI() {
             components = Components(
                 securitySchemes = mutableMapOf(
                     "bearer" to BearerAuth(),
-                    "basic" to BasicAuth(),
                 ),
             ),
         ).apply {

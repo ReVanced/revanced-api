@@ -118,10 +118,9 @@ fun Application.configureDependencies(
             val issuer = dotenv["JWT_ISSUER"]
             val validityInMin = dotenv["JWT_VALIDITY_IN_MIN"].toInt()
 
-            val basicUsername = dotenv["BASIC_USERNAME"]
-            val basicPassword = dotenv["BASIC_PASSWORD"]
+            val authSHA256DigestString = dotenv["AUTH_SHA256_DIGEST"]
 
-            AuthService(issuer, validityInMin, jwtSecret, basicUsername, basicPassword)
+            AuthService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
         }
         single {
             OldApiService(

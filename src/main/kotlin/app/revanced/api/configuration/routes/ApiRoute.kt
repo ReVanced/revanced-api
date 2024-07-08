@@ -25,7 +25,7 @@ internal fun Route.rootRoute() {
     val authService = koinGet<AuthService>()
 
     rateLimit(RateLimitName("strong")) {
-        authenticate("basic") {
+        authenticate("auth-digest") {
             route("token") {
                 installTokenRouteDocumentation()
 

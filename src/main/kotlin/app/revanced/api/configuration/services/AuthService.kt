@@ -6,15 +6,23 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import java.util.*
+import kotlin.text.HexFormat
 import kotlin.time.Duration.Companion.minutes
 
-internal class AuthService(
+internal class AuthService private constructor(
     private val issuer: String,
     private val validityInMin: Int,
     private val jwtSecret: String,
-    private val basicUsername: String,
-    private val basicPassword: String,
+    private val authSHA256Digest: ByteArray,
 ) {
+    @OptIn(ExperimentalStdlibApi::class)
+    constructor(issuer: String, validityInMin: Int, jwtSecret: String, authSHA256DigestString: String) : this(
+        issuer,
+        validityInMin,
+        jwtSecret,
+        authSHA256DigestString.hexToByteArray(HexFormat.Default),
+    )
+
     val configureSecurity: Application.() -> Unit = {
         install(Authentication) {
             jwt("jwt") {
@@ -26,13 +34,12 @@ internal class AuthService(
                 validate { credential -> JWTPrincipal(credential.payload) }
             }
 
-            basic("basic") {
-                validate { credentials ->
-                    if (credentials.name == basicUsername && credentials.password == basicPassword) {
-                        UserIdPrincipal(credentials.name)
-                    } else {
-                        null
-                    }
+            digest("auth-digest") {
+                realm = "ReVanced"
+                algorithmName = "SHA-256"
+
+                digestProvider { _, _ ->
+                    authSHA256Digest
                 }
             }
         }
