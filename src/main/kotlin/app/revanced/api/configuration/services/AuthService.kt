@@ -26,12 +26,9 @@ internal class AuthService private constructor(
     val configureSecurity: Application.() -> Unit = {
         install(Authentication) {
             jwt("jwt") {
-                verifier(
-                    JWT.require(Algorithm.HMAC256(jwtSecret))
-                        .withIssuer(issuer)
-                        .build(),
-                )
-                validate { credential -> JWTPrincipal(credential.payload) }
+                realm = "ReVanced"
+
+                verifier(JWT.require(Algorithm.HMAC256(jwtSecret)).withIssuer(issuer).build())
             }
 
             digest("auth-digest") {
