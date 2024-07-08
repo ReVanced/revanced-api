@@ -1,19 +1,19 @@
-FROM python:3.11-slim
+# Build the application
+FROM gradle:latest AS build
 
+ARG GITHUB_ACTOR
 ARG GITHUB_TOKEN
-ARG SENTRY_DSN
 
-ENV GITHUB_TOKEN $GITHUB_TOKEN
-ENV SENTRY_DSN $SENTRY_DSN
+ENV GITHUB_ACTOR=$GITHUB_ACTOR
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
 
-WORKDIR /usr/src/app
-
+WORKDIR /app
 COPY . .
+RUN gradle startShadowScript --no-daemon
 
-RUN apt update && \
-    apt-get install git build-essential libffi-dev libssl-dev openssl --no-install-recommends -y \
-    && pip install --no-cache-dir -r requirements.txt
+# Build the runtime container
+FROM eclipse-temurin:latest
 
-VOLUME persistence
-
-CMD [ "python3", "-m" , "sanic", "app:app", "--fast", "--access-logs", "--motd", "--noisy-exceptions", "-H", "0.0.0.0"]
+WORKDIR /app
+COPY --from=build /app/build/libs/revanced-api-*.jar revanced-api.jar
+CMD java -jar revanced-api.jar $COMMAND

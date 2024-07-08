@@ -1,0 +1,14 @@
+organization = "revanced"
+patches = { repository = "revanced-patches", asset-regex = "jar$", signature-asset-regex = "asc$", public-key-file = "key.asc" }
+integrations = { repository = "revanced-integrations", asset-regex = "apk$", signature-asset-regex = "asc$", public-key-file = "key.asc" }
+contributors-repositories = [
+    "revanced-patcher",
+    "revanced-patches",
+    "revanced-integrations",
+    "revanced-website",
+    "revanced-cli",
+    "revanced-manager",
+]
+api-version = 1
+cors = { host = "*.127.0.0.1:8888", sub-domains = [] }
+endpoint = "http://127.0.0.1:8888/"
