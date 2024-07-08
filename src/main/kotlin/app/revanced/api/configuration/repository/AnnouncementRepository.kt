@@ -1,6 +1,8 @@
 package app.revanced.api.configuration.repository
 
 import app.revanced.api.configuration.schema.APIAnnouncement
+import app.revanced.api.configuration.schema.APIResponseAnnouncement
+import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -41,11 +43,11 @@ internal class AnnouncementRepository {
     }
 
     suspend fun all() = transaction {
-        Announcement.all()
+        Announcement.all().map { it.toApi() }
     }
 
     suspend fun all(channel: String) = transaction {
-        Announcement.find { Announcements.channel eq channel }
+        Announcement.find { Announcements.channel eq channel }.map { it.toApi() }
     }
 
     suspend fun delete(id: Int) = transaction {
@@ -66,13 +68,13 @@ internal class AnnouncementRepository {
         }
     }
 
-    fun latest() = latestAnnouncement
+    fun latest() = latestAnnouncement?.toApi()
 
-    fun latest(channel: String) = latestAnnouncementByChannel[channel]
+    fun latest(channel: String) = latestAnnouncementByChannel[channel]?.toApi()
 
-    fun latestId() = latest()?.id?.value
+    fun latestId() = latest()?.id?.toApi()
 
-    fun latestId(channel: String) = latest(channel)?.id?.value
+    fun latestId(channel: String) = latest(channel)?.id?.toApi()
 
     suspend fun archive(
         id: Int,
@@ -172,4 +174,18 @@ internal class AnnouncementRepository {
         var url by Attachments.url
         var announcement by Announcement referencedOn Attachments.announcement
     }
+
+    private fun Announcement.toApi() = APIResponseAnnouncement(
+        id.value,
+        author,
+        title,
+        content,
+        attachments.map { it.url },
+        channel,
+        createdAt,
+        archivedAt,
+        level,
+    )
+
+    private fun Int.toApi() = APIResponseAnnouncementId(this)
 }

@@ -2,21 +2,20 @@ package app.revanced.api.configuration.services
 
 import app.revanced.api.configuration.repository.AnnouncementRepository
 import app.revanced.api.configuration.schema.APIAnnouncement
-import app.revanced.api.configuration.schema.APIResponseAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import kotlinx.datetime.LocalDateTime
 
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
 ) {
-    fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)?.toApi()
-    fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()?.toApi()
+    fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)
+    fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()
 
-    fun latest(channel: String) = announcementRepository.latest(channel)?.toApi()
-    fun latest() = announcementRepository.latest()?.toApi()
+    fun latest(channel: String) = announcementRepository.latest(channel)
+    fun latest() = announcementRepository.latest()
 
-    suspend fun all(channel: String) = announcementRepository.all(channel).map { it.toApi() }
-    suspend fun all() = announcementRepository.all().map { it.toApi() }
+    suspend fun all(channel: String) = announcementRepository.all(channel)
+    suspend fun all() = announcementRepository.all()
 
     suspend fun new(new: APIAnnouncement) {
         announcementRepository.new(new)
@@ -33,18 +32,4 @@ internal class AnnouncementService(
     suspend fun delete(id: Int) {
         announcementRepository.delete(id)
     }
-
-    private fun AnnouncementRepository.Announcement.toApi() = APIResponseAnnouncement(
-        id.value,
-        author,
-        title,
-        content,
-        attachments.map { it.url },
-        channel,
-        createdAt,
-        archivedAt,
-        level,
-    )
-
-    private fun Int.toApi() = APIResponseAnnouncementId(this)
 }
