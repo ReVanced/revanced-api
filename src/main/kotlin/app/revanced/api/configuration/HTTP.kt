@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.ratelimit.*
+import io.ktor.server.request.*
 import org.koin.ktor.ext.get
 import kotlin.time.Duration.Companion.minutes
 
@@ -19,13 +20,19 @@ fun Application.configureHTTP() {
     }
 
     install(RateLimit) {
-        register(RateLimitName("weak")) {
-            rateLimiter(limit = 30, refillPeriod = 2.minutes)
-            requestKey { it.request.origin.remoteAddress }
+        fun rateLimit(name: String, block: RateLimitProviderConfig.() -> Unit) = register(RateLimitName(name)) {
+            requestKey {
+                it.request.uri + it.request.origin.remoteAddress
+            }
+
+            block()
         }
-        register(RateLimitName("strong")) {
+
+        rateLimit("weak") {
+            rateLimiter(limit = 30, refillPeriod = 2.minutes)
+        }
+        rateLimit("strong") {
             rateLimiter(limit = 5, refillPeriod = 1.minutes)
-            requestKey { it.request.origin.remoteHost }
         }
     }
 }
