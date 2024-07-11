@@ -1,3 +1,10 @@
+# [1.0.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2024-07-11)
+
+
+### Bug Fixes
+
+* Move old API endpoint configuration from env to configuration file ([7e99e49](https://github.com/ReVanced/revanced-api/commit/7e99e49af202c4ec0a0d7e61dd0182dd2097e867))
+
 # [1.0.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2024-07-11)
 
 
