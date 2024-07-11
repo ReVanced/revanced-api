@@ -10,5 +10,8 @@ contributors-repositories = [
     "revanced-manager",
 ]
 api-version = 1
-cors = { host = "*.revanced.app", sub-domains = [] }
+cors-allowed-hosts = [
+    "revanced.app",
+    "*.revanced.app"
+]
 endpoint = "https://api.revanced.app"

@@ -13,10 +13,12 @@ fun Application.configureHTTP() {
     val configurationRepository = get<ConfigurationRepository>()
 
     install(CORS) {
-        allowHost(
-            host = configurationRepository.cors.host,
-            subDomains = configurationRepository.cors.subDomains,
-        )
+        configurationRepository.corsAllowedHosts.forEach { host ->
+            allowHost(
+                host = host,
+                schemes = listOf("http", "https")
+            )
+        }
     }
 
     install(RateLimit) {
