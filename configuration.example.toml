@@ -15,3 +15,4 @@ cors-allowed-hosts = [
     "*.revanced.app"
 ]
 endpoint = "https://api.revanced.app"
+old-api-endpoint = "https://old-api.revanced.app"

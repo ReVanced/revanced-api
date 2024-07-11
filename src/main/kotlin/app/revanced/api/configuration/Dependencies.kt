@@ -123,10 +123,11 @@ fun Application.configureDependencies(
             AuthService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
         }
         single {
+            val configuration = get<ConfigurationRepository>()
+
             OldApiService(
                 get {
-                    val defaultRequestUri = get<Dotenv>()["OLD_API_URL"]
-                    parameterArrayOf(defaultRequestUri)
+                    parameterArrayOf(configuration.oldApiEndpoint)
                 },
             )
         }

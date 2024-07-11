@@ -21,6 +21,7 @@ import java.io.File
  * @property apiVersion The version to use for the API.
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
  * @property endpoint The endpoint of the API.
+ * @property oldApiEndpoint The endpoint of the old API to proxy requests to.
  */
 @Serializable
 internal class ConfigurationRepository(
@@ -34,6 +35,8 @@ internal class ConfigurationRepository(
     @SerialName("cors-allowed-hosts")
     val corsAllowedHosts: Set<String>,
     val endpoint: String,
+    @SerialName("old-api-endpoint")
+    val oldApiEndpoint: String,
 ) {
     /**
      * An asset configuration.
