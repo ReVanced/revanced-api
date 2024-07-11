@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
@@ -191,10 +192,9 @@ class Organization {
 
     class Repository {
         @Resource("/repos/{owner}/{repo}/contributors")
-        class Contributors(val owner: String, val repo: String)
+        class Contributors(val owner: String, val repo: String, @SerialName("per_page") val perPage: Int = 100)
 
-        @Resource("/repos/{owner}/{repo}/releases")
-        class Releases(val owner: String, val repo: String) {
+        class Releases {
             @Resource("/repos/{owner}/{repo}/releases/tags/{tag}")
             class Tag(val owner: String, val repo: String, val tag: String)
 
