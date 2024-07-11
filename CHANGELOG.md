@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2024-07-11)
+
+
+### Bug Fixes
+
+* Configure CORS correctly ([2ed4cf3](https://github.com/ReVanced/revanced-api/commit/2ed4cf3b40caeb6181d068d411344e6732000f22))
+
 # 1.0.0-dev.1 (2024-07-10)
 
 
