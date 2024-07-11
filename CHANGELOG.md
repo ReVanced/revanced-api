@@ -1,3 +1,10 @@
+# [1.0.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-07-11)
+
+
+### Features
+
+* List more repository contributors ([19ebc82](https://github.com/ReVanced/revanced-api/commit/19ebc827bfb54a597dd06f9d99bdc820ee9977ee))
+
 # [1.0.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2024-07-11)
 
 
