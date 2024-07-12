@@ -67,10 +67,10 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
 
     override suspend fun members(organization: String): List<BackendMember> {
         // Get the list of members of the organization.
-        val members: List<GitHubOrganization.GitHubMember> = client.get(Organization.Members(organization)).body()
+        val publicMembers: List<GitHubOrganization.GitHubMember> = client.get(Organization.PublicMembers(organization)).body()
 
         return coroutineScope {
-            members.map { member ->
+            publicMembers.map { member ->
                 async {
                     awaitAll(
                         async {
@@ -187,8 +187,8 @@ class User(val login: String) {
 }
 
 class Organization {
-    @Resource("/orgs/{org}/members")
-    class Members(val org: String)
+    @Resource("/orgs/{org}/public_members")
+    class PublicMembers(val org: String)
 
     class Repository {
         @Resource("/repos/{owner}/{repo}/contributors")
