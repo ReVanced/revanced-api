@@ -20,7 +20,7 @@ import io.ktor.server.routing.*
 import kotlin.time.Duration.Companion.days
 import org.koin.ktor.ext.get as koinGet
 
-internal fun Route.rootRoute() {
+internal fun Route.apiRoute() {
     val apiService = koinGet<ApiService>()
     val authService = koinGet<AuthService>()
 
@@ -75,7 +75,7 @@ internal fun Route.rootRoute() {
             }
         }
 
-        staticResources("/", "/app/revanced/api/static") {
+        staticResources("/", "/app/revanced/api/static/versioned") {
             contentType { ContentType.Application.Json }
             extensions("json")
         }
