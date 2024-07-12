@@ -92,6 +92,7 @@ internal class PatchesService(
                         patchesFile,
                         signatureDownloadUrl,
                         configurationRepository.patches.publicKeyFile,
+                        configurationRepository.patches.publicKeyId,
                     )
                 ) {
                     PatchBundleLoader.Jar(patchesFile)

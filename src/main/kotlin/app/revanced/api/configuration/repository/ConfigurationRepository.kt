@@ -51,6 +51,7 @@ internal class ConfigurationRepository(
      * @property assetRegex The regex matching the asset name.
      * @property signatureAssetRegex The regex matching the signature asset name to verify the asset.
      * @property publicKeyFile The public key file to verify the signature of the asset.
+     * @property publicKeyId The ID of the public key to verify the signature of the asset.
      */
     @Serializable
     internal class AssetConfiguration(
@@ -64,6 +65,8 @@ internal class ConfigurationRepository(
         @Serializable(with = FileSerializer::class)
         @SerialName("public-key-file")
         val publicKeyFile: File,
+        @SerialName("public-key-id")
+        val publicKeyId: Long,
     )
 }
 
