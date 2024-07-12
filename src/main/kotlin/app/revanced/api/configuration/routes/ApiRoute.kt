@@ -82,7 +82,7 @@ internal fun Route.apiRoute() {
     }
 }
 
-fun Route.installRateLimitRouteDocumentation() = installNotarizedRoute {
+private fun Route.installRateLimitRouteDocumentation() = installNotarizedRoute {
     tags = setOf("API")
 
     get = GetInfo.builder {
@@ -97,7 +97,7 @@ fun Route.installRateLimitRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-fun Route.installPingRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPingRouteDocumentation() = installNotarizedRoute {
     tags = setOf("API")
 
     head = HeadInfo.builder {
@@ -111,7 +111,7 @@ fun Route.installPingRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-fun Route.installTeamRouteDocumentation() = installNotarizedRoute {
+private fun Route.installTeamRouteDocumentation() = installNotarizedRoute {
     tags = setOf("API")
 
     get = GetInfo.builder {
@@ -126,7 +126,7 @@ fun Route.installTeamRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-fun Route.installContributorsRouteDocumentation() = installNotarizedRoute {
+private fun Route.installContributorsRouteDocumentation() = installNotarizedRoute {
     tags = setOf("API")
 
     get = GetInfo.builder {
@@ -141,7 +141,7 @@ fun Route.installContributorsRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
+private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
     tags = setOf("API")
 
     get = GetInfo.builder {

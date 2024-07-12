@@ -18,7 +18,7 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): APIRelease {
+    suspend fun latestRelease(): APIRelease<APIPatchesAsset> {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
@@ -29,10 +29,10 @@ internal class PatchesService(
             configurationRepository.integrations.repository,
         )
 
-        fun ConfigurationRepository.AssetConfiguration.asset(
+        fun ConfigurationRepository.SignedAssetConfiguration.asset(
             release: BackendRepository.BackendOrganization.BackendRepository.BackendRelease,
             assetName: APIAssetName,
-        ) = APIAsset(
+        ) = APIPatchesAsset(
             release.assets.first(assetRegex).downloadUrl,
             release.assets.first(signatureAssetRegex).downloadUrl,
             assetName,
@@ -113,8 +113,8 @@ internal class PatchesService(
     }
 
     fun publicKeys(): APIAssetPublicKeys {
-        fun publicKeyBase64(getAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.AssetConfiguration) =
-            configurationRepository.getAssetConfiguration().publicKeyFile.readBytes().encodeBase64()
+        fun publicKeyBase64(getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration) =
+            configurationRepository.getSignedAssetConfiguration().publicKeyFile.readBytes().encodeBase64()
 
         return APIAssetPublicKeys(
             publicKeyBase64 { patches },

@@ -3,6 +3,7 @@ package app.revanced.api.configuration.routes
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.schema.APIAssetPublicKeys
+import app.revanced.api.configuration.schema.APIPatchesAsset
 import app.revanced.api.configuration.schema.APIRelease
 import app.revanced.api.configuration.schema.APIReleaseVersion
 import app.revanced.api.configuration.services.PatchesService
@@ -59,7 +60,7 @@ internal fun Route.patchesRoute() = route("patches") {
     }
 }
 
-fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRoute {
+private fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
@@ -69,12 +70,12 @@ fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRoute {
             description("The latest patches release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIRelease>()
+            responseType<APIRelease<APIPatchesAsset>>()
         }
     }
 }
 
-fun Route.installLatestPatchesVersionRouteDocumentation() = installNotarizedRoute {
+private fun Route.installLatestPatchesVersionRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
@@ -89,7 +90,7 @@ fun Route.installLatestPatchesVersionRouteDocumentation() = installNotarizedRout
     }
 }
 
-fun Route.installLatestPatchesListRouteDocumentation() = installNotarizedRoute {
+private fun Route.installLatestPatchesListRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
@@ -104,7 +105,7 @@ fun Route.installLatestPatchesListRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-fun Route.installPatchesPublicKeyRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesPublicKeyRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {

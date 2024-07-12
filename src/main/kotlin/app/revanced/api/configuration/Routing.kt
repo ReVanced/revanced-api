@@ -1,6 +1,7 @@
 package app.revanced.api.configuration
 
 import app.revanced.api.configuration.repository.ConfigurationRepository
+import app.revanced.api.configuration.routes.*
 import app.revanced.api.configuration.routes.announcementsRoute
 import app.revanced.api.configuration.routes.apiRoute
 import app.revanced.api.configuration.routes.oldApiRoute
@@ -22,6 +23,7 @@ internal fun Application.configureRouting() = routing {
     route("/v${configuration.apiVersion}") {
         announcementsRoute()
         patchesRoute()
+        managerRoute()
         apiRoute()
     }
 

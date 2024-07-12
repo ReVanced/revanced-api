@@ -134,6 +134,7 @@ fun Application.configureDependencies(
         singleOf(::AnnouncementService)
         singleOf(::SignatureService)
         singleOf(::PatchesService)
+        singleOf(::ManagerService)
         singleOf(::ApiService)
     }
 

@@ -3,15 +3,6 @@ package app.revanced.api.configuration.schema
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
-@Serializable
-class APIRelease(
-    val version: String,
-    val createdAt: LocalDateTime,
-    val description: String,
-    // Using a list instead of a set because set semantics are unnecessary here.
-    val assets: List<APIAsset>,
-)
-
 interface APIUser {
     val name: String
     val avatarUrl: String
@@ -48,7 +39,21 @@ class APIContributable(
 )
 
 @Serializable
-class APIAsset(
+class APIRelease<T>(
+    val version: String,
+    val createdAt: LocalDateTime,
+    val description: String,
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val assets: List<T>,
+)
+
+@Serializable
+class APIManagerAsset(
+    val downloadUrl: String,
+)
+
+@Serializable
+class APIPatchesAsset(
     val downloadUrl: String,
     val signatureDownloadUrl: String,
     // TODO: Remove this eventually when integrations are merged into patches.
