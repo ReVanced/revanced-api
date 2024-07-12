@@ -1,3 +1,17 @@
+# [1.0.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2024-07-12)
+
+
+### Bug Fixes
+
+* Move robots.txt to root ([2ade550](https://github.com/ReVanced/revanced-api/commit/2ade550d58c0e4b53fa7417bef0064f4f476aed8))
+* Only list public members ([97a5d11](https://github.com/ReVanced/revanced-api/commit/97a5d119ec415f9c25fbc50cb240603047defc73))
+
+
+### Features
+
+* Add configuration to specify public key id ([ad7d4b2](https://github.com/ReVanced/revanced-api/commit/ad7d4b226f71fd965421dc2f2a51825c8e8b3036))
+* Add manager route ([f814fe5](https://github.com/ReVanced/revanced-api/commit/f814fe5825eb8b864f2b0cba53ff721eba577eb4))
+
 # [1.0.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-07-11)
 
 
