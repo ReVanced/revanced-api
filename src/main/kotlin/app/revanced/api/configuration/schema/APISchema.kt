@@ -14,6 +14,7 @@ class APIMember(
     override val name: String,
     override val avatarUrl: String,
     override val url: String,
+    val bio: String?,
     val gpgKey: APIGpgKey?,
 ) : APIUser
 

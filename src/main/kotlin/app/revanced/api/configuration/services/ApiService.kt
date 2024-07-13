@@ -30,6 +30,7 @@ internal class ApiService(
             member.name,
             member.avatarUrl,
             member.url,
+            member.bio,
             if (member.gpgKeys.ids.isNotEmpty()) {
                 APIGpgKey(
                     // Must choose one of the GPG keys, because it does not make sense to have multiple GPG keys for the API.
@@ -39,7 +40,6 @@ internal class ApiService(
             } else {
                 null
             },
-
         )
     }
 
