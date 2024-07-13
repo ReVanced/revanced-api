@@ -1,3 +1,10 @@
+# [1.0.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2024-07-13)
+
+
+### Features
+
+* Add bio field for team members ([c40d50c](https://github.com/ReVanced/revanced-api/commit/c40d50c01368cb6b9ab06857694ec51d27aba2cb))
+
 # [1.0.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2024-07-12)
 
 
