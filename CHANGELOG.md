@@ -1,3 +1,10 @@
+# [1.0.0-dev.7](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-07-13)
+
+
+### Bug Fixes
+
+* Fix OpenAPI docs casing of a word ([541783d](https://github.com/ReVanced/revanced-api/commit/541783d9599c257f184d1b244e1b857b7c200227))
+
 # [1.0.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2024-07-13)
 
 
