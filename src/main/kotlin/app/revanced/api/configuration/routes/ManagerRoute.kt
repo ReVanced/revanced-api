@@ -40,7 +40,7 @@ private fun Route.installLatestManagerRouteDocumentation() = installNotarizedRou
 
     get = GetInfo.builder {
         description("Get the latest manager release")
-        summary("Get latest Manager release")
+        summary("Get latest manager release")
         response {
             description("The latest manager release")
             mediaTypes("application/json")
