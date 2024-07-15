@@ -1,7 +1,9 @@
 package app.revanced.api.configuration.repository
 
+import app.revanced.api.configuration.schema.APIAbout
 import app.revanced.api.configuration.services.ManagerService
 import app.revanced.api.configuration.services.PatchesService
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,6 +12,9 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNamingStrategy
+import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.nio.file.Path
 
@@ -27,6 +32,8 @@ import java.nio.file.Path
  * @property oldApiEndpoint The endpoint of the old API to proxy requests to.
  * @property staticFilesPath The path to the static files to be served under the root path.
  * @property versionedStaticFilesPath The path to the static files to be served under a versioned path.
+ * @property about The path to the json file deserialized to [APIAbout]
+ * (because com.akuleshov7.ktoml.Toml does not support nested tables).
  */
 @Serializable
 internal class ConfigurationRepository(
@@ -49,6 +56,9 @@ internal class ConfigurationRepository(
     @Serializable(with = PathSerializer::class)
     @SerialName("versioned-static-files-path")
     val versionedStaticFilesPath: Path,
+    @Serializable(with = AboutSerializer::class)
+    @SerialName("about-json-file-path")
+    val about: APIAbout,
 ) {
     /**
      * Am asset configuration whose asset is signed.
@@ -123,5 +133,17 @@ private object PathSerializer : KSerializer<Path> {
 
     override fun serialize(encoder: Encoder, value: Path) = encoder.encodeString(value.toString())
 
-    override fun deserialize(decoder: Decoder) = Path.of(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): Path = Path.of(decoder.decodeString())
+}
+
+private object AboutSerializer : KSerializer<APIAbout> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("APIAbout", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: APIAbout) = error("Serializing APIAbout is not supported")
+
+    @OptIn(ExperimentalSerializationApi::class)
+    val json = Json { namingStrategy = JsonNamingStrategy.SnakeCase }
+
+    override fun deserialize(decoder: Decoder): APIAbout =
+        json.decodeFromStream(File(decoder.decodeString()).inputStream())
 }

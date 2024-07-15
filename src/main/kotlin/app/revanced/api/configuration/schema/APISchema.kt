@@ -120,3 +120,55 @@ class APIAssetPublicKeys(
     val patchesPublicKey: String,
     val integrationsPublicKey: String,
 )
+
+@Serializable
+class APIAbout(
+    val name: String,
+    val about: String,
+    val keys: String,
+    val branding: Branding?,
+    val contact: Contact?,
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val socials: List<Social>?,
+    val donations: Donations?,
+) {
+    @Serializable
+    class Branding(
+        val logo: String,
+    )
+
+    @Serializable
+    class Contact(
+        val email: String,
+    )
+
+    @Serializable
+    class Social(
+        val name: String,
+        val url: String,
+        val preferred: Boolean? = false,
+    )
+
+    @Serializable
+    class Wallet(
+        val network: String,
+        val currencyCode: String,
+        val address: String,
+        val preferred: Boolean? = false,
+    )
+
+    @Serializable
+    class Link(
+        val name: String,
+        val url: String,
+        val preferred: Boolean? = false,
+    )
+
+    @Serializable
+    class Donations(
+        // Using a list instead of a set because set semantics are unnecessary here.
+        val wallets: List<Wallet>?,
+        // Using a list instead of a set because set semantics are unnecessary here.
+        val links: List<Link>?,
+    )
+}

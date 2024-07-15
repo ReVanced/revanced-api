@@ -5,6 +5,7 @@ import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
+import app.revanced.api.configuration.schema.APIAbout
 import app.revanced.api.configuration.schema.APIContributable
 import app.revanced.api.configuration.schema.APIMember
 import app.revanced.api.configuration.schema.APIRateLimit
@@ -56,6 +57,16 @@ internal fun Route.apiRoute() {
         }
     }
 
+    route("about") {
+        installCache(1.days)
+
+        installAboutRouteDocumentation()
+
+        get {
+            call.respond(apiService.about)
+        }
+    }
+
     route("ping") {
         installNoCache()
 
@@ -76,6 +87,21 @@ internal fun Route.apiRoute() {
         }
 
         staticFiles("/", apiService.versionedStaticFilesPath)
+    }
+}
+
+private fun Route.installAboutRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("API")
+
+    get = GetInfo.builder {
+        description("Get information about the API")
+        summary("Get about")
+        response {
+            description("Information about the API")
+            mediaTypes("application/json")
+            responseCode(HttpStatusCode.OK)
+            responseType<APIAbout>()
+        }
     }
 }
 
