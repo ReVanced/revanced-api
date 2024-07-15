@@ -1,5 +1,6 @@
 package app.revanced.api.configuration.routes
 
+import app.revanced.api.configuration.*
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
@@ -13,7 +14,6 @@ import io.bkbn.kompendium.core.metadata.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.http.content.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -75,10 +75,7 @@ internal fun Route.apiRoute() {
             }
         }
 
-        staticResources("/", "/app/revanced/api/static/versioned") {
-            contentType { ContentType.Application.Json }
-            extensions("json")
-        }
+        staticFiles("/", apiService.versionedStaticFilesPath)
     }
 }
 

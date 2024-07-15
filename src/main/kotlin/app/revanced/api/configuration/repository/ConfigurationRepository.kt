@@ -11,6 +11,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.io.File
+import java.nio.file.Path
 
 /**
  * The repository storing the configuration for the API.
@@ -24,6 +25,8 @@ import java.io.File
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
  * @property endpoint The endpoint of the API.
  * @property oldApiEndpoint The endpoint of the old API to proxy requests to.
+ * @property staticFilesPath The path to the static files to be served under the root path.
+ * @property versionedStaticFilesPath The path to the static files to be served under a versioned path.
  */
 @Serializable
 internal class ConfigurationRepository(
@@ -40,6 +43,12 @@ internal class ConfigurationRepository(
     val endpoint: String,
     @SerialName("old-api-endpoint")
     val oldApiEndpoint: String,
+    @Serializable(with = PathSerializer::class)
+    @SerialName("static-files-path")
+    val staticFilesPath: Path,
+    @Serializable(with = PathSerializer::class)
+    @SerialName("versioned-static-files-path")
+    val versionedStaticFilesPath: Path,
 ) {
     /**
      * Am asset configuration whose asset is signed.
@@ -107,4 +116,12 @@ private object FileSerializer : KSerializer<File> {
     override fun serialize(encoder: Encoder, value: File) = encoder.encodeString(value.path)
 
     override fun deserialize(decoder: Decoder) = File(decoder.decodeString())
+}
+
+private object PathSerializer : KSerializer<Path> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Path", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Path) = encoder.encodeString(value.toString())
+
+    override fun deserialize(decoder: Decoder) = Path.of(decoder.decodeString())
 }

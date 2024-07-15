@@ -17,3 +17,5 @@ cors-allowed-hosts = [
 ]
 endpoint = "https://api.revanced.app"
 old-api-endpoint = "https://old-api.revanced.app"
+static-files-path = "static/root"
+versioned-static-files-path = "static/versioned"

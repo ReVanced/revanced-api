@@ -12,6 +12,8 @@ internal class ApiService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
+    val versionedStaticFilesPath = configurationRepository.versionedStaticFilesPath
+
     suspend fun contributors() = withContext(Dispatchers.IO) {
         configurationRepository.contributorsRepositoryNames.map {
             async {
