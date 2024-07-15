@@ -1,3 +1,16 @@
+# [1.1.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.0.0...v1.1.0-dev.1) (2024-07-15)
+
+
+### Bug Fixes
+
+* Don't encode public keys & instead send them raw ([435beae](https://github.com/ReVanced/revanced-api/commit/435beae3831fc8ce161aec676ff20f253b1caf66))
+
+
+### Features
+
+* Add static file paths to remove env specific files in resources ([39d0b78](https://github.com/ReVanced/revanced-api/commit/39d0b78c7919f684439b6f052ab3f064159c2a70))
+* Convert static about file to documented route & add key parameter to about route ([dfe6df3](https://github.com/ReVanced/revanced-api/commit/dfe6df3ef6006d06681673bcfaf87c44c40ad446))
+
 # 1.0.0 (2024-07-13)
 
 

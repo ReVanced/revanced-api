@@ -7,7 +7,6 @@ import app.revanced.api.configuration.schema.*
 import app.revanced.library.PatchUtils
 import app.revanced.patcher.PatchBundleLoader
 import com.github.benmanes.caffeine.cache.Caffeine
-import io.ktor.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -113,12 +112,13 @@ internal class PatchesService(
     }
 
     fun publicKeys(): APIAssetPublicKeys {
-        fun publicKeyBase64(getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration) =
-            configurationRepository.getSignedAssetConfiguration().publicKeyFile.readBytes().encodeBase64()
+        fun readPublicKey(
+            getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration,
+        ) = configurationRepository.getSignedAssetConfiguration().publicKeyFile.readText()
 
         return APIAssetPublicKeys(
-            publicKeyBase64 { patches },
-            publicKeyBase64 { integrations },
+            readPublicKey { patches },
+            readPublicKey { integrations },
         )
     }
 }

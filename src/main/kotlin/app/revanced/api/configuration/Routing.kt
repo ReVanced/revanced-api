@@ -10,7 +10,6 @@ import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.routes.swagger
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import kotlin.time.Duration.Companion.minutes
 import org.koin.ktor.ext.get as koinGet
@@ -27,9 +26,31 @@ internal fun Application.configureRouting() = routing {
         apiRoute()
     }
 
-    staticResources("/", "/app/revanced/api/static/root") {
-        contentType { ContentType.Application.Json }
-        extensions("json")
+    staticFiles("/", configuration.staticFilesPath) {
+        contentType {
+            when (it.extension) {
+                "json" -> ContentType.Application.Json
+                "asc" -> ContentType.Text.Plain
+                "ico" -> ContentType.Image.XIcon
+                "svg" -> ContentType.Image.SVG
+                "jpg", "jpeg" -> ContentType.Image.JPEG
+                "png" -> ContentType.Image.PNG
+                "gif" -> ContentType.Image.GIF
+                "mp4" -> ContentType.Video.MP4
+                "ogg" -> ContentType.Video.OGG
+                "mp3" -> ContentType.Audio.MPEG
+                "css" -> ContentType.Text.CSS
+                "js" -> ContentType.Application.JavaScript
+                "html" -> ContentType.Text.Html
+                "xml" -> ContentType.Application.Xml
+                "pdf" -> ContentType.Application.Pdf
+                "zip" -> ContentType.Application.Zip
+                "gz" -> ContentType.Application.GZip
+                else -> ContentType.Application.OctetStream
+            }
+        }
+
+        extensions("json", "asc")
     }
 
     swagger(pageTitle = "ReVanced API", path = "/")
