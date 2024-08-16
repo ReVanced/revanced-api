@@ -19,30 +19,28 @@ import org.koin.ktor.ext.get as koinGet
 internal fun Route.patchesRoute() = route("patches") {
     val patchesService = koinGet<PatchesService>()
 
-    route("latest") {
-        installLatestPatchesRouteDocumentation()
+    installPatchesRouteDocumentation()
 
-        rateLimit(RateLimitName("weak")) {
-            get {
-                call.respond(patchesService.latestRelease())
-            }
-
-            route("version") {
-                installLatestPatchesVersionRouteDocumentation()
-
-                get {
-                    call.respond(patchesService.latestVersion())
-                }
-            }
+    rateLimit(RateLimitName("weak")) {
+        get {
+            call.respond(patchesService.latestRelease())
         }
 
-        rateLimit(RateLimitName("strong")) {
-            route("list") {
-                installLatestPatchesListRouteDocumentation()
+        route("version") {
+            installPatchesVersionRouteDocumentation()
 
-                get {
-                    call.respondBytes(ContentType.Application.Json) { patchesService.list() }
-                }
+            get {
+                call.respond(patchesService.latestVersion())
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
+        route("list") {
+            installPatchesListRouteDocumentation()
+
+            get {
+                call.respondBytes(ContentType.Application.Json) { patchesService.list() }
             }
         }
     }
@@ -60,14 +58,14 @@ internal fun Route.patchesRoute() = route("patches") {
     }
 }
 
-private fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the latest patches release")
-        summary("Get latest patches release")
+        description("Get the current patches release")
+        summary("Get current patches release")
         response {
-            description("The latest patches release")
+            description("The current patches release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<APIRelease<APIPatchesAsset>>()
@@ -75,14 +73,14 @@ private fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRou
     }
 }
 
-private fun Route.installLatestPatchesVersionRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesVersionRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the latest patches release version")
-        summary("Get latest patches release version")
+        description("Get the current patches release version")
+        summary("Get current patches release version")
         response {
-            description("The latest patches release version")
+            description("The current patches release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<APIReleaseVersion>()
@@ -90,12 +88,12 @@ private fun Route.installLatestPatchesVersionRouteDocumentation() = installNotar
     }
 }
 
-private fun Route.installLatestPatchesListRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesListRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the list of patches from the latest patches release")
-        summary("Get list of patches from latest patches release")
+        description("Get the list of patches from the current patches release")
+        summary("Get list of patches from current patches release")
         response {
             description("The list of patches")
             mediaTypes("application/json")

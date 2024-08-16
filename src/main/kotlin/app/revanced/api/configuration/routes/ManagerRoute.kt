@@ -16,31 +16,29 @@ import org.koin.ktor.ext.get as koinGet
 internal fun Route.managerRoute() = route("manager") {
     val managerService = koinGet<ManagerService>()
 
-    route("latest") {
-        installLatestManagerRouteDocumentation()
+    installManagerRouteDocumentation()
 
-        rateLimit(RateLimitName("weak")) {
+    rateLimit(RateLimitName("weak")) {
+        get {
+            call.respond(managerService.latestRelease())
+        }
+
+        route("version") {
+            installManagerVersionRouteDocumentation()
+
             get {
-                call.respond(managerService.latestRelease())
-            }
-
-            route("version") {
-                installLatestManagerVersionRouteDocumentation()
-
-                get {
-                    call.respond(managerService.latestVersion())
-                }
+                call.respond(managerService.latestVersion())
             }
         }
     }
 }
 
-private fun Route.installLatestManagerRouteDocumentation() = installNotarizedRoute {
+private fun Route.installManagerRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Manager")
 
     get = GetInfo.builder {
-        description("Get the latest manager release")
-        summary("Get latest manager release")
+        description("Get the current manager release")
+        summary("Get current manager release")
         response {
             description("The latest manager release")
             mediaTypes("application/json")
@@ -50,14 +48,14 @@ private fun Route.installLatestManagerRouteDocumentation() = installNotarizedRou
     }
 }
 
-private fun Route.installLatestManagerVersionRouteDocumentation() = installNotarizedRoute {
+private fun Route.installManagerVersionRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Manager")
 
     get = GetInfo.builder {
-        description("Get the latest manager release version")
-        summary("Get latest manager release version")
+        description("Get the current manager release version")
+        summary("Get current manager release version")
         response {
-            description("The latest manager release version")
+            description("The current manager release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<APIReleaseVersion>()
