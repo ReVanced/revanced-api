@@ -1,3 +1,10 @@
+# [1.2.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.1.0...v1.2.0-dev.1) (2024-08-16)
+
+
+### Features
+
+* Move /latest routes to parent ([4e8e83d](https://github.com/ReVanced/revanced-api/commit/4e8e83db1a20c76a81967af4e7e3a8634649790a))
+
 # [1.1.0](https://github.com/ReVanced/revanced-api/compare/v1.0.0...v1.1.0) (2024-07-15)
 
 
