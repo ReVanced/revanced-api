@@ -4,8 +4,8 @@ import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.schema.*
-import app.revanced.library.PatchUtils
-import app.revanced.patcher.PatchBundleLoader
+import app.revanced.library.serializeTo
+import app.revanced.patcher.patch.loadPatchesFromJar
 import com.github.benmanes.caffeine.cache.Caffeine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -94,7 +94,7 @@ internal class PatchesService(
                         configurationRepository.patches.publicKeyId,
                     )
                 ) {
-                    PatchBundleLoader.Jar(patchesFile)
+                    loadPatchesFromJar(setOf(patchesFile))
                 } else {
                     // Use an empty set of patches if the signature is invalid.
                     emptySet()
@@ -103,7 +103,7 @@ internal class PatchesService(
                 patchesFile.delete()
 
                 ByteArrayOutputStream().use { stream ->
-                    PatchUtils.Json.serialize(patches, outputStream = stream)
+                    patches.serializeTo(outputStream = stream)
 
                     stream.toByteArray()
                 }
