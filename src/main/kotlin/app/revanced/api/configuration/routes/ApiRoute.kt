@@ -72,7 +72,7 @@ internal fun Route.apiRoute() {
 
         installPingRouteDocumentation()
 
-        head {
+        handle {
             call.respond(HttpStatusCode.NoContent)
         }
     }
