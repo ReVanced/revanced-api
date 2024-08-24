@@ -1,3 +1,10 @@
+# [1.2.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2024-08-24)
+
+
+### Features
+
+* Respond to all ping request methods ([df116bd](https://github.com/ReVanced/revanced-api/commit/df116bd22134c8222c72b28e9387bc9871d3473e))
+
 # [1.2.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.1.0...v1.2.0-dev.1) (2024-08-16)
 
 
