@@ -1,3 +1,10 @@
+# [1.2.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2024-09-04)
+
+
+### Bug Fixes
+
+* Return correct GPG keys url ([#187](https://github.com/ReVanced/revanced-api/issues/187)) ([74e5389](https://github.com/ReVanced/revanced-api/commit/74e53891a17bd3f76f358477e4228550e6f70149))
+
 # [1.2.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2024-08-24)
 
 
