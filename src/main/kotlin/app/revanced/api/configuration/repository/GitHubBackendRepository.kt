@@ -98,7 +98,7 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
                 gpgKeys =
                 BackendMember.GpgKeys(
                     ids = gpgKeys.map { it.keyId },
-                    url = "https://api.github.com/users/${user.login}/gpg_keys",
+                    url = "https://github.com/${user.login}.gpg",
                 ),
             )
         }
