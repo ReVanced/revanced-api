@@ -1,3 +1,18 @@
+# [1.2.0](https://github.com/ReVanced/revanced-api/compare/v1.1.0...v1.2.0) (2024-09-06)
+
+
+### Bug Fixes
+
+* Add back deprecated routes for backwards compatibility ([9f0eb5b](https://github.com/ReVanced/revanced-api/commit/9f0eb5bfe9d0436e76462b9c094f8b1158e04a44))
+* Make sure, expected paths in configuration exist ([32bedb7](https://github.com/ReVanced/revanced-api/commit/32bedb7fad3eef8116625964e5e1f0a2543ea2a4))
+* Return correct GPG keys url ([#187](https://github.com/ReVanced/revanced-api/issues/187)) ([74e5389](https://github.com/ReVanced/revanced-api/commit/74e53891a17bd3f76f358477e4228550e6f70149))
+
+
+### Features
+
+* Move /latest routes to parent ([4e8e83d](https://github.com/ReVanced/revanced-api/commit/4e8e83db1a20c76a81967af4e7e3a8634649790a))
+* Respond to all ping request methods ([df116bd](https://github.com/ReVanced/revanced-api/commit/df116bd22134c8222c72b28e9387bc9871d3473e))
+
 # [1.2.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2024-09-06)
 
 
