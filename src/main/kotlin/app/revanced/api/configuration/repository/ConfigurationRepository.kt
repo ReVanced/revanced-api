@@ -17,6 +17,7 @@ import kotlinx.serialization.json.JsonNamingStrategy
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.nio.file.Path
+import kotlin.io.path.createDirectories
 
 /**
  * The repository storing the configuration for the API.
@@ -60,6 +61,11 @@ internal class ConfigurationRepository(
     @SerialName("about-json-file-path")
     val about: APIAbout,
 ) {
+    init {
+        staticFilesPath.createDirectories()
+        versionedStaticFilesPath.createDirectories()
+    }
+
     /**
      * Am asset configuration whose asset is signed.
      *
