@@ -1,3 +1,11 @@
+# [1.2.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2024-09-06)
+
+
+### Bug Fixes
+
+* Add back deprecated routes for backwards compatibility ([9f0eb5b](https://github.com/ReVanced/revanced-api/commit/9f0eb5bfe9d0436e76462b9c094f8b1158e04a44))
+* Make sure, expected paths in configuration exist ([32bedb7](https://github.com/ReVanced/revanced-api/commit/32bedb7fad3eef8116625964e5e1f0a2543ea2a4))
+
 # [1.2.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2024-09-04)
 
 
