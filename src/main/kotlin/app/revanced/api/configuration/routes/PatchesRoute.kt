@@ -17,32 +17,39 @@ import kotlin.time.Duration.Companion.days
 import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.patchesRoute() = route("patches") {
+    configure()
+
+    // TODO: Remove this deprecated route eventually.
+    route("latest") {
+        configure(deprecated = true)
+    }
+}
+
+private fun Route.configure(deprecated: Boolean = false) {
     val patchesService = koinGet<PatchesService>()
 
-    route("latest") {
-        installLatestPatchesRouteDocumentation()
+    installPatchesRouteDocumentation(deprecated)
 
-        rateLimit(RateLimitName("weak")) {
-            get {
-                call.respond(patchesService.latestRelease())
-            }
-
-            route("version") {
-                installLatestPatchesVersionRouteDocumentation()
-
-                get {
-                    call.respond(patchesService.latestVersion())
-                }
-            }
+    rateLimit(RateLimitName("weak")) {
+        get {
+            call.respond(patchesService.latestRelease())
         }
 
-        rateLimit(RateLimitName("strong")) {
-            route("list") {
-                installLatestPatchesListRouteDocumentation()
+        route("version") {
+            installPatchesVersionRouteDocumentation(deprecated)
 
-                get {
-                    call.respondBytes(ContentType.Application.Json) { patchesService.list() }
-                }
+            get {
+                call.respond(patchesService.latestVersion())
+            }
+        }
+    }
+
+    rateLimit(RateLimitName("strong")) {
+        route("list") {
+            installPatchesListRouteDocumentation(deprecated)
+
+            get {
+                call.respondBytes(ContentType.Application.Json) { patchesService.list() }
             }
         }
     }
@@ -51,7 +58,7 @@ internal fun Route.patchesRoute() = route("patches") {
         route("keys") {
             installCache(356.days)
 
-            installPatchesPublicKeyRouteDocumentation()
+            installPatchesPublicKeyRouteDocumentation(deprecated)
 
             get {
                 call.respond(patchesService.publicKeys())
@@ -60,14 +67,15 @@ internal fun Route.patchesRoute() = route("patches") {
     }
 }
 
-private fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the latest patches release")
-        summary("Get latest patches release")
+        if (deprecated) isDeprecated()
+        description("Get the current patches release")
+        summary("Get current patches release")
         response {
-            description("The latest patches release")
+            description("The current patches release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<APIRelease<APIPatchesAsset>>()
@@ -75,14 +83,15 @@ private fun Route.installLatestPatchesRouteDocumentation() = installNotarizedRou
     }
 }
 
-private fun Route.installLatestPatchesVersionRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesVersionRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the latest patches release version")
-        summary("Get latest patches release version")
+        if (deprecated) isDeprecated()
+        description("Get the current patches release version")
+        summary("Get current patches release version")
         response {
-            description("The latest patches release version")
+            description("The current patches release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<APIReleaseVersion>()
@@ -90,12 +99,13 @@ private fun Route.installLatestPatchesVersionRouteDocumentation() = installNotar
     }
 }
 
-private fun Route.installLatestPatchesListRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesListRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        description("Get the list of patches from the latest patches release")
-        summary("Get list of patches from latest patches release")
+        if (deprecated) isDeprecated()
+        description("Get the list of patches from the current patches release")
+        summary("Get list of patches from current patches release")
         response {
             description("The list of patches")
             mediaTypes("application/json")
@@ -105,10 +115,11 @@ private fun Route.installLatestPatchesListRouteDocumentation() = installNotarize
     }
 }
 
-private fun Route.installPatchesPublicKeyRouteDocumentation() = installNotarizedRoute {
+private fun Route.installPatchesPublicKeyRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
+        if (deprecated) isDeprecated()
         description("Get the public keys for verifying patches and integrations assets")
         summary("Get patches and integrations public keys")
         response {

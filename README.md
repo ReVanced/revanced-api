@@ -96,20 +96,30 @@ so before you can pull the image, you need to [authenticate to the Container reg
 
 1. Create an `.env` file using [.env.example](.env.example) as a template
 2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
-3. Create a `docker-compose.yml` file using [docker-compose.example.yml](docker-compose.example.yml) as a template
-4. Run `docker-compose up -d` to start the server
+3. Create an `about.json` file using [about.example.json](about.example.json) as a template
+4. Create a `docker-compose.yml` file using [docker-compose.example.yml](docker-compose.example.yml) as a template
+5. Run `docker-compose up -d` to start the server
 
 ### 💻 Docker CLI
 
 1. Create an `.env` file using [.env.example](.env.example) as a template
 2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
-3. Start the container using the following command:
+3. Create an `about.json` file using [about.example.json](about.example.json) as a template
+4. Start the container using the following command:
    ```shell
    docker run -d --name revanced-api \
     # Mount the .env file
     -v $(pwd)/.env:/app/.env \
     # Mount the configuration.toml file
     -v $(pwd)/configuration.toml:/app/configuration.toml \
+    # Mount the patches public key
+    -v $(pwd)/patches-public-key.asc:/app/patches-public-key.asc \
+    # Mount the integrations public key
+    -v $(pwd)/integrations-public-key.asc:/app/integrations-public-key.asc \
+    # Mount the static folder
+    -v $(pwd)/static:/app/static \
+    # Mount the about.json file
+    -v $(pwd)/about.json:/app/about.json \
     # Mount the persistence folder
     -v $(pwd)/persistence:/app/persistence \
     # Expose the port 8888
@@ -132,7 +142,8 @@ A Java Runtime Environment (JRE) must be installed.
 2. In the same folder, create an `.env` file using [.env.example](.env.example) as a template
 3. In the same folder, create a `configuration.toml` file
 using [configuration.example.toml](configuration.example.toml) as a template
-4. Run `java -jar revanced-api.jar start` to start the server
+4. In the same folder, create an `about.json` file using [about.example.json](about.example.json) as a template
+5. Run `java -jar revanced-api.jar start` to start the server
 
 ### 🛠️ From source
 
@@ -141,7 +152,8 @@ A Java Development Kit (JDK) and Git must be installed.
 1. Run `git clone git@github.com:ReVanced/revanced-api.git` to clone the repository
 2. Copy [.env.example](.env.example) to `.env` and fill in the required values
 3. Copy [configuration.example.toml](configuration.example.toml) to `configuration.toml` and fill in the required values
-4. Run `gradlew run --args=start` to start the server
+4. Copy [about.example.json](about.example.json) to `about.json` and fill in the required values
+5. Run `gradlew run --args=start` to start the server
 
 ## 📚 Everything else
 
