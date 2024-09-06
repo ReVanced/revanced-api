@@ -14,9 +14,18 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.managerRoute() = route("manager") {
+    configure()
+
+    // TODO: Remove this deprecated route eventually.
+    route("latest") {
+        configure(deprecated = true)
+    }
+}
+
+private fun Route.configure(deprecated: Boolean = false) {
     val managerService = koinGet<ManagerService>()
 
-    installManagerRouteDocumentation()
+    installManagerRouteDocumentation(deprecated)
 
     rateLimit(RateLimitName("weak")) {
         get {
@@ -24,7 +33,7 @@ internal fun Route.managerRoute() = route("manager") {
         }
 
         route("version") {
-            installManagerVersionRouteDocumentation()
+            installManagerVersionRouteDocumentation(deprecated)
 
             get {
                 call.respond(managerService.latestVersion())
@@ -33,10 +42,11 @@ internal fun Route.managerRoute() = route("manager") {
     }
 }
 
-private fun Route.installManagerRouteDocumentation() = installNotarizedRoute {
+private fun Route.installManagerRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Manager")
 
     get = GetInfo.builder {
+        if (deprecated) isDeprecated()
         description("Get the current manager release")
         summary("Get current manager release")
         response {
@@ -48,10 +58,11 @@ private fun Route.installManagerRouteDocumentation() = installNotarizedRoute {
     }
 }
 
-private fun Route.installManagerVersionRouteDocumentation() = installNotarizedRoute {
+private fun Route.installManagerVersionRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
     tags = setOf("Manager")
 
     get = GetInfo.builder {
+        if (deprecated) isDeprecated()
         description("Get the current manager release version")
         summary("Get current manager release version")
         response {
