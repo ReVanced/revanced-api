@@ -1,5 +1,6 @@
 package app.revanced.api.configuration
 
+import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -40,3 +41,11 @@ internal fun Route.staticFiles(
         extensions("json")
     },
 ) = staticFiles(remotePath, dir.toFile(), null, block)
+
+internal fun MethodInfo.Builder<*>.canRespondUnauthorized() {
+    canRespond {
+        responseCode(HttpStatusCode.Unauthorized)
+        description("Unauthorized")
+        responseType<Unit>()
+    }
+}

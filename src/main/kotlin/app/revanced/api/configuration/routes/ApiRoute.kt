@@ -4,6 +4,7 @@ import app.revanced.api.configuration.*
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.schema.APIAbout
 import app.revanced.api.configuration.schema.APIContributable
@@ -12,12 +13,15 @@ import app.revanced.api.configuration.schema.APIRateLimit
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthService
 import io.bkbn.kompendium.core.metadata.*
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json.Default.configuration
 import kotlin.time.Duration.Companion.days
 import org.koin.ktor.ext.get as koinGet
 
@@ -165,16 +169,38 @@ private fun Route.installContributorsRouteDocumentation() = installNotarizedRout
 }
 
 private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
+    val configuration = koinGet<ConfigurationRepository>()
+
     tags = setOf("API")
 
     get = GetInfo.builder {
         description("Get a new authorization token")
         summary("Get authorization token")
+        parameters(
+            Parameter(
+                name = "Authorization",
+                `in` = Parameter.Location.header,
+                schema = TypeDefinition.STRING,
+                required = true,
+                examples = mapOf(
+                    "Digest access authentication" to Parameter.Example(
+                        value = "Digest " +
+                            "username=\"ReVanced\", " +
+                            "realm=\"ReVanced\", " +
+                            "nonce=\"abc123\", " +
+                            "uri=\"/v${configuration.apiVersion}/token\", " +
+                            "algorithm=SHA-256, " +
+                            "response=\"yxz456\"",
+                    ),
+                ), // Provide an example for the header
+            ),
+        )
         response {
             description("The authorization token")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<String>()
         }
+        canRespondUnauthorized()
     }
 }
