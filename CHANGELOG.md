@@ -1,3 +1,10 @@
+# [1.3.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.2.0...v1.3.0-dev.1) (2024-09-11)
+
+
+### Features
+
+* Add missing parameter and response documentation ([491533d](https://github.com/ReVanced/revanced-api/commit/491533d3f44ccd716eee80123d0875a05eb9435b))
+
 # [1.2.0](https://github.com/ReVanced/revanced-api/compare/v1.1.0...v1.2.0) (2024-09-06)
 
 
