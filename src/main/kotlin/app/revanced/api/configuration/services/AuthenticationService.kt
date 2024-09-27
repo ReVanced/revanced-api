@@ -41,13 +41,8 @@ internal class AuthenticationService private constructor(
         }
     }
 
-    fun newToken(): String {
-        val issuedAt = Instant.now()
-
-        return JWT.create()
-            .withIssuer(issuer)
-            .withIssuedAt(issuedAt)
-            .withExpiresAt(issuedAt.plus(validityInMin, ChronoUnit.MINUTES))
-            .sign(Algorithm.HMAC256(jwtSecret))
-    }
+    fun newToken(): String = JWT.create()
+        .withIssuer(issuer)
+        .withExpiresAt(Instant.now().plus(validityInMin, ChronoUnit.MINUTES))
+        .sign(Algorithm.HMAC256(jwtSecret))
 }
