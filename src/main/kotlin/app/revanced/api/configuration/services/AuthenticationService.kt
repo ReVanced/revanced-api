@@ -1,5 +1,6 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.schema.APIToken
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.*
@@ -41,8 +42,10 @@ internal class AuthenticationService private constructor(
         }
     }
 
-    fun newToken(): String = JWT.create()
-        .withIssuer(issuer)
-        .withExpiresAt(Instant.now().plus(validityInMin, ChronoUnit.MINUTES))
-        .sign(Algorithm.HMAC256(jwtSecret))
+    fun newToken() = APIToken(
+        JWT.create()
+            .withIssuer(issuer)
+            .withExpiresAt(Instant.now().plus(validityInMin, ChronoUnit.MINUTES))
+            .sign(Algorithm.HMAC256(jwtSecret)),
+    )
 }

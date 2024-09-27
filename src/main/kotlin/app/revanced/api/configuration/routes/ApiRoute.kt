@@ -6,10 +6,7 @@ import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.schema.APIAbout
-import app.revanced.api.configuration.schema.APIContributable
-import app.revanced.api.configuration.schema.APIMember
-import app.revanced.api.configuration.schema.APIRateLimit
+import app.revanced.api.configuration.schema.*
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthenticationService
 import io.bkbn.kompendium.core.metadata.*
@@ -198,7 +195,7 @@ private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
             description("The authorization token")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<String>()
+            responseType<APIToken>()
         }
         canRespondUnauthorized()
     }
