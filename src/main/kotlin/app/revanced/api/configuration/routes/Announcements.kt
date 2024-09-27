@@ -157,7 +157,7 @@ private fun Route.installAnnouncementRouteDocumentation() = installNotarizedRout
             description("The new announcement")
         }
         response {
-            description("When the announcement was created")
+            description("The announcement is created")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
@@ -255,7 +255,7 @@ private fun Route.installAnnouncementArchiveRouteDocumentation() = installNotari
         description("Archive an announcement")
         summary("Archive announcement")
         response {
-            description("When the announcement was archived")
+            description("The announcement is archived")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
@@ -281,7 +281,7 @@ private fun Route.installAnnouncementUnarchiveRouteDocumentation() = installNota
         description("Unarchive an announcement")
         summary("Unarchive announcement")
         response {
-            description("When announcement was unarchived")
+            description("The announcement is unarchived")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
@@ -311,7 +311,7 @@ private fun Route.installAnnouncementIdRouteDocumentation() = installNotarizedRo
             description("The new announcement")
         }
         response {
-            description("When announcement was updated")
+            description("The announcement is updated")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
@@ -322,7 +322,7 @@ private fun Route.installAnnouncementIdRouteDocumentation() = installNotarizedRo
         description("Delete an announcement")
         summary("Delete announcement")
         response {
-            description("When the announcement was deleted")
+            description("The announcement is deleted")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
