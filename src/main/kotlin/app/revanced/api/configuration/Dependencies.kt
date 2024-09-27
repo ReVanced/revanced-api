@@ -7,7 +7,7 @@ import app.revanced.api.configuration.repository.GitHubBackendRepository
 import app.revanced.api.configuration.services.*
 import app.revanced.api.configuration.services.AnnouncementService
 import app.revanced.api.configuration.services.ApiService
-import app.revanced.api.configuration.services.AuthService
+import app.revanced.api.configuration.services.AuthenticationService
 import app.revanced.api.configuration.services.OldApiService
 import app.revanced.api.configuration.services.PatchesService
 import com.akuleshov7.ktoml.Toml
@@ -116,11 +116,11 @@ fun Application.configureDependencies(
 
             val jwtSecret = dotenv["JWT_SECRET"]
             val issuer = dotenv["JWT_ISSUER"]
-            val validityInMin = dotenv["JWT_VALIDITY_IN_MIN"].toInt()
+            val validityInMin = dotenv["JWT_VALIDITY_IN_MIN"].toLong()
 
             val authSHA256DigestString = dotenv["AUTH_SHA256_DIGEST"]
 
-            AuthService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
+            AuthenticationService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
         }
         single {
             val configuration = get<ConfigurationRepository>()

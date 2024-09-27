@@ -11,7 +11,7 @@ import app.revanced.api.configuration.schema.APIContributable
 import app.revanced.api.configuration.schema.APIMember
 import app.revanced.api.configuration.schema.APIRateLimit
 import app.revanced.api.configuration.services.ApiService
-import app.revanced.api.configuration.services.AuthService
+import app.revanced.api.configuration.services.AuthenticationService
 import io.bkbn.kompendium.core.metadata.*
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -21,13 +21,12 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.Json.Default.configuration
 import kotlin.time.Duration.Companion.days
 import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.apiRoute() {
     val apiService = koinGet<ApiService>()
-    val authService = koinGet<AuthService>()
+    val authenticationService = koinGet<AuthenticationService>()
 
     rateLimit(RateLimitName("strong")) {
         authenticate("auth-digest") {
@@ -35,7 +34,7 @@ internal fun Route.apiRoute() {
                 installTokenRouteDocumentation()
 
                 get {
-                    call.respond(authService.newToken())
+                    call.respond(authenticationService.newToken())
                 }
             }
         }
