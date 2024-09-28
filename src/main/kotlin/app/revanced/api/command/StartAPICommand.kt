@@ -1,6 +1,7 @@
 package app.revanced.api.command
 
 import app.revanced.api.configuration.*
+import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.engine.*
 import io.ktor.server.jetty.*
 import picocli.CommandLine
@@ -33,6 +34,8 @@ internal object StartAPICommand : Runnable {
     private var configFile = File("configuration.toml")
 
     override fun run() {
+        Dotenv.configure().systemProperties().load()
+
         embeddedServer(Jetty, port, host) {
             configureDependencies(configFile)
             configureHTTP()

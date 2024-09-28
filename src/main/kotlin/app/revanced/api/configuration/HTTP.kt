@@ -16,7 +16,7 @@ fun Application.configureHTTP() {
         configurationRepository.corsAllowedHosts.forEach { host ->
             allowHost(
                 host = host,
-                schemes = listOf("http", "https")
+                schemes = listOf("http", "https"),
             )
         }
     }
