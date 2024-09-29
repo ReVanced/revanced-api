@@ -1,3 +1,18 @@
+# [1.3.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2024-09-29)
+
+
+### Bug Fixes
+
+* Add missing OK response to routes ([1181be1](https://github.com/ReVanced/revanced-api/commit/1181be12e2223b245019f64570bc8f7bef4e7dc2))
+* Respond with JSON when returning token ([1e3e46f](https://github.com/ReVanced/revanced-api/commit/1e3e46ff4f7c12569b88fcd1bc252aeb5a611b63))
+* Specify a validation function to fix authentication ([53c3600](https://github.com/ReVanced/revanced-api/commit/53c36002e9af89aa5fed71f831470b42d5d777c9))
+
+
+### Features
+
+* Customize logging level through environment variable ([8b17d88](https://github.com/ReVanced/revanced-api/commit/8b17d8894db8db4a168c30be50af91c04e173e14))
+* Improve response info description wording ([977d252](https://github.com/ReVanced/revanced-api/commit/977d25249738b24cb6a3530543349efe1d71a9ba))
+
 # [1.3.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2024-09-27)
 
 
