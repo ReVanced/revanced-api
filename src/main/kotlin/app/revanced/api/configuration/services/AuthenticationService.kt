@@ -26,8 +26,9 @@ internal class AuthenticationService private constructor(
     fun AuthenticationConfig.jwt() {
         jwt("jwt") {
             realm = "ReVanced"
-
             verifier(JWT.require(Algorithm.HMAC256(jwtSecret)).withIssuer(issuer).build())
+            // This is required and not optional. Authentication will fail if this is not present.
+            validate { JWTPrincipal(it.payload) }
         }
     }
 
