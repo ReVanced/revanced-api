@@ -1,6 +1,7 @@
 package app.revanced.api.configuration
 
 import app.revanced.api.configuration.repository.ConfigurationRepository
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.cors.routing.*
@@ -13,6 +14,11 @@ fun Application.configureHTTP() {
     val configurationRepository = get<ConfigurationRepository>()
 
     install(CORS) {
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Authorization)
+
+        allowCredentials = true
+
         configurationRepository.corsAllowedHosts.forEach { host ->
             allowHost(
                 host = host,
