@@ -94,6 +94,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
             post<APIAnnouncement> { announcement ->
                 announcementService.new(announcement)
+
+                call.respond(HttpStatusCode.OK)
             }
 
             route("{id}") {
@@ -103,12 +105,16 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     val id: Int by call.parameters
 
                     announcementService.update(id, announcement)
+
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 delete {
                     val id: Int by call.parameters
 
                     announcementService.delete(id)
+
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 route("archive") {
@@ -119,6 +125,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
                         val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
 
                         announcementService.archive(id, archivedAt)
+
+                        call.respond(HttpStatusCode.OK)
                     }
                 }
 
@@ -129,6 +137,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
                         val id: Int by call.parameters
 
                         announcementService.unarchive(id)
+
+                        call.respond(HttpStatusCode.OK)
                     }
                 }
             }
