@@ -1,3 +1,10 @@
+# [1.3.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2024-09-29)
+
+
+### Bug Fixes
+
+* Configure CORS properly to allow authorization and content-type header ([6442757](https://github.com/ReVanced/revanced-api/commit/6442757927c0307c01b2793858d25df7e3fca122))
+
 # [1.3.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2024-09-29)
 
 
