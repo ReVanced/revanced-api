@@ -1,3 +1,10 @@
+# [1.3.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2024-09-30)
+
+
+### Bug Fixes
+
+* Allow more necessary HTTP methods for CORS ([080e2e5](https://github.com/ReVanced/revanced-api/commit/080e2e582cb8ea97421c402a4cb82414e11fb1cf))
+
 # [1.3.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2024-09-29)
 
 
