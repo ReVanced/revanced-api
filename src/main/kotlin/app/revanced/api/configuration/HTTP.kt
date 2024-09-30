@@ -14,6 +14,8 @@ fun Application.configureHTTP() {
     val configurationRepository = get<ConfigurationRepository>()
 
     install(CORS) {
+        HttpMethod.DefaultMethods.minus(HttpMethod.Options).forEach(::allowMethod)
+
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
 
