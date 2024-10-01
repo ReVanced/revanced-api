@@ -22,10 +22,7 @@ fun Application.configureHTTP() {
         allowCredentials = true
 
         configurationRepository.corsAllowedHosts.forEach { host ->
-            allowHost(
-                host = host,
-                schemes = listOf("http", "https"),
-            )
+            allowHost(host = host, schemes = listOf("https"))
         }
     }
 
