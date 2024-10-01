@@ -18,6 +18,7 @@ fun Application.configureHTTP() {
 
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
+        exposeHeader(HttpHeaders.WWWAuthenticate)
 
         allowCredentials = true
 
