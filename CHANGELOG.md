@@ -1,3 +1,15 @@
+# [1.3.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2024-10-02)
+
+
+### Bug Fixes
+
+* Expose www-authenticate header to JS ([9ed724e](https://github.com/ReVanced/revanced-api/commit/9ed724e161f9029967f67e4c2066f2fdf7be0a27))
+
+
+### Features
+
+* Only allow requests from HTTPs ([a6d7da1](https://github.com/ReVanced/revanced-api/commit/a6d7da1205ef7bc23eba0b1fca2480a4327def19))
+
 # [1.3.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2024-09-30)
 
 
