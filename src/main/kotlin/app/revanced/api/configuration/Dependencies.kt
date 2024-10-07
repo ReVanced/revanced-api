@@ -7,12 +7,11 @@ import app.revanced.api.configuration.repository.GitHubBackendRepository
 import app.revanced.api.configuration.services.*
 import app.revanced.api.configuration.services.AnnouncementService
 import app.revanced.api.configuration.services.ApiService
-import app.revanced.api.configuration.services.AuthService
+import app.revanced.api.configuration.services.AuthenticationService
 import app.revanced.api.configuration.services.OldApiService
 import app.revanced.api.configuration.services.PatchesService
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.source.decodeFromStream
-import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
@@ -38,11 +37,7 @@ import java.io.File
 fun Application.configureDependencies(
     configFile: File,
 ) {
-    val globalModule = module {
-        single {
-            Dotenv.configure().load()
-        }
-
+    val miscModule = module {
         factory { params ->
             val defaultRequestUri: String = params.get<String>()
             val configBlock = params.getOrNull<(HttpClientConfig<OkHttpConfig>.() -> Unit)>() ?: {}
@@ -72,7 +67,7 @@ fun Application.configureDependencies(
                             )
                         }
 
-                        get<Dotenv>()["BACKEND_API_TOKEN"]?.let {
+                        System.getProperty("BACKEND_API_TOKEN")?.let {
                             install(Auth) {
                                 bearer {
                                     loadTokens {
@@ -98,12 +93,10 @@ fun Application.configureDependencies(
         }
 
         single {
-            val dotenv = get<Dotenv>()
-
             TransactionManager.defaultDatabase = Database.connect(
-                url = dotenv["DB_URL"],
-                user = dotenv["DB_USER"],
-                password = dotenv["DB_PASSWORD"],
+                url = System.getProperty("DB_URL"),
+                user = System.getProperty("DB_USER"),
+                password = System.getProperty("DB_PASSWORD"),
             )
 
             AnnouncementRepository()
@@ -112,15 +105,13 @@ fun Application.configureDependencies(
 
     val serviceModule = module {
         single {
-            val dotenv = get<Dotenv>()
+            val jwtSecret = System.getProperty("JWT_SECRET")
+            val issuer = System.getProperty("JWT_ISSUER")
+            val validityInMin = System.getProperty("JWT_VALIDITY_IN_MIN").toLong()
 
-            val jwtSecret = dotenv["JWT_SECRET"]
-            val issuer = dotenv["JWT_ISSUER"]
-            val validityInMin = dotenv["JWT_VALIDITY_IN_MIN"].toInt()
+            val authSHA256DigestString = System.getProperty("AUTH_SHA256_DIGEST")
 
-            val authSHA256DigestString = dotenv["AUTH_SHA256_DIGEST"]
-
-            AuthService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
+            AuthenticationService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
         }
         single {
             val configuration = get<ConfigurationRepository>()
@@ -140,7 +131,7 @@ fun Application.configureDependencies(
 
     install(Koin) {
         modules(
-            globalModule,
+            miscModule,
             repositoryModule,
             serviceModule,
         )

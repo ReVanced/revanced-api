@@ -12,7 +12,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - name: Checkout
@@ -60,7 +60,7 @@ jobs:
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm exec semantic-release
 
       - name: Set Portainer stack webhook URL based on branch

@@ -1,3 +1,58 @@
+# [1.3.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2024-10-02)
+
+
+### Bug Fixes
+
+* Expose www-authenticate header to JS ([9ed724e](https://github.com/ReVanced/revanced-api/commit/9ed724e161f9029967f67e4c2066f2fdf7be0a27))
+
+
+### Features
+
+* Only allow requests from HTTPs ([a6d7da1](https://github.com/ReVanced/revanced-api/commit/a6d7da1205ef7bc23eba0b1fca2480a4327def19))
+
+# [1.3.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2024-09-30)
+
+
+### Bug Fixes
+
+* Allow more necessary HTTP methods for CORS ([080e2e5](https://github.com/ReVanced/revanced-api/commit/080e2e582cb8ea97421c402a4cb82414e11fb1cf))
+
+# [1.3.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2024-09-29)
+
+
+### Bug Fixes
+
+* Configure CORS properly to allow authorization and content-type header ([6442757](https://github.com/ReVanced/revanced-api/commit/6442757927c0307c01b2793858d25df7e3fca122))
+
+# [1.3.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2024-09-29)
+
+
+### Bug Fixes
+
+* Add missing OK response to routes ([1181be1](https://github.com/ReVanced/revanced-api/commit/1181be12e2223b245019f64570bc8f7bef4e7dc2))
+* Respond with JSON when returning token ([1e3e46f](https://github.com/ReVanced/revanced-api/commit/1e3e46ff4f7c12569b88fcd1bc252aeb5a611b63))
+* Specify a validation function to fix authentication ([53c3600](https://github.com/ReVanced/revanced-api/commit/53c36002e9af89aa5fed71f831470b42d5d777c9))
+
+
+### Features
+
+* Customize logging level through environment variable ([8b17d88](https://github.com/ReVanced/revanced-api/commit/8b17d8894db8db4a168c30be50af91c04e173e14))
+* Improve response info description wording ([977d252](https://github.com/ReVanced/revanced-api/commit/977d25249738b24cb6a3530543349efe1d71a9ba))
+
+# [1.3.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* Expire token relative to current date time instead of just time ([c26e129](https://github.com/ReVanced/revanced-api/commit/c26e129bda09345761f291917f026c13e89a2572))
+
+# [1.3.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.2.0...v1.3.0-dev.1) (2024-09-11)
+
+
+### Features
+
+* Add missing parameter and response documentation ([491533d](https://github.com/ReVanced/revanced-api/commit/491533d3f44ccd716eee80123d0875a05eb9435b))
+
 # [1.2.0](https://github.com/ReVanced/revanced-api/compare/v1.1.0...v1.2.0) (2024-09-06)
 
 

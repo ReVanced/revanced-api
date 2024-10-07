@@ -4,14 +4,14 @@ import app.revanced.api.configuration.*
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.schema.APIAbout
-import app.revanced.api.configuration.schema.APIContributable
-import app.revanced.api.configuration.schema.APIMember
-import app.revanced.api.configuration.schema.APIRateLimit
+import app.revanced.api.configuration.schema.*
 import app.revanced.api.configuration.services.ApiService
-import app.revanced.api.configuration.services.AuthService
+import app.revanced.api.configuration.services.AuthenticationService
 import io.bkbn.kompendium.core.metadata.*
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -23,7 +23,7 @@ import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.apiRoute() {
     val apiService = koinGet<ApiService>()
-    val authService = koinGet<AuthService>()
+    val authenticationService = koinGet<AuthenticationService>()
 
     rateLimit(RateLimitName("strong")) {
         authenticate("auth-digest") {
@@ -31,7 +31,7 @@ internal fun Route.apiRoute() {
                 installTokenRouteDocumentation()
 
                 get {
-                    call.respond(authService.newToken())
+                    call.respond(authenticationService.newToken())
                 }
             }
         }
@@ -165,16 +165,38 @@ private fun Route.installContributorsRouteDocumentation() = installNotarizedRout
 }
 
 private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
+    val configuration = koinGet<ConfigurationRepository>()
+
     tags = setOf("API")
 
     get = GetInfo.builder {
         description("Get a new authorization token")
         summary("Get authorization token")
+        parameters(
+            Parameter(
+                name = "Authorization",
+                `in` = Parameter.Location.header,
+                schema = TypeDefinition.STRING,
+                required = true,
+                examples = mapOf(
+                    "Digest access authentication" to Parameter.Example(
+                        value = "Digest " +
+                            "username=\"ReVanced\", " +
+                            "realm=\"ReVanced\", " +
+                            "nonce=\"abc123\", " +
+                            "uri=\"/v${configuration.apiVersion}/token\", " +
+                            "algorithm=SHA-256, " +
+                            "response=\"yxz456\"",
+                    ),
+                ), // Provide an example for the header
+            ),
+        )
         response {
             description("The authorization token")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<String>()
+            responseType<APIToken>()
         }
+        canRespondUnauthorized()
     }
 }

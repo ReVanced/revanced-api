@@ -172,3 +172,6 @@ class APIAbout(
         val links: List<Link>?,
     )
 }
+
+@Serializable
+class APIToken(val token: String)

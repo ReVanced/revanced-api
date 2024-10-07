@@ -1,5 +1,6 @@
 package app.revanced.api.configuration.routes
 
+import app.revanced.api.configuration.canRespondUnauthorized
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
@@ -8,10 +9,7 @@ import app.revanced.api.configuration.schema.APIAnnouncementArchivedAt
 import app.revanced.api.configuration.schema.APIResponseAnnouncement
 import app.revanced.api.configuration.schema.APIResponseAnnouncementId
 import app.revanced.api.configuration.services.AnnouncementService
-import io.bkbn.kompendium.core.metadata.DeleteInfo
-import io.bkbn.kompendium.core.metadata.GetInfo
-import io.bkbn.kompendium.core.metadata.PatchInfo
-import io.bkbn.kompendium.core.metadata.PostInfo
+import io.bkbn.kompendium.core.metadata.*
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
@@ -96,6 +94,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
             post<APIAnnouncement> { announcement ->
                 announcementService.new(announcement)
+
+                call.respond(HttpStatusCode.OK)
             }
 
             route("{id}") {
@@ -105,12 +105,16 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     val id: Int by call.parameters
 
                     announcementService.update(id, announcement)
+
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 delete {
                     val id: Int by call.parameters
 
                     announcementService.delete(id)
+
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 route("archive") {
@@ -121,6 +125,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
                         val archivedAt = call.receiveNullable<APIAnnouncementArchivedAt>()?.archivedAt
 
                         announcementService.archive(id, archivedAt)
+
+                        call.respond(HttpStatusCode.OK)
                     }
                 }
 
@@ -131,6 +137,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
                         val id: Int by call.parameters
 
                         announcementService.unarchive(id)
+
+                        call.respond(HttpStatusCode.OK)
                     }
                 }
             }
@@ -138,8 +146,18 @@ internal fun Route.announcementsRoute() = route("announcements") {
     }
 }
 
+private val authHeaderParameter = Parameter(
+    name = "Authorization",
+    `in` = Parameter.Location.header,
+    schema = TypeDefinition.STRING,
+    required = true,
+    examples = mapOf("Bearer authentication" to Parameter.Example("Bearer abc123")),
+)
+
 private fun Route.installAnnouncementRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Announcements")
+
+    parameters = listOf(authHeaderParameter)
 
     post = PostInfo.builder {
         description("Create a new announcement")
@@ -149,10 +167,11 @@ private fun Route.installAnnouncementRouteDocumentation() = installNotarizedRout
             description("The new announcement")
         }
         response {
-            description("When the announcement was created")
+            description("The announcement is created")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
+        canRespondUnauthorized()
     }
 }
 
@@ -239,16 +258,18 @@ private fun Route.installAnnouncementArchiveRouteDocumentation() = installNotari
             description = "The date and time the announcement to be archived",
             required = false,
         ),
+        authHeaderParameter,
     )
 
     post = PostInfo.builder {
         description("Archive an announcement")
         summary("Archive announcement")
         response {
-            description("When the announcement was archived")
+            description("The announcement is archived")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
+        canRespondUnauthorized()
     }
 }
 
@@ -263,16 +284,18 @@ private fun Route.installAnnouncementUnarchiveRouteDocumentation() = installNota
             description = "The id of the announcement to unarchive",
             required = true,
         ),
+        authHeaderParameter,
     )
 
     post = PostInfo.builder {
         description("Unarchive an announcement")
         summary("Unarchive announcement")
         response {
-            description("When announcement was unarchived")
+            description("The announcement is unarchived")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
+        canRespondUnauthorized()
     }
 }
 
@@ -287,6 +310,7 @@ private fun Route.installAnnouncementIdRouteDocumentation() = installNotarizedRo
             description = "The id of the announcement to update",
             required = true,
         ),
+        authHeaderParameter,
     )
 
     patch = PatchInfo.builder {
@@ -297,20 +321,22 @@ private fun Route.installAnnouncementIdRouteDocumentation() = installNotarizedRo
             description("The new announcement")
         }
         response {
-            description("When announcement was updated")
+            description("The announcement is updated")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
+        canRespondUnauthorized()
     }
 
     delete = DeleteInfo.builder {
         description("Delete an announcement")
         summary("Delete announcement")
         response {
-            description("When the announcement was deleted")
+            description("The announcement is deleted")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }
+        canRespondUnauthorized()
     }
 }
 
