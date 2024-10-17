@@ -9,17 +9,17 @@ internal class ManagerService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): APIRelease<APIManagerAsset> {
+    suspend fun latestRelease(): ApiRelease<ApiManagerAsset> {
         val managerRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.manager.repository,
         )
 
-        val managerAsset = APIManagerAsset(
+        val managerAsset = ApiManagerAsset(
             managerRelease.assets.first(configurationRepository.manager.assetRegex).downloadUrl,
         )
 
-        return APIRelease(
+        return ApiRelease(
             managerRelease.tag,
             managerRelease.createdAt,
             managerRelease.releaseNote,
@@ -27,12 +27,12 @@ internal class ManagerService(
         )
     }
 
-    suspend fun latestVersion(): APIReleaseVersion {
+    suspend fun latestVersion(): ApiReleaseVersion {
         val managerRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.manager.repository,
         )
 
-        return APIReleaseVersion(managerRelease.tag)
+        return ApiReleaseVersion(managerRelease.tag)
     }
 }
