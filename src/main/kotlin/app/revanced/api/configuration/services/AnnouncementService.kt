@@ -2,7 +2,6 @@ package app.revanced.api.configuration.services
 
 import app.revanced.api.configuration.repository.AnnouncementRepository
 import app.revanced.api.configuration.schema.ApiAnnouncement
-import kotlinx.datetime.LocalDateTime
 
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
@@ -24,10 +23,6 @@ internal class AnnouncementService(
     suspend fun delete(id: Int) = announcementRepository.delete(id)
 
     suspend fun new(new: ApiAnnouncement) = announcementRepository.new(new)
-
-    suspend fun archive(id: Int, archivedAt: LocalDateTime?) = announcementRepository.archive(id, archivedAt)
-
-    suspend fun unarchive(id: Int) = announcementRepository.unarchive(id)
 
     suspend fun tags() = announcementRepository.tags()
 }

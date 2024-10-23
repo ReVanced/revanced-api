@@ -5,7 +5,6 @@ import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.schema.ApiAnnouncement
-import app.revanced.api.configuration.schema.ApiAnnouncementArchivedAt
 import app.revanced.api.configuration.schema.ApiResponseAnnouncement
 import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
 import app.revanced.api.configuration.services.AnnouncementService
@@ -102,27 +101,6 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
                     call.respond(HttpStatusCode.OK)
                 }
-            }
-        }
-
-        route("archive") {
-            installAnnouncementsArchiveRouteDocumentation()
-
-            post {
-                val id: Int by call.parameters
-                val archivedAt = call.receiveNullable<ApiAnnouncementArchivedAt>()?.archivedAt
-
-                announcementService.archive(id, archivedAt)
-
-                call.respond(HttpStatusCode.OK)
-            }
-
-            delete {
-                val id: Int by call.parameters
-
-                announcementService.unarchive(id)
-
-                call.respond(HttpStatusCode.OK)
             }
         }
 
@@ -317,52 +295,6 @@ private fun Route.installAnnouncementsIdRouteDocumentation() = installNotarizedR
         summary("Delete announcement")
         response {
             description("The announcement is deleted")
-            responseCode(HttpStatusCode.OK)
-            responseType<Unit>()
-        }
-        canRespondUnauthorized()
-    }
-}
-
-private fun Route.installAnnouncementsArchiveRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    parameters = listOf(
-        Parameter(
-            name = "id",
-            `in` = Parameter.Location.path,
-            schema = TypeDefinition.INT,
-            description = "The ID of the announcement to archive",
-            required = true,
-        ),
-        authHeaderParameter,
-    )
-
-    post = PostInfo.builder {
-        description("Archive an announcement")
-        summary("Archive announcement")
-        parameters(
-            Parameter(
-                name = "archivedAt",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.STRING,
-                description = "The date and time the announcement to be archived",
-                required = false,
-            ),
-        )
-        response {
-            description("The announcement is archived")
-            responseCode(HttpStatusCode.OK)
-            responseType<Unit>()
-        }
-        canRespondUnauthorized()
-    }
-
-    delete = DeleteInfo.builder {
-        description("Unarchive an announcement")
-        summary("Unarchive announcement")
-        response {
-            description("The announcement is unarchived")
             responseCode(HttpStatusCode.OK)
             responseType<Unit>()
         }

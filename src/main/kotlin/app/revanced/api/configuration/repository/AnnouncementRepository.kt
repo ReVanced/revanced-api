@@ -167,21 +167,6 @@ internal class AnnouncementRepository {
         }
     }
 
-    suspend fun archive(
-        id: Int,
-        archivedAt: LocalDateTime?,
-    ) = transaction {
-        Announcement.findByIdAndUpdate(id) {
-            it.archivedAt = archivedAt ?: java.time.LocalDateTime.now().toKotlinLocalDateTime()
-        }?.let(::updateLatestAnnouncement)
-    }
-
-    suspend fun unarchive(id: Int) = transaction {
-        Announcement.findByIdAndUpdate(id) {
-            it.archivedAt = null
-        }?.let(::updateLatestAnnouncement) ?: Unit
-    }
-
     suspend fun tags() = transaction {
         Tag.all().toList().toApiTag()
     }

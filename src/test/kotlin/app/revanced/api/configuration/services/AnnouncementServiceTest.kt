@@ -51,13 +51,19 @@ private object AnnouncementServiceTest {
     @Test
     fun `archiving works properly`() = runBlocking {
         announcementService.new(ApiAnnouncement(title = "title"))
-        val latestId = announcementService.latestId()!!.id
 
-        announcementService.archive(latestId, LocalDateTime.now().toKotlinLocalDateTime())
-        assertNotNull(announcementService.get(latestId)?.archivedAt)
+        val latest = announcementService.latest()!!
+        assertNull(announcementService.get(latest.id)?.archivedAt)
 
-        announcementService.unarchive(latestId)
-        assertNull(announcementService.get(latestId)?.archivedAt)
+        val updated = ApiAnnouncement(
+            title = latest.title,
+            archivedAt = LocalDateTime.now().toKotlinLocalDateTime(),
+        )
+
+        announcementService.update(latest.id, updated)
+        assertNotNull(announcementService.get(latest.id)?.archivedAt)
+
+        return@runBlocking
     }
 
     @Test
