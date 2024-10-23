@@ -1,9 +1,9 @@
 package app.revanced.api.configuration.routes
 
 import app.revanced.api.configuration.installNotarizedRoute
-import app.revanced.api.configuration.schema.APIManagerAsset
-import app.revanced.api.configuration.schema.APIRelease
-import app.revanced.api.configuration.schema.APIReleaseVersion
+import app.revanced.api.configuration.schema.ApiManagerAsset
+import app.revanced.api.configuration.schema.ApiRelease
+import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.api.configuration.services.ManagerService
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.ktor.http.*
@@ -53,7 +53,7 @@ private fun Route.installManagerRouteDocumentation(deprecated: Boolean) = instal
             description("The latest manager release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIRelease<APIManagerAsset>>()
+            responseType<ApiRelease<ApiManagerAsset>>()
         }
     }
 }
@@ -69,7 +69,7 @@ private fun Route.installManagerVersionRouteDocumentation(deprecated: Boolean) =
             description("The current manager release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIReleaseVersion>()
+            responseType<ApiReleaseVersion>()
         }
     }
 }

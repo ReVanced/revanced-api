@@ -115,7 +115,7 @@ private fun Route.installRateLimitRouteDocumentation() = installNotarizedRoute {
             description("The rate limit of the backend")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIRateLimit>()
+            responseType<ApiRateLimit>()
         }
     }
 }
@@ -144,7 +144,7 @@ private fun Route.installTeamRouteDocumentation() = installNotarizedRoute {
             description("The list of team members")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<Set<APIMember>>()
+            responseType<Set<ApiMember>>()
         }
     }
 }
@@ -195,7 +195,7 @@ private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
             description("The authorization token")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIToken>()
+            responseType<ApiToken>()
         }
         canRespondUnauthorized()
     }

@@ -75,7 +75,7 @@ with updates and ReVanced Patches.
 
 Some of the features ReVanced API include:
 
-- 📢 **Announcements**: Post and get announcements grouped by channels
+- 📢 **Announcements**: Post and get announcements
 - ℹ️ **About**: Get more information such as a description, ways to donate to, 
 and links of the hoster of ReVanced API
 - 🧩 **Patches**: Get the latest updates of ReVanced Patches, directly from ReVanced API

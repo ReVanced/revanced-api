@@ -2,10 +2,10 @@ package app.revanced.api.configuration.routes
 
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
-import app.revanced.api.configuration.schema.APIAssetPublicKeys
-import app.revanced.api.configuration.schema.APIPatchesAsset
-import app.revanced.api.configuration.schema.APIRelease
-import app.revanced.api.configuration.schema.APIReleaseVersion
+import app.revanced.api.configuration.schema.ApiAssetPublicKeys
+import app.revanced.api.configuration.schema.ApiPatchesAsset
+import app.revanced.api.configuration.schema.ApiRelease
+import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.api.configuration.services.PatchesService
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.ktor.http.*
@@ -78,7 +78,7 @@ private fun Route.installPatchesRouteDocumentation(deprecated: Boolean) = instal
             description("The current patches release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIRelease<APIPatchesAsset>>()
+            responseType<ApiRelease<ApiPatchesAsset>>()
         }
     }
 }
@@ -94,7 +94,7 @@ private fun Route.installPatchesVersionRouteDocumentation(deprecated: Boolean) =
             description("The current patches release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIReleaseVersion>()
+            responseType<ApiReleaseVersion>()
         }
     }
 }
@@ -126,7 +126,7 @@ private fun Route.installPatchesPublicKeyRouteDocumentation(deprecated: Boolean)
             description("The public keys")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIAssetPublicKeys>()
+            responseType<ApiAssetPublicKeys>()
         }
     }
 }

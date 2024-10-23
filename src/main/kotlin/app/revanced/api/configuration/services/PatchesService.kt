@@ -17,7 +17,7 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): APIRelease<APIPatchesAsset> {
+    suspend fun latestRelease(): ApiRelease<ApiPatchesAsset> {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
@@ -30,8 +30,8 @@ internal class PatchesService(
 
         fun ConfigurationRepository.SignedAssetConfiguration.asset(
             release: BackendRepository.BackendOrganization.BackendRepository.BackendRelease,
-            assetName: APIAssetName,
-        ) = APIPatchesAsset(
+            assetName: ApiAssetName,
+        ) = ApiPatchesAsset(
             release.assets.first(assetRegex).downloadUrl,
             release.assets.first(signatureAssetRegex).downloadUrl,
             assetName,
@@ -39,14 +39,14 @@ internal class PatchesService(
 
         val patchesAsset = configurationRepository.patches.asset(
             patchesRelease,
-            APIAssetName.PATCHES,
+            ApiAssetName.PATCHES,
         )
         val integrationsAsset = configurationRepository.integrations.asset(
             integrationsRelease,
-            APIAssetName.INTEGRATION,
+            ApiAssetName.INTEGRATION,
         )
 
-        return APIRelease(
+        return ApiRelease(
             patchesRelease.tag,
             patchesRelease.createdAt,
             patchesRelease.releaseNote,
@@ -54,13 +54,13 @@ internal class PatchesService(
         )
     }
 
-    suspend fun latestVersion(): APIReleaseVersion {
+    suspend fun latestVersion(): ApiReleaseVersion {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
         )
 
-        return APIReleaseVersion(patchesRelease.tag)
+        return ApiReleaseVersion(patchesRelease.tag)
     }
 
     private val patchesListCache = Caffeine
@@ -111,12 +111,12 @@ internal class PatchesService(
         }
     }
 
-    fun publicKeys(): APIAssetPublicKeys {
+    fun publicKeys(): ApiAssetPublicKeys {
         fun readPublicKey(
             getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration,
         ) = configurationRepository.getSignedAssetConfiguration().publicKeyFile.readText()
 
-        return APIAssetPublicKeys(
+        return ApiAssetPublicKeys(
             readPublicKey { patches },
             readPublicKey { integrations },
         )

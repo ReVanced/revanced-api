@@ -21,7 +21,7 @@ internal class ApiService(
                 APIContributable(
                     it,
                     backendRepository.contributors(configurationRepository.organization, it).map {
-                        APIContributor(it.name, it.avatarUrl, it.url, it.contributions)
+                        ApiContributor(it.name, it.avatarUrl, it.url, it.contributions)
                     },
                 )
             }
@@ -29,13 +29,13 @@ internal class ApiService(
     }.awaitAll()
 
     suspend fun team() = backendRepository.members(configurationRepository.organization).map { member ->
-        APIMember(
+        ApiMember(
             member.name,
             member.avatarUrl,
             member.url,
             member.bio,
             if (member.gpgKeys.ids.isNotEmpty()) {
-                APIGpgKey(
+                ApiGpgKey(
                     // Must choose one of the GPG keys, because it does not make sense to have multiple GPG keys for the API.
                     member.gpgKeys.ids.first(),
                     member.gpgKeys.url,
@@ -47,6 +47,6 @@ internal class ApiService(
     }
 
     suspend fun rateLimit() = backendRepository.rateLimit()?.let {
-        APIRateLimit(it.limit, it.remaining, it.reset)
+        ApiRateLimit(it.limit, it.remaining, it.reset)
     }
 }
