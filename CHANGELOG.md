@@ -1,3 +1,11 @@
+# [1.4.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2024-11-01)
+
+
+### Features
+
+* Remove "archived" query parameter ([8ad614e](https://github.com/ReVanced/revanced-api/commit/8ad614ef4fdaf45af87a3316ef4db7e7236fd64a))
+* Use tag name directly instead of ID ([fc40427](https://github.com/ReVanced/revanced-api/commit/fc40427fbaafb523045eb6f5285d90949b206b8b))
+
 # [1.4.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2024-11-01)
 
 
