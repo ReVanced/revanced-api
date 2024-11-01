@@ -13,7 +13,7 @@ organization = "revanced"
 
 [patches]
 repository = "revanced-patches"
-asset-regex = "jar$"
+asset-regex = "rvp$"
 signature-asset-regex = "asc$"
 public-key-file = "static/root/keys.asc"
 public-key-id = 3897925568445097277
