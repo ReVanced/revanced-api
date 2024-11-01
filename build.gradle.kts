@@ -48,6 +48,12 @@ kotlin {
     }
 }
 
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
 repositories {
     mavenCentral()
     google()
@@ -98,6 +104,8 @@ dependencies {
     implementation(libs.caffeine)
     implementation(libs.bouncy.castle.provider)
     implementation(libs.bouncy.castle.pgp)
+
+    testImplementation(kotlin("test"))
 }
 
 // The maven-publish plugin is necessary to make signing work.
