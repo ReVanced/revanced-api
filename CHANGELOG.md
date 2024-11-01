@@ -1,3 +1,17 @@
+# [1.4.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2024-11-01)
+
+
+### Bug Fixes
+
+* Add missing logging level environment variable to .env.example ([3b62120](https://github.com/ReVanced/revanced-api/commit/3b6212065a5cfb95c303b6d0551747ba1eb317f6))
+
+
+### Features
+
+* Add URL and use friendly name for `APIContributable` ([a5498ab](https://github.com/ReVanced/revanced-api/commit/a5498aba2b99db89c28a65738cc58cc4c852c327))
+* Make backend configurable ([f91f3a6](https://github.com/ReVanced/revanced-api/commit/f91f3a65c5e07b5b58ccbff1d4b0a5ba9b15fc50))
+* Remove ReVanced Integrations ([f1c1092](https://github.com/ReVanced/revanced-api/commit/f1c10928ae3be1c6b1d675819755b3046fad70d8))
+
 # [1.4.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.3.0...v1.4.0-dev.1) (2024-11-01)
 
 
