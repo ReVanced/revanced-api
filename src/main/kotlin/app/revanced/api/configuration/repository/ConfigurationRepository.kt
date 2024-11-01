@@ -27,6 +27,7 @@ import kotlin.io.path.createDirectories
  * @property integrations The source of the integrations.
  * @property manager The source of the manager.
  * @property contributorsRepositoryNames The names of the repositories to get contributors from.
+ * @property backendServiceName The name of the backend service to use for the repositories, contributors, etc.
  * @property apiVersion The version to use for the API.
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
  * @property endpoint The endpoint of the API.
@@ -44,6 +45,8 @@ internal class ConfigurationRepository(
     val manager: AssetConfiguration,
     @SerialName("contributors-repositories")
     val contributorsRepositoryNames: Set<String>,
+    @SerialName("backend-service-name")
+    val backendServiceName: String,
     @SerialName("api-version")
     val apiVersion: Int = 1,
     @SerialName("cors-allowed-hosts")

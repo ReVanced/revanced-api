@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.time.LocalDateTime
 
-internal class AnnouncementRepository {
+internal class AnnouncementRepository(private val database: Database) {
     // This is better than doing a maxByOrNull { it.id } on every request.
     private var latestAnnouncement: Announcement? = null
     private val latestAnnouncementByTag = mutableMapOf<Int, Announcement>()
@@ -187,7 +187,7 @@ internal class AnnouncementRepository {
     }
 
     private suspend fun <T> transaction(statement: suspend Transaction.() -> T) =
-        newSuspendedTransaction(Dispatchers.IO, statement = statement)
+        newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
 
     private object Announcements : IntIdTable() {
         val author = varchar("author", 32).nullable()

@@ -1,16 +1,59 @@
 package app.revanced.api.configuration.repository
 
 import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.cache.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.resources.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNamingStrategy
 
 /**
  *  The backend of the API used to get data.
  *
- *  @param client The HTTP client to use for requests.
+ *  @param defaultRequestUri The URI to use for requests.
+ *  @param website The site of the backend users can visit.
  */
 abstract class BackendRepository internal constructor(
-    protected val client: HttpClient,
+    defaultRequestUri: String,
+    internal val website: String,
 ) {
+    protected val client: HttpClient = HttpClient(OkHttp) {
+        defaultRequest { url(defaultRequestUri) }
+
+        install(HttpCache)
+        install(Resources)
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    ignoreUnknownKeys = true
+                    @Suppress("OPT_IN_USAGE")
+                    namingStrategy = JsonNamingStrategy.SnakeCase
+                },
+            )
+        }
+
+        System.getProperty("BACKEND_API_TOKEN")?.let {
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        BearerTokens(
+                            accessToken = it,
+                            refreshToken = "", // Required dummy value
+                        )
+                    }
+
+                    sendWithoutRequest { true }
+                }
+            }
+        }
+    }
+
     /**
      * A user.
      *
@@ -153,7 +196,10 @@ abstract class BackendRepository internal constructor(
      * @param repository The name of the repository.
      * @return The contributors.
      */
-    abstract suspend fun contributors(owner: String, repository: String): List<BackendOrganization.BackendRepository.BackendContributor>
+    abstract suspend fun contributors(
+        owner: String,
+        repository: String,
+    ): List<BackendOrganization.BackendRepository.BackendContributor>
 
     /**
      * Get the members of an organization.

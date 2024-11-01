@@ -5,7 +5,6 @@ import app.revanced.api.configuration.schema.ApiAnnouncement
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertNull
 import java.time.LocalDateTime
@@ -18,10 +17,9 @@ private object AnnouncementServiceTest {
     @JvmStatic
     @BeforeAll
     fun setUp() {
-        TransactionManager.defaultDatabase =
-            Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false")
+        val database = Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false")
 
-        announcementService = AnnouncementService(AnnouncementRepository())
+        announcementService = AnnouncementService(AnnouncementRepository(database))
     }
 
     @BeforeEach

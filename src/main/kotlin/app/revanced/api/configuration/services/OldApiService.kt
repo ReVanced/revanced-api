@@ -1,6 +1,9 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.repository.ConfigurationRepository
 import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -11,7 +14,11 @@ import io.ktor.server.response.*
 import io.ktor.util.*
 import io.ktor.utils.io.*
 
-internal class OldApiService(private val client: HttpClient) {
+internal class OldApiService(configurationRepository: ConfigurationRepository) {
+    private val client = HttpClient(OkHttp) {
+        defaultRequest { url(configurationRepository.oldApiEndpoint) }
+    }
+
     @OptIn(InternalAPI::class)
     suspend fun proxy(call: ApplicationCall) {
         val channel = call.request.receiveChannel()
