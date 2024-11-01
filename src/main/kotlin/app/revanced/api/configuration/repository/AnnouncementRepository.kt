@@ -6,7 +6,6 @@ import app.revanced.api.configuration.schema.ApiResponseAnnouncement
 import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -15,7 +14,6 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import java.time.LocalDateTime
 
 internal class AnnouncementRepository(private val database: Database) {
     // This is better than doing a maxByOrNull { it.id } on every request.
@@ -74,33 +72,21 @@ internal class AnnouncementRepository(private val database: Database) {
     fun latestId(tags: Set<String>) =
         tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
 
-    suspend fun paged(cursor: Int, count: Int, tags: Set<String>?, archived: Boolean) = transaction {
+    suspend fun paged(cursor: Int, count: Int, tags: Set<String>?) = transaction {
         Announcement.find {
             fun idLessEq() = Announcements.id lessEq cursor
-            fun archivedAtIsNull() = Announcements.archivedAt.isNull()
-            fun archivedAtGreaterNow() = Announcements.archivedAt greater LocalDateTime.now().toKotlinLocalDateTime()
 
             if (tags == null) {
-                if (archived) {
-                    idLessEq()
-                } else {
-                    idLessEq() and (archivedAtIsNull() or archivedAtGreaterNow())
-                }
+                idLessEq()
             } else {
-                fun archivedAtGreaterOrNullOrTrue() = if (archived) {
-                    Op.TRUE
-                } else {
-                    archivedAtIsNull() or archivedAtGreaterNow()
-                }
-
                 fun hasTags() = Announcements.id inSubQuery (
-                    Tags.innerJoin(AnnouncementTags)
+                    AnnouncementTags.innerJoin(Tags)
                         .select(AnnouncementTags.announcement)
-                        .where { Tags.name inList tags }
                         .withDistinct()
+                        .where { Tags.name inList tags }
                     )
 
-                idLessEq() and archivedAtGreaterOrNullOrTrue() and hasTags()
+                idLessEq() and hasTags()
             }
         }.orderBy(Announcements.id to SortOrder.DESC).limit(count).toApiAnnouncement()
     }

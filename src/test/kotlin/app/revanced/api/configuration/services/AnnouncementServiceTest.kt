@@ -153,11 +153,11 @@ private object AnnouncementServiceTest {
             announcementService.new(ApiAnnouncement(title = "title$it"))
         }
 
-        val announcements = announcementService.paged(Int.MAX_VALUE, 5, null, true)
+        val announcements = announcementService.paged(Int.MAX_VALUE, 5, null)
         assertEquals(5, announcements.size, "Returns correct number of announcements")
         assertEquals("title9", announcements.first().title, "Starts from the latest announcement")
 
-        val announcements2 = announcementService.paged(5, 5, null, true)
+        val announcements2 = announcementService.paged(5, 5, null)
         assertEquals(5, announcements2.size, "Returns correct number of announcements when starting from the cursor")
         assertEquals("title4", announcements2.first().title, "Starts from the cursor")
 
@@ -180,10 +180,7 @@ private object AnnouncementServiceTest {
         val tags = announcementService.tags()
         assertEquals(5, tags.size, "Returns correct number of newly created tags")
 
-        val announcements3 = announcementService.paged(5, 5, setOf(tags[1].name), true)
+        val announcements3 = announcementService.paged(5, 5, setOf(tags[1].name))
         assertEquals(4, announcements3.size, "Filters announcements by tag")
-
-        val announcements4 = announcementService.paged(Int.MAX_VALUE, 10, null, false)
-        assertEquals(8, announcements4.size, "Filters out archived announcements")
     }
 }

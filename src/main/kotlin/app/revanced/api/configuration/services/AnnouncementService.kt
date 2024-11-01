@@ -14,8 +14,8 @@ internal class AnnouncementService(
 
     fun latestId() = announcementRepository.latestId()
 
-    suspend fun paged(cursor: Int, limit: Int, tags: Set<String>?, archived: Boolean) =
-        announcementRepository.paged(cursor, limit, tags, archived)
+    suspend fun paged(cursor: Int, limit: Int, tags: Set<String>?) =
+        announcementRepository.paged(cursor, limit, tags)
 
     suspend fun get(id: Int) = announcementRepository.get(id)
 

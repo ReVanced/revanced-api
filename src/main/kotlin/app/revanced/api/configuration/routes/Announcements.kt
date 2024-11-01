@@ -36,9 +36,8 @@ internal fun Route.announcementsRoute() = route("announcements") {
             val cursor = call.parameters["cursor"]?.toInt() ?: Int.MAX_VALUE
             val count = call.parameters["count"]?.toInt() ?: 16
             val tags = call.parameters.getAll("tag")
-            val archived = call.parameters["archived"]?.toBoolean() ?: true
 
-            call.respond(announcementService.paged(cursor, count, tags?.toSet(), archived))
+            call.respond(announcementService.paged(cursor, count, tags?.toSet()))
         }
     }
 
@@ -151,13 +150,6 @@ private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRou
                 `in` = Parameter.Location.query,
                 schema = TypeDefinition.STRING,
                 description = "The tags to filter the announcements by. Default is all tags",
-                required = false,
-            ),
-            Parameter(
-                name = "archived",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.BOOLEAN,
-                description = "Whether to include archived announcements. Default is true",
                 required = false,
             ),
         )
