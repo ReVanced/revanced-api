@@ -35,6 +35,7 @@ class ApiContributor(
 @Serializable
 class APIContributable(
     val name: String,
+    val url: String,
     // Using a list instead of a set because set semantics are unnecessary here.
     val contributors: List<ApiContributor>,
 )

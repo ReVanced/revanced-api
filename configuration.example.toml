@@ -2,14 +2,6 @@ organization = "revanced"
 patches = { repository = "revanced-patches", asset-regex = "jar$", signature-asset-regex = "asc$", public-key-file = "patches-public-key.asc", public-key-id = 0 }
 integrations = { repository = "revanced-integrations", asset-regex = "apk$", signature-asset-regex = "asc$", public-key-file = "integrations-public-key.asc", public-key-id = 0 }
 manager = { repository = "revanced-manager", asset-regex = "apk$" }
-contributors-repositories = [
-    "revanced-patcher",
-    "revanced-patches",
-    "revanced-integrations",
-    "revanced-website",
-    "revanced-cli",
-    "revanced-manager",
-]
 api-version = 1
 cors-allowed-hosts = [
     "revanced.app",
@@ -21,3 +13,9 @@ static-files-path = "static/root"
 versioned-static-files-path = "static/versioned"
 about-json-file-path = "about.json"
 backend-service-name = "GitHub"
+[contributors-repositories]
+revanced-patcher = "ReVanced Patcher"
+revanced-patches = "ReVanced Patches"
+revanced-website = "ReVanced Website"
+revanced-cli = "ReVanced CLI"
+revanced-manager = "ReVanced Manager"

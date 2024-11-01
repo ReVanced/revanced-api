@@ -3,6 +3,7 @@ package app.revanced.api.configuration.services
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.schema.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -16,11 +17,15 @@ internal class ApiService(
     val about = configurationRepository.about
 
     suspend fun contributors() = withContext(Dispatchers.IO) {
-        configurationRepository.contributorsRepositoryNames.map {
+        configurationRepository.contributorsRepositoryNames.map { (repository, name) ->
             async {
                 APIContributable(
-                    it,
-                    backendRepository.contributors(configurationRepository.organization, it).map {
+                    name,
+                    URLBuilder().apply {
+                        takeFrom(backendRepository.website)
+                        path(configurationRepository.organization, repository)
+                    }.buildString(),
+                    backendRepository.contributors(configurationRepository.organization, repository).map {
                         ApiContributor(it.name, it.avatarUrl, it.url, it.contributions)
                     },
                 )

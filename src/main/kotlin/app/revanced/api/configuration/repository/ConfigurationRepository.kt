@@ -26,7 +26,7 @@ import kotlin.io.path.createDirectories
  * @property patches The source of the patches.
  * @property integrations The source of the integrations.
  * @property manager The source of the manager.
- * @property contributorsRepositoryNames The names of the repositories to get contributors from.
+ * @property contributorsRepositoryNames The friendly name of repos mapped to the repository names to get contributors from.
  * @property backendServiceName The name of the backend service to use for the repositories, contributors, etc.
  * @property apiVersion The version to use for the API.
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
@@ -44,7 +44,7 @@ internal class ConfigurationRepository(
     val integrations: SignedAssetConfiguration,
     val manager: AssetConfiguration,
     @SerialName("contributors-repositories")
-    val contributorsRepositoryNames: Set<String>,
+    val contributorsRepositoryNames: Map<String, String>,
     @SerialName("backend-service-name")
     val backendServiceName: String,
     @SerialName("api-version")
