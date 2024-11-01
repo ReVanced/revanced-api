@@ -12,10 +12,10 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import java.time.LocalDateTime
 
 internal class AnnouncementRepository {
     // This is better than doing a maxByOrNull { it.id } on every request.
@@ -73,20 +73,35 @@ internal class AnnouncementRepository {
     fun latestId(tags: Set<Int>) =
         tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
 
-    suspend fun paged(offset: Int, count: Int, tags: Set<Int>?) = transaction {
-        if (tags == null) {
-            Announcement.all()
-        } else {
-            @Suppress("NAME_SHADOWING")
-            val tags = tags.mapNotNull { Tag.findById(it)?.id }
+    suspend fun paged(cursor: Int, count: Int, tags: Set<Int>?, archived: Boolean) = transaction {
+        Announcement.find {
+            fun idLessEq() = Announcements.id lessEq cursor
+            fun archivedAtIsNull() = Announcements.archivedAt.isNull()
+            fun archivedAtGreaterNow() = Announcements.archivedAt greater LocalDateTime.now().toKotlinLocalDateTime()
 
-            Announcement.find {
-                Announcements.id inSubQuery Announcements.innerJoin(AnnouncementTags)
-                    .select(Announcements.id)
-                    .where { AnnouncementTags.tag inList tags }
-                    .withDistinct()
+            if (tags == null) {
+                if (archived) {
+                    idLessEq()
+                } else {
+                    idLessEq() and (archivedAtIsNull() or archivedAtGreaterNow())
+                }
+            } else {
+                fun archivedAtGreaterOrNullOrTrue() = if (archived) {
+                    Op.TRUE
+                } else {
+                    archivedAtIsNull() or archivedAtGreaterNow()
+                }
+
+                fun hasTags() = tags.mapNotNull { Tag.findById(it)?.id }.let { tags ->
+                    Announcements.id inSubQuery Announcements.leftJoin(AnnouncementTags)
+                        .select(AnnouncementTags.announcement)
+                        .where { AnnouncementTags.tag inList tags }
+                        .withDistinct()
+                }
+
+                idLessEq() and archivedAtGreaterOrNullOrTrue() and hasTags()
             }
-        }.orderBy(Announcements.id to SortOrder.DESC).limit(count, offset.toLong()).map { it }.toApiAnnouncement()
+        }.orderBy(Announcements.id to SortOrder.DESC).limit(count).toApiAnnouncement()
     }
 
     suspend fun get(id: Int) = transaction {
@@ -242,11 +257,11 @@ internal class AnnouncementRepository {
         )
     }
 
-    private fun List<Announcement>.toApiAnnouncement() = map { it.toApiResponseAnnouncement()!! }
+    private fun Iterable<Announcement>.toApiAnnouncement() = map { it.toApiResponseAnnouncement()!! }
 
-    private fun List<Tag>.toApiTag() = map { ApiAnnouncementTag(it.id.value, it.name) }
+    private fun Iterable<Tag>.toApiTag() = map { ApiAnnouncementTag(it.id.value, it.name) }
 
     private fun Int?.toApiResponseAnnouncementId() = this?.let { ApiResponseAnnouncementId(this) }
 
-    private fun List<Int?>.toApiResponseAnnouncementId() = map { it.toApiResponseAnnouncementId() }
+    private fun Iterable<Int?>.toApiResponseAnnouncementId() = map { it.toApiResponseAnnouncementId() }
 }

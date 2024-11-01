@@ -15,7 +15,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.ratelimit.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
@@ -31,11 +30,12 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
     rateLimit(RateLimitName("strong")) {
         get {
-            val offset = call.parameters["offset"]?.toInt() ?: 0
+            val cursor = call.parameters["cursor"]?.toInt() ?: Int.MAX_VALUE
             val count = call.parameters["count"]?.toInt() ?: 16
             val tags = call.parameters.getAll("tag")
+            val archived = call.parameters["archived"]?.toBoolean() ?: true
 
-            call.respond(announcementService.paged(offset, count, tags?.map { it.toInt() }?.toSet()))
+            call.respond(announcementService.paged(cursor, count, tags?.map { it.toInt() }?.toSet(), archived))
         }
     }
 
@@ -130,24 +130,31 @@ private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRou
         summary("Get announcements")
         parameters(
             Parameter(
-                name = "offset",
+                name = "cursor",
                 `in` = Parameter.Location.query,
                 schema = TypeDefinition.INT,
-                description = "The offset of the announcements",
+                description = "The offset of the announcements. Default is Int.MAX_VALUE (Newest first)",
                 required = false,
             ),
             Parameter(
                 name = "count",
                 `in` = Parameter.Location.query,
                 schema = TypeDefinition.INT,
-                description = "The count of the announcements",
+                description = "The count of the announcements. Default is 16",
                 required = false,
             ),
             Parameter(
                 name = "tag",
                 `in` = Parameter.Location.query,
                 schema = TypeDefinition.INT,
-                description = "The tag IDs to filter the announcements by",
+                description = "The tag IDs to filter the announcements by. Default is all tags",
+                required = false,
+            ),
+            Parameter(
+                name = "archived",
+                `in` = Parameter.Location.query,
+                schema = TypeDefinition.BOOLEAN,
+                description = "Whether to include archived announcements. Default is true",
                 required = false,
             ),
         )
