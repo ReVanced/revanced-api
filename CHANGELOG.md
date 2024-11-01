@@ -1,3 +1,10 @@
+# [1.4.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2024-11-01)
+
+
+### Bug Fixes
+
+* Use new patches file extension ([d42a3a3](https://github.com/ReVanced/revanced-api/commit/d42a3a393396a0f4e9085cda46e0af2c12b63cb1))
+
 # [1.4.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2024-11-01)
 
 
