@@ -3,27 +3,24 @@ package app.revanced.api.configuration.services
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.*
+import app.revanced.api.configuration.schema.ApiRelease
+import app.revanced.api.configuration.schema.ApiReleaseVersion
 
 internal class ManagerService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): ApiRelease<ApiManagerAsset> {
+    suspend fun latestRelease(): ApiRelease {
         val managerRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.manager.repository,
-        )
-
-        val managerAsset = ApiManagerAsset(
-            managerRelease.assets.first(configurationRepository.manager.assetRegex).downloadUrl,
         )
 
         return ApiRelease(
             managerRelease.tag,
             managerRelease.createdAt,
             managerRelease.releaseNote,
-            listOf(managerAsset),
+            managerRelease.assets.first(configurationRepository.manager.assetRegex).downloadUrl,
         )
     }
 

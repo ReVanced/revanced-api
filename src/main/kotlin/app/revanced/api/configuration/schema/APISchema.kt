@@ -41,32 +41,13 @@ class APIContributable(
 )
 
 @Serializable
-class ApiRelease<T>(
+class ApiRelease(
     val version: String,
     val createdAt: LocalDateTime,
     val description: String,
-    // Using a list instead of a set because set semantics are unnecessary here.
-    val assets: List<T>,
-)
-
-@Serializable
-class ApiManagerAsset(
     val downloadUrl: String,
+    val signatureDownloadUrl: String? = null,
 )
-
-@Serializable
-class ApiPatchesAsset(
-    val downloadUrl: String,
-    val signatureDownloadUrl: String,
-    // TODO: Remove this eventually when integrations are merged into patches.
-    val name: ApiAssetName,
-)
-
-@Serializable
-enum class ApiAssetName {
-    PATCHES,
-    INTEGRATION,
-}
 
 @Serializable
 class ApiReleaseVersion(
@@ -125,9 +106,8 @@ class ApiRateLimit(
 )
 
 @Serializable
-class ApiAssetPublicKeys(
+class ApiAssetPublicKey(
     val patchesPublicKey: String,
-    val integrationsPublicKey: String,
 )
 
 @Serializable

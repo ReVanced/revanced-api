@@ -1,7 +1,6 @@
 package app.revanced.api.configuration.routes
 
 import app.revanced.api.configuration.installNotarizedRoute
-import app.revanced.api.configuration.schema.ApiManagerAsset
 import app.revanced.api.configuration.schema.ApiRelease
 import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.api.configuration.services.ManagerService
@@ -53,7 +52,7 @@ private fun Route.installManagerRouteDocumentation(deprecated: Boolean) = instal
             description("The latest manager release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<ApiRelease<ApiManagerAsset>>()
+            responseType<ApiRelease>()
         }
     }
 }

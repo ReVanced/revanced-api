@@ -3,7 +3,9 @@ package app.revanced.api.configuration.services
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.*
+import app.revanced.api.configuration.schema.ApiAssetPublicKey
+import app.revanced.api.configuration.schema.ApiRelease
+import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.library.serializeTo
 import app.revanced.patcher.patch.loadPatchesFromJar
 import com.github.benmanes.caffeine.cache.Caffeine
@@ -17,40 +19,18 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): ApiRelease<ApiPatchesAsset> {
+    suspend fun latestRelease(): ApiRelease {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
-        )
-
-        val integrationsRelease = backendRepository.release(
-            configurationRepository.organization,
-            configurationRepository.integrations.repository,
-        )
-
-        fun ConfigurationRepository.SignedAssetConfiguration.asset(
-            release: BackendRepository.BackendOrganization.BackendRepository.BackendRelease,
-            assetName: ApiAssetName,
-        ) = ApiPatchesAsset(
-            release.assets.first(assetRegex).downloadUrl,
-            release.assets.first(signatureAssetRegex).downloadUrl,
-            assetName,
-        )
-
-        val patchesAsset = configurationRepository.patches.asset(
-            patchesRelease,
-            ApiAssetName.PATCHES,
-        )
-        val integrationsAsset = configurationRepository.integrations.asset(
-            integrationsRelease,
-            ApiAssetName.INTEGRATION,
         )
 
         return ApiRelease(
             patchesRelease.tag,
             patchesRelease.createdAt,
             patchesRelease.releaseNote,
-            listOf(patchesAsset, integrationsAsset),
+            patchesRelease.assets.first(configurationRepository.patches.assetRegex).downloadUrl,
+            patchesRelease.assets.first(configurationRepository.patches.signatureAssetRegex).downloadUrl,
         )
     }
 
@@ -111,14 +91,5 @@ internal class PatchesService(
         }
     }
 
-    fun publicKeys(): ApiAssetPublicKeys {
-        fun readPublicKey(
-            getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration,
-        ) = configurationRepository.getSignedAssetConfiguration().publicKeyFile.readText()
-
-        return ApiAssetPublicKeys(
-            readPublicKey { patches },
-            readPublicKey { integrations },
-        )
-    }
+    fun publicKey() = ApiAssetPublicKey(configurationRepository.patches.publicKeyFile.readText())
 }

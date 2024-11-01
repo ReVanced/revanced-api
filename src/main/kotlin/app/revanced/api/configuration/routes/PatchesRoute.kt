@@ -2,8 +2,7 @@ package app.revanced.api.configuration.routes
 
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
-import app.revanced.api.configuration.schema.ApiAssetPublicKeys
-import app.revanced.api.configuration.schema.ApiPatchesAsset
+import app.revanced.api.configuration.schema.ApiAssetPublicKey
 import app.revanced.api.configuration.schema.ApiRelease
 import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.api.configuration.services.PatchesService
@@ -61,7 +60,7 @@ private fun Route.configure(deprecated: Boolean = false) {
             installPatchesPublicKeyRouteDocumentation(deprecated)
 
             get {
-                call.respond(patchesService.publicKeys())
+                call.respond(patchesService.publicKey())
             }
         }
     }
@@ -78,7 +77,7 @@ private fun Route.installPatchesRouteDocumentation(deprecated: Boolean) = instal
             description("The current patches release")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<ApiRelease<ApiPatchesAsset>>()
+            responseType<ApiRelease>()
         }
     }
 }
@@ -120,13 +119,13 @@ private fun Route.installPatchesPublicKeyRouteDocumentation(deprecated: Boolean)
 
     get = GetInfo.builder {
         if (deprecated) isDeprecated()
-        description("Get the public keys for verifying patches and integrations assets")
-        summary("Get patches and integrations public keys")
+        description("Get the public keys for verifying patches assets")
+        summary("Get patches public keys")
         response {
             description("The public keys")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<ApiAssetPublicKeys>()
+            responseType<ApiAssetPublicKey>()
         }
     }
 }
