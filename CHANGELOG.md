@@ -1,3 +1,10 @@
+# [1.4.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.3.0...v1.4.0-dev.1) (2024-11-01)
+
+
+### Features
+
+* Improve announcements API ([#192](https://github.com/ReVanced/revanced-api/issues/192)) ([56a00dd](https://github.com/ReVanced/revanced-api/commit/56a00ddb85f302d441f0b222a9902ea2c1c18897))
+
 # [1.3.0](https://github.com/ReVanced/revanced-api/compare/v1.2.0...v1.3.0) (2024-10-07)
 
 
