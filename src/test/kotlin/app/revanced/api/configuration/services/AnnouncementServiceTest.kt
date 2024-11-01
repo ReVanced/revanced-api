@@ -5,8 +5,10 @@ import app.revanced.api.configuration.schema.ApiAnnouncement
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.Database
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -84,27 +86,22 @@ private object AnnouncementServiceTest {
         announcementService.new(ApiAnnouncement(title = "2", tags = listOf("tag1", "tag3")))
         announcementService.new(ApiAnnouncement(title = "3", tags = listOf("tag1", "tag4")))
 
-        val tag2 = announcementService.tags().find { it.name == "tag2" }!!.id
-        assert(announcementService.latest(setOf(tag2)).first().title == "1")
+        assert(announcementService.latest(setOf("tag2")).first().title == "1")
+        assert(announcementService.latest(setOf("tag3")).last().title == "2")
 
-        val tag3 = announcementService.tags().find { it.name == "tag3" }!!.id
-        assert(announcementService.latest(setOf(tag3)).last().title == "2")
-
-        val tag1and3 =
-            announcementService.tags().filter { it.name == "tag1" || it.name == "tag3" }.map { it.id }.toSet()
-        val announcement2and3 = announcementService.latest(tag1and3)
+        val announcement2and3 = announcementService.latest(setOf("tag1", "tag3"))
         assert(announcement2and3.size == 2)
         assert(announcement2and3.any { it.title == "2" })
         assert(announcement2and3.any { it.title == "3" })
 
         announcementService.delete(announcementService.latestId()!!.id)
-        assert(announcementService.latest(tag1and3).first().title == "2")
+        assert(announcementService.latest(setOf("tag1", "tag3")).first().title == "2")
 
         announcementService.delete(announcementService.latestId()!!.id)
-        assert(announcementService.latest(tag1and3).first().title == "1")
+        assert(announcementService.latest(setOf("tag1", "tag3")).first().title == "1")
 
         announcementService.delete(announcementService.latestId()!!.id)
-        assert(announcementService.latest(tag1and3).isEmpty())
+        assert(announcementService.latest(setOf("tag1", "tag3")).isEmpty())
         assert(announcementService.tags().isEmpty())
     }
 
@@ -183,7 +180,7 @@ private object AnnouncementServiceTest {
         val tags = announcementService.tags()
         assertEquals(5, tags.size, "Returns correct number of newly created tags")
 
-        val announcements3 = announcementService.paged(5, 5, setOf(tags[1].id), true)
+        val announcements3 = announcementService.paged(5, 5, setOf(tags[1].name), true)
         assertEquals(4, announcements3.size, "Filters announcements by tag")
 
         val announcements4 = announcementService.paged(Int.MAX_VALUE, 10, null, false)

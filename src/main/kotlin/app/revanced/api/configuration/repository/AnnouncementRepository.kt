@@ -6,7 +6,7 @@ import app.revanced.api.configuration.schema.ApiResponseAnnouncement
 import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.*
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 internal class AnnouncementRepository(private val database: Database) {
     // This is better than doing a maxByOrNull { it.id } on every request.
     private var latestAnnouncement: Announcement? = null
-    private val latestAnnouncementByTag = mutableMapOf<Int, Announcement>()
+    private val latestAnnouncementByTag = mutableMapOf<String, Announcement>()
 
     init {
         runBlocking {
@@ -40,22 +40,23 @@ internal class AnnouncementRepository(private val database: Database) {
     private fun initializeLatestAnnouncements() {
         latestAnnouncement = Announcement.all().orderBy(Announcements.id to SortOrder.DESC).firstOrNull()
 
-        Tag.all().map { it.id.value }.forEach(::updateLatestAnnouncementForTag)
+        Tag.all().map { it.name }.forEach(::updateLatestAnnouncementForTag)
     }
 
     private fun updateLatestAnnouncement(new: Announcement) {
         if (latestAnnouncement == null || latestAnnouncement!!.id.value <= new.id.value) {
             latestAnnouncement = new
-            new.tags.forEach { tag -> latestAnnouncementByTag[tag.id.value] = new }
+            new.tags.forEach { tag -> latestAnnouncementByTag[tag.name] = new }
         }
     }
 
-    private fun updateLatestAnnouncementForTag(tag: Int) {
-        val latestAnnouncementForTag = AnnouncementTags.select(AnnouncementTags.announcement)
-            .where { AnnouncementTags.tag eq tag }
-            .map { it[AnnouncementTags.announcement] }
-            .mapNotNull { Announcement.findById(it) }
-            .maxByOrNull { it.id }
+    private fun updateLatestAnnouncementForTag(tag: String) {
+        val latestAnnouncementForTag = Tags.innerJoin(AnnouncementTags)
+            .select(AnnouncementTags.announcement)
+            .where { Tags.name eq tag }
+            .orderBy(AnnouncementTags.announcement to SortOrder.DESC)
+            .limit(1)
+            .firstNotNullOfOrNull { Announcement.findById(it[AnnouncementTags.announcement]) }
 
         latestAnnouncementForTag?.let { latestAnnouncementByTag[tag] = it }
     }
@@ -64,16 +65,16 @@ internal class AnnouncementRepository(private val database: Database) {
         latestAnnouncement.toApiResponseAnnouncement()
     }
 
-    suspend fun latest(tags: Set<Int>) = transaction {
+    suspend fun latest(tags: Set<String>) = transaction {
         tags.mapNotNull { tag -> latestAnnouncementByTag[tag] }.toApiAnnouncement()
     }
 
     fun latestId() = latestAnnouncement?.id?.value.toApiResponseAnnouncementId()
 
-    fun latestId(tags: Set<Int>) =
+    fun latestId(tags: Set<String>) =
         tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
 
-    suspend fun paged(cursor: Int, count: Int, tags: Set<Int>?, archived: Boolean) = transaction {
+    suspend fun paged(cursor: Int, count: Int, tags: Set<String>?, archived: Boolean) = transaction {
         Announcement.find {
             fun idLessEq() = Announcements.id lessEq cursor
             fun archivedAtIsNull() = Announcements.archivedAt.isNull()
@@ -92,12 +93,12 @@ internal class AnnouncementRepository(private val database: Database) {
                     archivedAtIsNull() or archivedAtGreaterNow()
                 }
 
-                fun hasTags() = tags.mapNotNull { Tag.findById(it)?.id }.let { tags ->
-                    Announcements.id inSubQuery Announcements.leftJoin(AnnouncementTags)
+                fun hasTags() = Announcements.id inSubQuery (
+                    Tags.innerJoin(AnnouncementTags)
                         .select(AnnouncementTags.announcement)
-                        .where { AnnouncementTags.tag inList tags }
+                        .where { Tags.name inList tags }
                         .withDistinct()
-                }
+                    )
 
                 idLessEq() and archivedAtGreaterOrNullOrTrue() and hasTags()
             }
@@ -165,7 +166,7 @@ internal class AnnouncementRepository(private val database: Database) {
         // Delete the tag if no other announcements are referencing it.
         // One count means that the announcement is the only one referencing the tag.
         announcement.tags.filter { tag -> tag.announcements.count() == 1L }.forEach { tag ->
-            latestAnnouncementByTag -= tag.id.value
+            latestAnnouncementByTag -= tag.name
             tag.delete()
         }
 
@@ -250,7 +251,7 @@ internal class AnnouncementRepository(private val database: Database) {
             title,
             content,
             attachments.map { it.url },
-            tags.map { it.id.value },
+            tags.map { it.name },
             createdAt,
             archivedAt,
             level,
@@ -259,7 +260,7 @@ internal class AnnouncementRepository(private val database: Database) {
 
     private fun Iterable<Announcement>.toApiAnnouncement() = map { it.toApiResponseAnnouncement()!! }
 
-    private fun Iterable<Tag>.toApiTag() = map { ApiAnnouncementTag(it.id.value, it.name) }
+    private fun Iterable<Tag>.toApiTag() = map { ApiAnnouncementTag(it.name) }
 
     private fun Int?.toApiResponseAnnouncementId() = this?.let { ApiResponseAnnouncementId(this) }
 

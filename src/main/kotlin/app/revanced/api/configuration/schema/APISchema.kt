@@ -76,7 +76,7 @@ class ApiResponseAnnouncement(
     // Using a list instead of a set because set semantics are unnecessary here.
     val attachments: List<String> = emptyList(),
     // Using a list instead of a set because set semantics are unnecessary here.
-    val tags: List<Int> = emptyList(),
+    val tags: List<String> = emptyList(),
     val createdAt: LocalDateTime,
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
@@ -94,7 +94,6 @@ class ApiAnnouncementArchivedAt(
 
 @Serializable
 class ApiAnnouncementTag(
-    val id: Int,
     val name: String,
 )
 

@@ -8,7 +8,10 @@ import app.revanced.api.configuration.schema.ApiAnnouncement
 import app.revanced.api.configuration.schema.ApiResponseAnnouncement
 import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
 import app.revanced.api.configuration.services.AnnouncementService
-import io.bkbn.kompendium.core.metadata.*
+import io.bkbn.kompendium.core.metadata.DeleteInfo
+import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PatchInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
@@ -35,7 +38,7 @@ internal fun Route.announcementsRoute() = route("announcements") {
             val tags = call.parameters.getAll("tag")
             val archived = call.parameters["archived"]?.toBoolean() ?: true
 
-            call.respond(announcementService.paged(cursor, count, tags?.map { it.toInt() }?.toSet(), archived))
+            call.respond(announcementService.paged(cursor, count, tags?.toSet(), archived))
         }
     }
 
@@ -55,7 +58,7 @@ internal fun Route.announcementsRoute() = route("announcements") {
                 val tags = call.parameters.getAll("tag")
 
                 if (tags?.isNotEmpty() == true) {
-                    call.respond(announcementService.latest(tags.map { it.toInt() }.toSet()))
+                    call.respond(announcementService.latest(tags.toSet()))
                 } else {
                     call.respondOrNotFound(announcementService.latest())
                 }
@@ -68,7 +71,7 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     val tags = call.parameters.getAll("tag")
 
                     if (tags?.isNotEmpty() == true) {
-                        call.respond(announcementService.latestId(tags.map { it.toInt() }.toSet()))
+                        call.respond(announcementService.latestId(tags.toSet()))
                     } else {
                         call.respondOrNotFound(announcementService.latestId())
                     }
@@ -146,8 +149,8 @@ private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRou
             Parameter(
                 name = "tag",
                 `in` = Parameter.Location.query,
-                schema = TypeDefinition.INT,
-                description = "The tag IDs to filter the announcements by. Default is all tags",
+                schema = TypeDefinition.STRING,
+                description = "The tags to filter the announcements by. Default is all tags",
                 required = false,
             ),
             Parameter(
@@ -193,8 +196,8 @@ private fun Route.installAnnouncementsLatestRouteDocumentation() = installNotari
             Parameter(
                 name = "tag",
                 `in` = Parameter.Location.query,
-                schema = TypeDefinition.INT,
-                description = "The tag IDs to filter the latest announcements by",
+                schema = TypeDefinition.STRING,
+                description = "The tags to filter the latest announcements by",
                 required = false,
             ),
         )
@@ -228,8 +231,8 @@ private fun Route.installAnnouncementsLatestIdRouteDocumentation() = installNota
             Parameter(
                 name = "tag",
                 `in` = Parameter.Location.query,
-                schema = TypeDefinition.INT,
-                description = "The tag IDs to filter the latest announcements by",
+                schema = TypeDefinition.STRING,
+                description = "The tags to filter the latest announcements by",
                 required = false,
             ),
         )

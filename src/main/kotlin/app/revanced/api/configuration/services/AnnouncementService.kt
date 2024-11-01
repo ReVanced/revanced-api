@@ -6,15 +6,15 @@ import app.revanced.api.configuration.schema.ApiAnnouncement
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
 ) {
-    suspend fun latest(tags: Set<Int>) = announcementRepository.latest(tags)
+    suspend fun latest(tags: Set<String>) = announcementRepository.latest(tags)
 
     suspend fun latest() = announcementRepository.latest()
 
-    fun latestId(tags: Set<Int>) = announcementRepository.latestId(tags)
+    fun latestId(tags: Set<String>) = announcementRepository.latestId(tags)
 
     fun latestId() = announcementRepository.latestId()
 
-    suspend fun paged(cursor: Int, limit: Int, tags: Set<Int>?, archived: Boolean) =
+    suspend fun paged(cursor: Int, limit: Int, tags: Set<String>?, archived: Boolean) =
         announcementRepository.paged(cursor, limit, tags, archived)
 
     suspend fun get(id: Int) = announcementRepository.get(id)
