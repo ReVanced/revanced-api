@@ -1,6 +1,6 @@
 [versions]
 kompendium-core = "3.14.4"
-kotlin = "2.0.0"
+kotlin = "2.0.20"
 logback = "1.5.6"
 exposed = "0.52.0"
 h2 = "2.2.224"
@@ -10,8 +10,8 @@ ktor = "2.3.7"
 ktoml = "0.5.2"
 picocli = "4.7.6"
 datetime = "0.6.0"
-revanced-patcher = "20.0.0"
-revanced-library = "3.0.1-dev.1"
+revanced-patcher = "21.0.0"
+revanced-library = "3.0.2"
 caffeine = "3.1.8"
 bouncy-castle = "1.78.1"
 
