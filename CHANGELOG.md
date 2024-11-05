@@ -1,3 +1,5 @@
+# [1.4.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2024-11-05)
+
 # [1.4.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2024-11-01)
 
 
