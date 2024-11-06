@@ -16,18 +16,9 @@ import kotlin.time.Duration.Companion.days
 import org.koin.ktor.ext.get as koinGet
 
 internal fun Route.patchesRoute() = route("patches") {
-    configure()
-
-    // TODO: Remove this deprecated route eventually.
-    route("latest") {
-        configure(deprecated = true)
-    }
-}
-
-private fun Route.configure(deprecated: Boolean = false) {
     val patchesService = koinGet<PatchesService>()
 
-    installPatchesRouteDocumentation(deprecated)
+    installPatchesRouteDocumentation()
 
     rateLimit(RateLimitName("weak")) {
         get {
@@ -35,7 +26,7 @@ private fun Route.configure(deprecated: Boolean = false) {
         }
 
         route("version") {
-            installPatchesVersionRouteDocumentation(deprecated)
+            installPatchesVersionRouteDocumentation()
 
             get {
                 call.respond(patchesService.latestVersion())
@@ -45,7 +36,7 @@ private fun Route.configure(deprecated: Boolean = false) {
 
     rateLimit(RateLimitName("strong")) {
         route("list") {
-            installPatchesListRouteDocumentation(deprecated)
+            installPatchesListRouteDocumentation()
 
             get {
                 call.respondBytes(ContentType.Application.Json) { patchesService.list() }
@@ -57,7 +48,7 @@ private fun Route.configure(deprecated: Boolean = false) {
         route("keys") {
             installCache(356.days)
 
-            installPatchesPublicKeyRouteDocumentation(deprecated)
+            installPatchesPublicKeyRouteDocumentation()
 
             get {
                 call.respond(patchesService.publicKey())
@@ -66,11 +57,10 @@ private fun Route.configure(deprecated: Boolean = false) {
     }
 }
 
-private fun Route.installPatchesRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
+private fun Route.installPatchesRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        if (deprecated) isDeprecated()
         description("Get the current patches release")
         summary("Get current patches release")
         response {
@@ -82,11 +72,10 @@ private fun Route.installPatchesRouteDocumentation(deprecated: Boolean) = instal
     }
 }
 
-private fun Route.installPatchesVersionRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
+private fun Route.installPatchesVersionRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        if (deprecated) isDeprecated()
         description("Get the current patches release version")
         summary("Get current patches release version")
         response {
@@ -98,11 +87,10 @@ private fun Route.installPatchesVersionRouteDocumentation(deprecated: Boolean) =
     }
 }
 
-private fun Route.installPatchesListRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
+private fun Route.installPatchesListRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        if (deprecated) isDeprecated()
         description("Get the list of patches from the current patches release")
         summary("Get list of patches from current patches release")
         response {
@@ -114,11 +102,10 @@ private fun Route.installPatchesListRouteDocumentation(deprecated: Boolean) = in
     }
 }
 
-private fun Route.installPatchesPublicKeyRouteDocumentation(deprecated: Boolean) = installNotarizedRoute {
+private fun Route.installPatchesPublicKeyRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
-        if (deprecated) isDeprecated()
         description("Get the public keys for verifying patches assets")
         summary("Get patches public keys")
         response {

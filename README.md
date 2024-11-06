@@ -81,7 +81,6 @@ Some of the features ReVanced API include:
   and links of the hoster of ReVanced API
 - 🧩 **Patches**: Get the latest updates of ReVanced Patches, directly from ReVanced API
 - 👥 **Contributors**: List all contributors involved in the project
-- 🔄 **Backwards compatibility**: Proxy an old API for migration purposes and backwards compatibility
 
 ## 🚀 How to get started
 

@@ -30,7 +30,6 @@ import kotlin.io.path.createDirectories
  * @property apiVersion The version to use for the API.
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
  * @property endpoint The endpoint of the API.
- * @property oldApiEndpoint The endpoint of the old API to proxy requests to.
  * @property staticFilesPath The path to the static files to be served under the root path.
  * @property versionedStaticFilesPath The path to the static files to be served under a versioned path.
  * @property about The path to the json file deserialized to [APIAbout]
@@ -50,8 +49,6 @@ internal class ConfigurationRepository(
     @SerialName("cors-allowed-hosts")
     val corsAllowedHosts: Set<String>,
     val endpoint: String,
-    @SerialName("old-api-endpoint")
-    val oldApiEndpoint: String,
     @Serializable(with = PathSerializer::class)
     @SerialName("static-files-path")
     val staticFilesPath: Path,

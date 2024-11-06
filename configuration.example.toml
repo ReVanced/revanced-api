@@ -4,7 +4,6 @@ cors-allowed-hosts = [
     "*.revanced.app"
 ]
 endpoint = "https://api.revanced.app"
-old-api-endpoint = "https://old-api.revanced.app"
 static-files-path = "static/root"
 versioned-static-files-path = "static/versioned"
 backend-service-name = "GitHub"

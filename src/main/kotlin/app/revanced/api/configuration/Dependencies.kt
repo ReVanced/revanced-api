@@ -51,7 +51,6 @@ fun Application.configureDependencies(
 
             AuthenticationService(issuer, validityInMin, jwtSecret, authSHA256DigestString)
         }
-        singleOf(::OldApiService)
         singleOf(::AnnouncementService)
         singleOf(::SignatureService)
         singleOf(::PatchesService)
