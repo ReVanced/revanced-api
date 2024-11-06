@@ -68,19 +68,19 @@ API server for ReVanced.
 ## ❓ About
 
 ReVanced API is a server that is used as the backend for ReVanced.
-ReVanced API acts as the data source for [ReVanced Website](https://github.com/ReVanced/revanced-website) and powers [ReVanced Manager](https://github.com/ReVanced/revanced-manager)
+ReVanced API acts as the data source for [ReVanced Website](https://github.com/ReVanced/revanced-website) and
+powers [ReVanced Manager](https://github.com/ReVanced/revanced-manager)
 with updates and ReVanced Patches.
 
 ## 💪 Features
 
 Some of the features ReVanced API include:
 
-- 📢 **Announcements**: Post and get announcements grouped by channels
-- ℹ️ **About**: Get more information such as a description, ways to donate to, 
-and links of the hoster of ReVanced API
+- 📢 **Announcements**: Post and get announcements
+- ℹ️ **About**: Get more information such as a description, ways to donate to,
+  and links of the hoster of ReVanced API
 - 🧩 **Patches**: Get the latest updates of ReVanced Patches, directly from ReVanced API
 - 👥 **Contributors**: List all contributors involved in the project
-- 🔄 **Backwards compatibility**: Proxy an old API for migration purposes and backwards compatibility
 
 ## 🚀 How to get started
 
@@ -90,7 +90,8 @@ ReVanced API can be deployed as a Docker container or used standalone.
 
 To deploy ReVanced API as a Docker container, you can use Docker Compose or Docker CLI.  
 The Docker image is published on GitHub Container registry,
-so before you can pull the image, you need to [authenticate to the Container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry).
+so before you can pull the image, you need
+to [authenticate to the Container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry).
 
 ### 🗄️ Docker Compose
 
@@ -114,8 +115,6 @@ so before you can pull the image, you need to [authenticate to the Container reg
     -v $(pwd)/configuration.toml:/app/configuration.toml \
     # Mount the patches public key
     -v $(pwd)/patches-public-key.asc:/app/patches-public-key.asc \
-    # Mount the integrations public key
-    -v $(pwd)/integrations-public-key.asc:/app/integrations-public-key.asc \
     # Mount the static folder
     -v $(pwd)/static:/app/static \
     # Mount the about.json file
@@ -141,7 +140,7 @@ A Java Runtime Environment (JRE) must be installed.
 1. [Download](https://github.com/ReVanced/revanced-api/releases/latest) ReVanced API to a folder
 2. In the same folder, create an `.env` file using [.env.example](.env.example) as a template
 3. In the same folder, create a `configuration.toml` file
-using [configuration.example.toml](configuration.example.toml) as a template
+   using [configuration.example.toml](configuration.example.toml) as a template
 4. In the same folder, create an `about.json` file using [about.example.json](about.example.json) as a template
 5. Run `java -jar revanced-api.jar start` to start the server
 
@@ -159,7 +158,8 @@ A Java Development Kit (JDK) and Git must be installed.
 
 ### 📙 Contributing
 
-Thank you for considering contributing to ReVanced API. You can find the contribution guidelines [here](CONTRIBUTING.md).
+Thank you for considering contributing to ReVanced API. You can find the contribution
+guidelines [here](CONTRIBUTING.md).
 
 ### 🛠️ Building
 

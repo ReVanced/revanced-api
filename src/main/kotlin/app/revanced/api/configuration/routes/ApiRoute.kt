@@ -6,7 +6,6 @@ import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.schema.*
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthenticationService
 import io.bkbn.kompendium.core.metadata.*
@@ -115,7 +114,7 @@ private fun Route.installRateLimitRouteDocumentation() = installNotarizedRoute {
             description("The rate limit of the backend")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIRateLimit>()
+            responseType<ApiRateLimit>()
         }
     }
 }
@@ -144,7 +143,7 @@ private fun Route.installTeamRouteDocumentation() = installNotarizedRoute {
             description("The list of team members")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<Set<APIMember>>()
+            responseType<Set<ApiMember>>()
         }
     }
 }
@@ -184,7 +183,7 @@ private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
                             "username=\"ReVanced\", " +
                             "realm=\"ReVanced\", " +
                             "nonce=\"abc123\", " +
-                            "uri=\"/v${configuration.apiVersion}/token\", " +
+                            "uri=\"/${configuration.apiVersion}/token\", " +
                             "algorithm=SHA-256, " +
                             "response=\"yxz456\"",
                     ),
@@ -195,7 +194,7 @@ private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
             description("The authorization token")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
-            responseType<APIToken>()
+            responseType<ApiToken>()
         }
         canRespondUnauthorized()
     }

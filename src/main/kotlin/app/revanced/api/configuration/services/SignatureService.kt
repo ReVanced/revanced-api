@@ -12,7 +12,7 @@ import java.security.MessageDigest
 internal class SignatureService {
     private val signatureCache = Caffeine
         .newBuilder()
-        .maximumSize(2) // Assuming this is enough for patches and integrations.
+        .maximumSize(1) // 1 because currently only the latest patches is needed.
         .build<ByteArray, Boolean>() // Hash -> Verified.
 
     fun verify(

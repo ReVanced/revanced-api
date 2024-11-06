@@ -41,7 +41,6 @@ persistence/
 configuration.toml
 docker-compose.yml
 patches-public-key.asc
-integrations-public-key.asc
 node_modules/
 static/
 about.json

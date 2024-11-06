@@ -1,6 +1,6 @@
 package app.revanced.api.configuration.repository
 
-import app.revanced.api.configuration.schema.APIAbout
+import app.revanced.api.configuration.APIAbout
 import app.revanced.api.configuration.services.ManagerService
 import app.revanced.api.configuration.services.PatchesService
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -22,15 +22,14 @@ import kotlin.io.path.createDirectories
 /**
  * The repository storing the configuration for the API.
  *
- * @property organization The API backends organization name where the repositories for the patches and integrations are.
+ * @property organization The API backends organization name where the repositories are.
  * @property patches The source of the patches.
- * @property integrations The source of the integrations.
  * @property manager The source of the manager.
- * @property contributorsRepositoryNames The names of the repositories to get contributors from.
+ * @property contributorsRepositoryNames The friendly name of repos mapped to the repository names to get contributors from.
+ * @property backendServiceName The name of the backend service to use for the repositories, contributors, etc.
  * @property apiVersion The version to use for the API.
  * @property corsAllowedHosts The hosts allowed to make requests to the API.
  * @property endpoint The endpoint of the API.
- * @property oldApiEndpoint The endpoint of the old API to proxy requests to.
  * @property staticFilesPath The path to the static files to be served under the root path.
  * @property versionedStaticFilesPath The path to the static files to be served under a versioned path.
  * @property about The path to the json file deserialized to [APIAbout]
@@ -40,17 +39,16 @@ import kotlin.io.path.createDirectories
 internal class ConfigurationRepository(
     val organization: String,
     val patches: SignedAssetConfiguration,
-    val integrations: SignedAssetConfiguration,
     val manager: AssetConfiguration,
     @SerialName("contributors-repositories")
-    val contributorsRepositoryNames: Set<String>,
+    val contributorsRepositoryNames: Map<String, String>,
+    @SerialName("backend-service-name")
+    val backendServiceName: String,
     @SerialName("api-version")
-    val apiVersion: Int = 1,
+    val apiVersion: String = "v1",
     @SerialName("cors-allowed-hosts")
     val corsAllowedHosts: Set<String>,
     val endpoint: String,
-    @SerialName("old-api-endpoint")
-    val oldApiEndpoint: String,
     @Serializable(with = PathSerializer::class)
     @SerialName("static-files-path")
     val staticFilesPath: Path,

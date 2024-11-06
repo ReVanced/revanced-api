@@ -1,9 +1,11 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.ApiAssetPublicKey
+import app.revanced.api.configuration.ApiRelease
+import app.revanced.api.configuration.ApiReleaseVersion
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.*
 import app.revanced.library.serializeTo
 import app.revanced.patcher.patch.loadPatchesFromJar
 import com.github.benmanes.caffeine.cache.Caffeine
@@ -17,50 +19,28 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): APIRelease<APIPatchesAsset> {
+    suspend fun latestRelease(): ApiRelease {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
         )
 
-        val integrationsRelease = backendRepository.release(
-            configurationRepository.organization,
-            configurationRepository.integrations.repository,
-        )
-
-        fun ConfigurationRepository.SignedAssetConfiguration.asset(
-            release: BackendRepository.BackendOrganization.BackendRepository.BackendRelease,
-            assetName: APIAssetName,
-        ) = APIPatchesAsset(
-            release.assets.first(assetRegex).downloadUrl,
-            release.assets.first(signatureAssetRegex).downloadUrl,
-            assetName,
-        )
-
-        val patchesAsset = configurationRepository.patches.asset(
-            patchesRelease,
-            APIAssetName.PATCHES,
-        )
-        val integrationsAsset = configurationRepository.integrations.asset(
-            integrationsRelease,
-            APIAssetName.INTEGRATION,
-        )
-
-        return APIRelease(
+        return ApiRelease(
             patchesRelease.tag,
             patchesRelease.createdAt,
             patchesRelease.releaseNote,
-            listOf(patchesAsset, integrationsAsset),
+            patchesRelease.assets.first(configurationRepository.patches.assetRegex).downloadUrl,
+            patchesRelease.assets.first(configurationRepository.patches.signatureAssetRegex).downloadUrl,
         )
     }
 
-    suspend fun latestVersion(): APIReleaseVersion {
+    suspend fun latestVersion(): ApiReleaseVersion {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
         )
 
-        return APIReleaseVersion(patchesRelease.tag)
+        return ApiReleaseVersion(patchesRelease.tag)
     }
 
     private val patchesListCache = Caffeine
@@ -111,14 +91,5 @@ internal class PatchesService(
         }
     }
 
-    fun publicKeys(): APIAssetPublicKeys {
-        fun readPublicKey(
-            getSignedAssetConfiguration: ConfigurationRepository.() -> ConfigurationRepository.SignedAssetConfiguration,
-        ) = configurationRepository.getSignedAssetConfiguration().publicKeyFile.readText()
-
-        return APIAssetPublicKeys(
-            readPublicKey { patches },
-            readPublicKey { integrations },
-        )
-    }
+    fun publicKey() = ApiAssetPublicKey(configurationRepository.patches.publicKeyFile.readText())
 }

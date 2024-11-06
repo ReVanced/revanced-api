@@ -1,35 +1,29 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.ApiAnnouncement
 import app.revanced.api.configuration.repository.AnnouncementRepository
-import app.revanced.api.configuration.schema.APIAnnouncement
-import app.revanced.api.configuration.schema.APIResponseAnnouncementId
-import kotlinx.datetime.LocalDateTime
 
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,
 ) {
-    fun latestId(channel: String): APIResponseAnnouncementId? = announcementRepository.latestId(channel)
-    fun latestId(): APIResponseAnnouncementId? = announcementRepository.latestId()
+    suspend fun latest(tags: Set<String>) = announcementRepository.latest(tags)
 
-    fun latest(channel: String) = announcementRepository.latest(channel)
-    fun latest() = announcementRepository.latest()
+    suspend fun latest() = announcementRepository.latest()
 
-    suspend fun all(channel: String) = announcementRepository.all(channel)
-    suspend fun all() = announcementRepository.all()
+    fun latestId(tags: Set<String>) = announcementRepository.latestId(tags)
 
-    suspend fun new(new: APIAnnouncement) {
-        announcementRepository.new(new)
-    }
-    suspend fun archive(id: Int, archivedAt: LocalDateTime?) {
-        announcementRepository.archive(id, archivedAt)
-    }
-    suspend fun unarchive(id: Int) {
-        announcementRepository.unarchive(id)
-    }
-    suspend fun update(id: Int, new: APIAnnouncement) {
-        announcementRepository.update(id, new)
-    }
-    suspend fun delete(id: Int) {
-        announcementRepository.delete(id)
-    }
+    fun latestId() = announcementRepository.latestId()
+
+    suspend fun paged(cursor: Int, limit: Int, tags: Set<String>?) =
+        announcementRepository.paged(cursor, limit, tags)
+
+    suspend fun get(id: Int) = announcementRepository.get(id)
+
+    suspend fun update(id: Int, new: ApiAnnouncement) = announcementRepository.update(id, new)
+
+    suspend fun delete(id: Int) = announcementRepository.delete(id)
+
+    suspend fun new(new: ApiAnnouncement) = announcementRepository.new(new)
+
+    suspend fun tags() = announcementRepository.tags()
 }

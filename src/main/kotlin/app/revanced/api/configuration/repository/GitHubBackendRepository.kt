@@ -8,18 +8,19 @@ import app.revanced.api.configuration.repository.GitHubOrganization.GitHubReposi
 import app.revanced.api.configuration.repository.GitHubOrganization.GitHubRepository.GitHubRelease
 import app.revanced.api.configuration.repository.Organization.Repository.Contributors
 import app.revanced.api.configuration.repository.Organization.Repository.Releases
-import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.resources.*
 import io.ktor.resources.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
+class GitHubBackendRepository : BackendRepository("https://api.github.com", "https://github.com") {
     override suspend fun release(
         owner: String,
         repository: String,
@@ -67,7 +68,8 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
 
     override suspend fun members(organization: String): List<BackendMember> {
         // Get the list of members of the organization.
-        val publicMembers: List<GitHubOrganization.GitHubMember> = client.get(Organization.PublicMembers(organization)).body()
+        val publicMembers: List<GitHubOrganization.GitHubMember> =
+            client.get(Organization.PublicMembers(organization)).body()
 
         return coroutineScope {
             publicMembers.map { member ->
@@ -112,6 +114,10 @@ class GitHubBackendRepository(client: HttpClient) : BackendRepository(client) {
             remaining = rateLimit.rate.remaining,
             reset = Instant.fromEpochSeconds(rateLimit.rate.reset).toLocalDateTime(TimeZone.UTC),
         )
+    }
+
+    companion object {
+        const val SERVICE_NAME = "GitHub"
     }
 }
 

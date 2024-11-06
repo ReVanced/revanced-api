@@ -4,7 +4,6 @@ import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.routes.*
 import app.revanced.api.configuration.routes.announcementsRoute
 import app.revanced.api.configuration.routes.apiRoute
-import app.revanced.api.configuration.routes.oldApiRoute
 import app.revanced.api.configuration.routes.patchesRoute
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.routes.swagger
@@ -19,7 +18,7 @@ internal fun Application.configureRouting() = routing {
 
     installCache(5.minutes)
 
-    route("/v${configuration.apiVersion}") {
+    route("/${configuration.apiVersion}") {
         announcementsRoute()
         patchesRoute()
         managerRoute()
@@ -55,7 +54,4 @@ internal fun Application.configureRouting() = routing {
 
     swagger(pageTitle = "ReVanced API", path = "/")
     redoc(pageTitle = "ReVanced API", path = "/redoc")
-
-    // TODO: Remove, once migration period from v2 API is over (In 1-2 years).
-    oldApiRoute()
 }

@@ -1,124 +1,112 @@
-package app.revanced.api.configuration.schema
+package app.revanced.api.configuration
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
-interface APIUser {
+interface ApiUser {
     val name: String
     val avatarUrl: String
     val url: String
 }
 
 @Serializable
-class APIMember(
+class ApiMember(
     override val name: String,
     override val avatarUrl: String,
     override val url: String,
     val bio: String?,
-    val gpgKey: APIGpgKey?,
-) : APIUser
+    val gpgKey: ApiGpgKey?,
+) : ApiUser
 
 @Serializable
-class APIGpgKey(
+class ApiGpgKey(
     val id: String,
     val url: String,
 )
 
 @Serializable
-class APIContributor(
+class ApiContributor(
     override val name: String,
     override val avatarUrl: String,
     override val url: String,
     val contributions: Int,
-) : APIUser
+) : ApiUser
 
 @Serializable
 class APIContributable(
     val name: String,
+    val url: String,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val contributors: List<APIContributor>,
+    val contributors: List<ApiContributor>,
 )
 
 @Serializable
-class APIRelease<T>(
+class ApiRelease(
     val version: String,
     val createdAt: LocalDateTime,
     val description: String,
-    // Using a list instead of a set because set semantics are unnecessary here.
-    val assets: List<T>,
-)
-
-@Serializable
-class APIManagerAsset(
     val downloadUrl: String,
+    val signatureDownloadUrl: String? = null,
 )
 
 @Serializable
-class APIPatchesAsset(
-    val downloadUrl: String,
-    val signatureDownloadUrl: String,
-    // TODO: Remove this eventually when integrations are merged into patches.
-    val name: APIAssetName,
-)
-
-@Serializable
-enum class APIAssetName {
-    PATCHES,
-    INTEGRATION,
-}
-
-@Serializable
-class APIReleaseVersion(
+class ApiReleaseVersion(
     val version: String,
 )
 
 @Serializable
-class APIAnnouncement(
+class ApiAnnouncement(
     val author: String? = null,
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val attachmentUrls: List<String> = emptyList(),
-    val channel: String? = null,
+    val attachments: List<String> = emptyList(),
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val tags: List<String> = emptyList(),
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
 )
 
 @Serializable
-class APIResponseAnnouncement(
+class ApiResponseAnnouncement(
     val id: Int,
     val author: String? = null,
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val attachmentUrls: List<String> = emptyList(),
-    val channel: String? = null,
+    val attachments: List<String> = emptyList(),
+    // Using a list instead of a set because set semantics are unnecessary here.
+    val tags: List<String> = emptyList(),
     val createdAt: LocalDateTime,
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
 )
 
 @Serializable
-class APIResponseAnnouncementId(
+class ApiResponseAnnouncementId(
     val id: Int,
 )
 
 @Serializable
-class APIAnnouncementArchivedAt(
+class ApiAnnouncementArchivedAt(
     val archivedAt: LocalDateTime,
 )
 
 @Serializable
-class APIRateLimit(
+class ApiAnnouncementTag(
+    val name: String,
+)
+
+@Serializable
+class ApiRateLimit(
     val limit: Int,
     val remaining: Int,
     val reset: LocalDateTime,
 )
 
 @Serializable
-class APIAssetPublicKeys(
+class ApiAssetPublicKey(
     val patchesPublicKey: String,
-    val integrationsPublicKey: String,
 )
 
 @Serializable
@@ -174,4 +162,4 @@ class APIAbout(
 }
 
 @Serializable
-class APIToken(val token: String)
+class ApiToken(val token: String)
