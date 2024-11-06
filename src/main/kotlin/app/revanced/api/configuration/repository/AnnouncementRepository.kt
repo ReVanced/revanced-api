@@ -1,9 +1,9 @@
 package app.revanced.api.configuration.repository
 
-import app.revanced.api.configuration.schema.ApiAnnouncement
-import app.revanced.api.configuration.schema.ApiAnnouncementTag
-import app.revanced.api.configuration.schema.ApiResponseAnnouncement
-import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
+import app.revanced.api.configuration.ApiAnnouncement
+import app.revanced.api.configuration.ApiAnnouncementTag
+import app.revanced.api.configuration.ApiResponseAnnouncement
+import app.revanced.api.configuration.ApiResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.dao.IntEntity

@@ -1,7 +1,7 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.ApiAnnouncement
 import app.revanced.api.configuration.repository.AnnouncementRepository
-import app.revanced.api.configuration.schema.ApiAnnouncement
 
 internal class AnnouncementService(
     private val announcementRepository: AnnouncementRepository,

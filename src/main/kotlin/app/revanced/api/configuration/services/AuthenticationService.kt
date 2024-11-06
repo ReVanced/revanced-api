@@ -1,6 +1,6 @@
 package app.revanced.api.configuration.services
 
-import app.revanced.api.configuration.schema.ApiToken
+import app.revanced.api.configuration.ApiToken
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.*

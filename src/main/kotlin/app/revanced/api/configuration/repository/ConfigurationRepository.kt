@@ -1,6 +1,6 @@
 package app.revanced.api.configuration.repository
 
-import app.revanced.api.configuration.schema.APIAbout
+import app.revanced.api.configuration.APIAbout
 import app.revanced.api.configuration.services.ManagerService
 import app.revanced.api.configuration.services.PatchesService
 import kotlinx.serialization.ExperimentalSerializationApi

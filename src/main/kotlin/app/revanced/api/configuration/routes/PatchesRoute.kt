@@ -1,10 +1,10 @@
 package app.revanced.api.configuration.routes
 
+import app.revanced.api.configuration.ApiAssetPublicKey
+import app.revanced.api.configuration.ApiRelease
+import app.revanced.api.configuration.ApiReleaseVersion
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
-import app.revanced.api.configuration.schema.ApiAssetPublicKey
-import app.revanced.api.configuration.schema.ApiRelease
-import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.api.configuration.services.PatchesService
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.ktor.http.*

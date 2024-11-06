@@ -1,8 +1,8 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.*
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

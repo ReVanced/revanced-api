@@ -1,4 +1,4 @@
-package app.revanced.api.configuration.schema
+package app.revanced.api.configuration
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable

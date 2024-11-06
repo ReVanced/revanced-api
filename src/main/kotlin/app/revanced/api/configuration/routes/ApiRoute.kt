@@ -6,7 +6,6 @@ import app.revanced.api.configuration.installNoCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.repository.ConfigurationRepository
 import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.schema.*
 import app.revanced.api.configuration.services.ApiService
 import app.revanced.api.configuration.services.AuthenticationService
 import io.bkbn.kompendium.core.metadata.*

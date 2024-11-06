@@ -1,12 +1,12 @@
 package app.revanced.api.configuration.routes
 
+import app.revanced.api.configuration.ApiAnnouncement
+import app.revanced.api.configuration.ApiResponseAnnouncement
+import app.revanced.api.configuration.ApiResponseAnnouncementId
 import app.revanced.api.configuration.canRespondUnauthorized
 import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.schema.ApiAnnouncement
-import app.revanced.api.configuration.schema.ApiResponseAnnouncement
-import app.revanced.api.configuration.schema.ApiResponseAnnouncementId
 import app.revanced.api.configuration.services.AnnouncementService
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo

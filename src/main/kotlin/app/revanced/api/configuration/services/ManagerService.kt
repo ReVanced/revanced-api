@@ -1,10 +1,10 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.ApiRelease
+import app.revanced.api.configuration.ApiReleaseVersion
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.ApiRelease
-import app.revanced.api.configuration.schema.ApiReleaseVersion
 
 internal class ManagerService(
     private val backendRepository: BackendRepository,

@@ -1,11 +1,11 @@
 package app.revanced.api.configuration.services
 
+import app.revanced.api.configuration.ApiAssetPublicKey
+import app.revanced.api.configuration.ApiRelease
+import app.revanced.api.configuration.ApiReleaseVersion
 import app.revanced.api.configuration.repository.BackendRepository
 import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.schema.ApiAssetPublicKey
-import app.revanced.api.configuration.schema.ApiRelease
-import app.revanced.api.configuration.schema.ApiReleaseVersion
 import app.revanced.library.serializeTo
 import app.revanced.patcher.patch.loadPatchesFromJar
 import com.github.benmanes.caffeine.cache.Caffeine
