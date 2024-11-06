@@ -1,3 +1,23 @@
+# [1.4.0](https://github.com/ReVanced/revanced-api/compare/v1.3.0...v1.4.0) (2024-11-06)
+
+
+### Bug Fixes
+
+* Add missing logging level environment variable to .env.example ([3b62120](https://github.com/ReVanced/revanced-api/commit/3b6212065a5cfb95c303b6d0551747ba1eb317f6))
+* Use new patches file extension ([d42a3a3](https://github.com/ReVanced/revanced-api/commit/d42a3a393396a0f4e9085cda46e0af2c12b63cb1))
+
+
+### Features
+
+* Add URL and use friendly name for `APIContributable` ([a5498ab](https://github.com/ReVanced/revanced-api/commit/a5498aba2b99db89c28a65738cc58cc4c852c327))
+* Allow versioning by arbitrary path string ([814d3c9](https://github.com/ReVanced/revanced-api/commit/814d3c946e31068e12e3886aa8beb3238ef126ae))
+* Improve announcements API ([#192](https://github.com/ReVanced/revanced-api/issues/192)) ([56a00dd](https://github.com/ReVanced/revanced-api/commit/56a00ddb85f302d441f0b222a9902ea2c1c18897))
+* Make backend configurable ([f91f3a6](https://github.com/ReVanced/revanced-api/commit/f91f3a65c5e07b5b58ccbff1d4b0a5ba9b15fc50))
+* Remove "archived" query parameter ([8ad614e](https://github.com/ReVanced/revanced-api/commit/8ad614ef4fdaf45af87a3316ef4db7e7236fd64a))
+* Remove deprecated routes and old API ([eca40a6](https://github.com/ReVanced/revanced-api/commit/eca40a69799240f7803aa8851eb3ee961937e4d6))
+* Remove ReVanced Integrations ([f1c1092](https://github.com/ReVanced/revanced-api/commit/f1c10928ae3be1c6b1d675819755b3046fad70d8))
+* Use tag name directly instead of ID ([fc40427](https://github.com/ReVanced/revanced-api/commit/fc40427fbaafb523045eb6f5285d90949b206b8b))
+
 # [1.4.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2024-11-06)
 
 
