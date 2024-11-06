@@ -11,7 +11,7 @@ import org.koin.ktor.ext.get
 import kotlin.time.Duration.Companion.minutes
 
 fun Application.configureHTTP() {
-    val configurationRepository = get<ConfigurationRepository>()
+    val configuration = get<ConfigurationRepository>()
 
     install(CORS) {
         HttpMethod.DefaultMethods.minus(HttpMethod.Options).forEach(::allowMethod)
@@ -22,7 +22,7 @@ fun Application.configureHTTP() {
 
         allowCredentials = true
 
-        configurationRepository.corsAllowedHosts.forEach { host ->
+        configuration.corsAllowedHosts.forEach { host ->
             allowHost(host = host, schemes = listOf("https"))
         }
     }

@@ -52,6 +52,7 @@ internal fun Application.configureRouting() = routing {
         extensions("json", "asc")
     }
 
-    swagger(pageTitle = "ReVanced API", path = "/")
-    redoc(pageTitle = "ReVanced API", path = "/redoc")
+    val specUrl = "/${configuration.apiVersion}/openapi.json"
+    swagger(pageTitle = "ReVanced API", path = "/", specUrl = specUrl)
+    redoc(pageTitle = "ReVanced API", path = "/redoc", specUrl = specUrl)
 }
