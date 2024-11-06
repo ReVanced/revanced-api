@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/ReVanced/revanced-api/compare/v1.4.0...v1.5.0) (2024-11-06)
+
+
+### Features
+
+* Allow updating `createdAt` field for announcements ([58ba4cb](https://github.com/ReVanced/revanced-api/commit/58ba4cb11c789507826cd70ac548943a94da4223))
+* Move spec url to versioned path ([e871b23](https://github.com/ReVanced/revanced-api/commit/e871b23210798723c34bce93c7567d8fbcf4e060))
+* Simplify log pattern ([d5d9e04](https://github.com/ReVanced/revanced-api/commit/d5d9e04325fa93540be0438e7b51243e2aeeab3d))
+
 # [1.5.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.5.0-dev.1...v1.5.0-dev.2) (2024-11-06)
 
 
