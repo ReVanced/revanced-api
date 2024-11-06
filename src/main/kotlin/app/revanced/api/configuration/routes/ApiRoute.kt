@@ -183,7 +183,7 @@ private fun Route.installTokenRouteDocumentation() = installNotarizedRoute {
                             "username=\"ReVanced\", " +
                             "realm=\"ReVanced\", " +
                             "nonce=\"abc123\", " +
-                            "uri=\"/v${configuration.apiVersion}/token\", " +
+                            "uri=\"/${configuration.apiVersion}/token\", " +
                             "algorithm=SHA-256, " +
                             "response=\"yxz456\"",
                     ),

@@ -45,7 +45,7 @@ internal class ConfigurationRepository(
     @SerialName("backend-service-name")
     val backendServiceName: String,
     @SerialName("api-version")
-    val apiVersion: Int = 1,
+    val apiVersion: String = "v1",
     @SerialName("cors-allowed-hosts")
     val corsAllowedHosts: Set<String>,
     val endpoint: String,

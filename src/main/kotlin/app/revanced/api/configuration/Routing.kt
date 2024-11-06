@@ -18,7 +18,7 @@ internal fun Application.configureRouting() = routing {
 
     installCache(5.minutes)
 
-    route("/v${configuration.apiVersion}") {
+    route("/${configuration.apiVersion}") {
         announcementsRoute()
         patchesRoute()
         managerRoute()

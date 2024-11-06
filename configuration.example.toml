@@ -1,4 +1,4 @@
-api-version = 1
+api-version = "v1"
 cors-allowed-hosts = [
     "revanced.app",
     "*.revanced.app"
