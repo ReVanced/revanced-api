@@ -1,3 +1,11 @@
+# [1.4.0-dev.6](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2024-11-06)
+
+
+### Features
+
+* Allow versioning by arbitrary path string ([814d3c9](https://github.com/ReVanced/revanced-api/commit/814d3c946e31068e12e3886aa8beb3238ef126ae))
+* Remove deprecated routes and old API ([eca40a6](https://github.com/ReVanced/revanced-api/commit/eca40a69799240f7803aa8851eb3ee961937e4d6))
+
 # [1.4.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2024-11-05)
 
 # [1.4.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2024-11-01)
