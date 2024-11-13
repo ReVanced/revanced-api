@@ -100,6 +100,7 @@ internal class AnnouncementRepository(private val database: Database) {
             author = new.author
             title = new.title
             content = new.content
+            createdAt = new.createdAt
             archivedAt = new.archivedAt
             level = new.level
             tags = SizedCollection(
