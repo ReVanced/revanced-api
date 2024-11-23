@@ -1,3 +1,10 @@
+# [1.6.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.5.0...v1.6.0-dev.1) (2024-11-23)
+
+
+### Features
+
+* Allow setting `Announcement.createdAt` when creating an announcement ([7f6e29d](https://github.com/ReVanced/revanced-api/commit/7f6e29de5205f63ac4aaea490c844b58e14000c8))
+
 # [1.5.0](https://github.com/ReVanced/revanced-api/compare/v1.4.0...v1.5.0) (2024-11-06)
 
 
