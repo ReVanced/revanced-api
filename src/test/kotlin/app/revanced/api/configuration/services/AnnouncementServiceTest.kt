@@ -135,7 +135,7 @@ private object AnnouncementServiceTest {
         val latestAnnouncement = announcementService.latest()!!
         val latestId = latestAnnouncement.id
 
-        val attachments = latestAnnouncement.attachments
+        val attachments = latestAnnouncement.attachments!!
         assertEquals(2, attachments.size)
         assert(attachments.any { it == "attachment1" })
         assert(attachments.any { it == "attachment2" })
@@ -144,7 +144,7 @@ private object AnnouncementServiceTest {
             latestId,
             ApiAnnouncement(title = "title", attachments = listOf("attachment1", "attachment3")),
         )
-        assert(announcementService.get(latestId)!!.attachments.any { it == "attachment3" })
+        assert(announcementService.get(latestId)!!.attachments!!.any { it == "attachment3" })
     }
 
     @Test
