@@ -63,9 +63,9 @@ class ApiAnnouncement(
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val attachments: List<String> = emptyList(),
+    val attachments: List<String>? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val tags: List<String> = emptyList(),
+    val tags: List<String>? = null,
     val createdAt: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
@@ -78,9 +78,9 @@ class ApiResponseAnnouncement(
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val attachments: List<String> = emptyList(),
+    val attachments: List<String>? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
-    val tags: List<String> = emptyList(),
+    val tags: List<String>? = null,
     val createdAt: LocalDateTime,
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,

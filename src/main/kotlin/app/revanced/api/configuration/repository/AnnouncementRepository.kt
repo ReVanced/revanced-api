@@ -69,8 +69,7 @@ internal class AnnouncementRepository(private val database: Database) {
 
     fun latestId() = latestAnnouncement?.id?.value.toApiResponseAnnouncementId()
 
-    fun latestId(tags: Set<String>) =
-        tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
+    fun latestId(tags: Set<String>) = tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
 
     suspend fun paged(cursor: Int, count: Int, tags: Set<String>?) = transaction {
         Announcement.find {
@@ -103,11 +102,13 @@ internal class AnnouncementRepository(private val database: Database) {
             createdAt = new.createdAt
             archivedAt = new.archivedAt
             level = new.level
-            tags = SizedCollection(
-                new.tags.map { tag -> Tag.find { Tags.name eq tag }.firstOrNull() ?: Tag.new { name = tag } },
-            )
+            if (new.tags != null) {
+                tags = SizedCollection(
+                    new.tags.map { tag -> Tag.find { Tags.name eq tag }.firstOrNull() ?: Tag.new { name = tag } },
+                )
+            }
         }.apply {
-            new.attachments.map { attachmentUrl ->
+            new.attachments?.map { attachmentUrl ->
                 Attachment.new {
                     url = attachmentUrl
                     announcement = this@apply
@@ -125,24 +126,28 @@ internal class AnnouncementRepository(private val database: Database) {
             it.archivedAt = new.archivedAt
             it.level = new.level
 
-            // Get the old tags, create new tags if they don't exist,
-            // and delete tags that are not in the new tags, after updating the announcement.
-            val oldTags = it.tags.toList()
-            val updatedTags = new.tags.map { name ->
-                Tag.find { Tags.name eq name }.firstOrNull() ?: Tag.new { this.name = name }
-            }
-            it.tags = SizedCollection(updatedTags)
-            oldTags.forEach { tag ->
-                if (tag in updatedTags || !tag.announcements.empty()) return@forEach
-                tag.delete()
+            if (new.tags != null) {
+                // Get the old tags, create new tags if they don't exist,
+                // and delete tags that are not in the new tags, after updating the announcement.
+                val oldTags = it.tags.toList()
+                val updatedTags = new.tags.map { name ->
+                    Tag.find { Tags.name eq name }.firstOrNull() ?: Tag.new { this.name = name }
+                }
+                it.tags = SizedCollection(updatedTags)
+                oldTags.forEach { tag ->
+                    if (tag in updatedTags || !tag.announcements.empty()) return@forEach
+                    tag.delete()
+                }
             }
 
             // Delete old attachments and create new attachments.
-            it.attachments.forEach { attachment -> attachment.delete() }
-            new.attachments.map { attachment ->
-                Attachment.new {
-                    url = attachment
-                    announcement = it
+            if (new.attachments != null) {
+                it.attachments.forEach { attachment -> attachment.delete() }
+                new.attachments.map { attachment ->
+                    Attachment.new {
+                        url = attachment
+                        announcement = it
+                    }
                 }
             }
         }?.let(::updateLatestAnnouncement) ?: Unit
@@ -175,8 +180,7 @@ internal class AnnouncementRepository(private val database: Database) {
         Tag.all().toList().toApiTag()
     }
 
-    private suspend fun <T> transaction(statement: suspend Transaction.() -> T) =
-        newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
+    private suspend fun <T> transaction(statement: suspend Transaction.() -> T) = newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
 
     private object Announcements : IntIdTable() {
         val author = varchar("author", 32).nullable()
