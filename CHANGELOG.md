@@ -1,3 +1,10 @@
+# [1.6.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2024-12-20)
+
+
+### Features
+
+* Make some announcements schema fields nullable ([db22874](https://github.com/ReVanced/revanced-api/commit/db22874f063bae0c9e7f0c99a20cdf1b16addd89))
+
 # [1.6.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.5.0...v1.6.0-dev.1) (2024-11-23)
 
 
