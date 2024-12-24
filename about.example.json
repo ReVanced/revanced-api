@@ -5,6 +5,7 @@
   "branding": {
     "logo": "https://raw.githubusercontent.com/ReVanced/revanced-branding/main/assets/revanced-logo/revanced-logo.svg"
   },
+  "status": "https://status.revanced.app",
   "contact": {
     "email": "contact@revanced.app"
   },

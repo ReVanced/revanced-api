@@ -123,6 +123,7 @@ class APIAbout(
     // Using a list instead of a set because set semantics are unnecessary here.
     val socials: List<Social>?,
     val donations: Donations?,
+    val status: String,
 ) {
     @Serializable
     class Branding(
