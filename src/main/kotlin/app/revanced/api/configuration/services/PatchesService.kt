@@ -19,10 +19,11 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): ApiRelease {
+    suspend fun latestRelease(prerelease: Boolean): ApiRelease {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
+            prerelease,
         )
 
         return ApiRelease(
@@ -34,10 +35,11 @@ internal class PatchesService(
         )
     }
 
-    suspend fun latestVersion(): ApiReleaseVersion {
+    suspend fun latestVersion(prerelease: Boolean): ApiReleaseVersion {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
+            prerelease,
         )
 
         return ApiReleaseVersion(patchesRelease.tag)
@@ -48,10 +50,11 @@ internal class PatchesService(
         .maximumSize(1)
         .build<String, ByteArray>()
 
-    suspend fun list(): ByteArray {
+    suspend fun list(prerelease: Boolean): ByteArray {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
+            prerelease,
         )
 
         return withContext(Dispatchers.IO) {

@@ -10,10 +10,11 @@ internal class ManagerService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    suspend fun latestRelease(): ApiRelease {
+    suspend fun latestRelease(prerelease: Boolean): ApiRelease {
         val managerRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.manager.repository,
+            prerelease,
         )
 
         return ApiRelease(
@@ -24,10 +25,11 @@ internal class ManagerService(
         )
     }
 
-    suspend fun latestVersion(): ApiReleaseVersion {
+    suspend fun latestVersion(prerelease: Boolean): ApiReleaseVersion {
         val managerRelease = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.manager.repository,
+            prerelease,
         )
 
         return ApiReleaseVersion(managerRelease.tag)
