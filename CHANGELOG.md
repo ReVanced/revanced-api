@@ -1,3 +1,11 @@
+# [1.6.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.6.0-dev.2...v1.6.0-dev.3) (2024-12-25)
+
+
+### Features
+
+* Add status page link to about ([8a957cd](https://github.com/ReVanced/revanced-api/commit/8a957cd797e7e42f43670baaed60ac0d3543342f))
+* Add support for prereleases ([c25bc8b](https://github.com/ReVanced/revanced-api/commit/c25bc8b4ba2bd4bf1708f19dc8bc228a7f54d548))
+
 # [1.6.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2024-12-20)
 
 
