@@ -7,6 +7,8 @@ import app.revanced.api.configuration.installCache
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.services.PatchesService
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.ratelimit.*
@@ -22,14 +24,18 @@ internal fun Route.patchesRoute() = route("patches") {
 
     rateLimit(RateLimitName("weak")) {
         get {
-            call.respond(patchesService.latestRelease())
+            val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+            call.respond(patchesService.latestRelease(prerelease))
         }
 
         route("version") {
             installPatchesVersionRouteDocumentation()
 
             get {
-                call.respond(patchesService.latestVersion())
+                val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+                call.respond(patchesService.latestVersion(prerelease))
             }
         }
     }
@@ -39,7 +45,9 @@ internal fun Route.patchesRoute() = route("patches") {
             installPatchesListRouteDocumentation()
 
             get {
-                call.respondBytes(ContentType.Application.Json) { patchesService.list() }
+                val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+                call.respondBytes(ContentType.Application.Json) { patchesService.list(prerelease) }
             }
         }
     }
@@ -57,12 +65,21 @@ internal fun Route.patchesRoute() = route("patches") {
     }
 }
 
+private val prereleaseParameter = Parameter(
+    name = "prerelease",
+    `in` = Parameter.Location.query,
+    schema = TypeDefinition.STRING,
+    description = "Whether to get the current patches prerelease",
+    required = false,
+)
+
 private fun Route.installPatchesRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Patches")
 
     get = GetInfo.builder {
         description("Get the current patches release")
         summary("Get current patches release")
+        parameters(prereleaseParameter)
         response {
             description("The current patches release")
             mediaTypes("application/json")
@@ -78,6 +95,7 @@ private fun Route.installPatchesVersionRouteDocumentation() = installNotarizedRo
     get = GetInfo.builder {
         description("Get the current patches release version")
         summary("Get current patches release version")
+        parameters(prereleaseParameter)
         response {
             description("The current patches release version")
             mediaTypes("application/json")
@@ -93,6 +111,7 @@ private fun Route.installPatchesListRouteDocumentation() = installNotarizedRoute
     get = GetInfo.builder {
         description("Get the list of patches from the current patches release")
         summary("Get list of patches from current patches release")
+        parameters(prereleaseParameter)
         response {
             description("The list of patches")
             mediaTypes("application/json")

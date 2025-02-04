@@ -135,12 +135,14 @@ abstract class BackendRepository internal constructor(
              * @property tag The tag of the release.
              * @property assets The assets of the release.
              * @property createdAt The date and time the release was created.
+             * @property prerelease Whether the release is a prerelease.
              * @property releaseNote The release note of the release.
              */
             class BackendRelease(
                 val tag: String,
                 val releaseNote: String,
                 val createdAt: LocalDateTime,
+                val prerelease: Boolean,
                 // Using a list instead of a set because set semantics are unnecessary here.
                 val assets: List<BackendAsset>,
             ) {
@@ -180,13 +182,13 @@ abstract class BackendRepository internal constructor(
      *
      * @param owner The owner of the repository.
      * @param repository The name of the repository.
-     * @param tag The tag of the release. If null, the latest release is returned.
+     * @param prerelease Whether to get a prerelease.
      * @return The release.
      */
     abstract suspend fun release(
         owner: String,
         repository: String,
-        tag: String? = null,
+        prerelease: Boolean,
     ): BackendOrganization.BackendRepository.BackendRelease
 
     /**

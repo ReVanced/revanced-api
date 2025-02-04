@@ -24,10 +24,10 @@ class GitHubBackendRepository : BackendRepository("https://api.github.com", "htt
     override suspend fun release(
         owner: String,
         repository: String,
-        tag: String?,
+        prerelease: Boolean,
     ): BackendRelease {
-        val release: GitHubRelease = if (tag != null) {
-            client.get(Releases.Tag(owner, repository, tag)).body()
+        val release: GitHubRelease = if (prerelease) {
+            client.get(Releases(owner, repository)).body<List<GitHubRelease>>().first { it.prerelease }
         } else {
             client.get(Releases.Latest(owner, repository)).body()
         }
@@ -36,6 +36,7 @@ class GitHubBackendRepository : BackendRepository("https://api.github.com", "htt
             tag = release.tagName,
             releaseNote = release.body,
             createdAt = release.createdAt.toLocalDateTime(TimeZone.UTC),
+            prerelease = release.prerelease,
             assets = release.assets.map {
                 BackendAsset(
                     name = it.name,
@@ -163,6 +164,7 @@ class GitHubOrganization {
             // Using a list instead of a set because set semantics are unnecessary here.
             val assets: List<GitHubAsset>,
             val createdAt: Instant,
+            val prerelease: Boolean,
             val body: String,
         ) {
             @Serializable
@@ -200,10 +202,8 @@ class Organization {
         @Resource("/repos/{owner}/{repo}/contributors")
         class Contributors(val owner: String, val repo: String, @SerialName("per_page") val perPage: Int = 100)
 
-        class Releases {
-            @Resource("/repos/{owner}/{repo}/releases/tags/{tag}")
-            class Tag(val owner: String, val repo: String, val tag: String)
-
+        @Resource("/repos/{owner}/{repo}/releases")
+        class Releases(val owner: String, val repo: String) {
             @Resource("/repos/{owner}/{repo}/releases/latest")
             class Latest(val owner: String, val repo: String)
         }

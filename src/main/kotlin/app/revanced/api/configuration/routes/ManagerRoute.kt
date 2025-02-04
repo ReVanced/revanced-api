@@ -5,6 +5,8 @@ import app.revanced.api.configuration.ApiReleaseVersion
 import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.services.ManagerService
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.ratelimit.*
@@ -19,18 +21,30 @@ internal fun Route.managerRoute() = route("manager") {
 
     rateLimit(RateLimitName("weak")) {
         get {
-            call.respond(managerService.latestRelease())
+            val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+            call.respond(managerService.latestRelease(prerelease))
         }
 
         route("version") {
             installManagerVersionRouteDocumentation()
 
             get {
-                call.respond(managerService.latestVersion())
+                val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+                call.respond(managerService.latestVersion(prerelease))
             }
         }
     }
 }
+
+private val prereleaseParameter = Parameter(
+    name = "prerelease",
+    `in` = Parameter.Location.query,
+    schema = TypeDefinition.STRING,
+    description = "Whether to get the current manager prerelease",
+    required = false,
+)
 
 private fun Route.installManagerRouteDocumentation() = installNotarizedRoute {
     tags = setOf("Manager")
@@ -38,6 +52,7 @@ private fun Route.installManagerRouteDocumentation() = installNotarizedRoute {
     get = GetInfo.builder {
         description("Get the current manager release")
         summary("Get current manager release")
+        parameters(prereleaseParameter)
         response {
             description("The latest manager release")
             mediaTypes("application/json")
@@ -53,6 +68,7 @@ private fun Route.installManagerVersionRouteDocumentation() = installNotarizedRo
     get = GetInfo.builder {
         description("Get the current manager release version")
         summary("Get current manager release version")
+        parameters(prereleaseParameter)
         response {
             description("The current manager release version")
             mediaTypes("application/json")
