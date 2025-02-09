@@ -20,6 +20,8 @@ public-key-id = 3897925568445097277
 [manager]
 repository = "revanced-manager"
 asset-regex = "apk$"
+downloaders-repository = "revanced-manager-downloaders"
+downloaders-asset-regex = "apk$"
 
 [contributors-repositories]
 revanced-patcher = "ReVanced Patcher"

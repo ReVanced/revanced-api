@@ -34,4 +34,29 @@ internal class ManagerService(
 
         return ApiReleaseVersion(managerRelease.tag)
     }
+
+    suspend fun latestDownloadersRelease(prerelease: Boolean): ApiRelease {
+        val downloaderPluginsRelease = backendRepository.release(
+            configurationRepository.organization,
+            configurationRepository.manager.downloadersRepository,
+            prerelease,
+        )
+
+        return ApiRelease(
+            downloaderPluginsRelease.tag,
+            downloaderPluginsRelease.createdAt,
+            downloaderPluginsRelease.releaseNote,
+            downloaderPluginsRelease.assets.first(configurationRepository.manager.downloadersAssetRegex).downloadUrl,
+        )
+    }
+
+    suspend fun latestDownloadersVersion(prerelease: Boolean): ApiReleaseVersion {
+        val downloaderPluginsRelease = backendRepository.release(
+            configurationRepository.organization,
+            configurationRepository.manager.downloadersRepository,
+            prerelease,
+        )
+
+        return ApiReleaseVersion(downloaderPluginsRelease.tag)
+    }
 }
