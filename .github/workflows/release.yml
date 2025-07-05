@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache Gradle
-        uses: burrunan/gradle-cache-action@v1
+        uses: burrunan/gradle-cache-action@v3
 
       - name: Build
         env:
@@ -52,7 +52,6 @@ jobs:
 
       - name: Release
         uses: cycjimmy/semantic-release-action@v4
-        id: release
         env:
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
