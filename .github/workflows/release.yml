@@ -17,11 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          # Make sure the release step uses its own credentials:
-          # https://github.com/cycjimmy/semantic-release-action#private-packages
-          persist-credentials: false
-          fetch-depth: 0
 
       - name: Cache Gradle
         uses: burrunan/gradle-cache-action@v1
@@ -56,12 +51,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Release
+        uses: cycjimmy/semantic-release-action@v4
+        id: release
         env:
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm exec semantic-release
 
       - name: Set Portainer stack webhook URL based on branch
         run: |
