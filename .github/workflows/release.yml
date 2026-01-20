@@ -23,7 +23,7 @@ jobs:
 
       - name: Build
         env:
-          ORG_GRADLE_PROJECT_githubPackagesUsername: ${{ env.GITHUB_ACTOR }}
+          ORG_GRADLE_PROJECT_githubPackagesUsername: ${{ github.actor }}
           ORG_GRADLE_PROJECT_githubPackagesPassword: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew startShadowScripts clean
 
@@ -56,8 +56,9 @@ jobs:
         env:
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_githubPackagesUsername: ${{ github.actor }}
+          ORG_GRADLE_PROJECT_githubPackagesPassword: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set Portainer stack webhook URL based on branch
         run: |
