@@ -63,6 +63,7 @@ class ApiAnnouncement(
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
+    @Deprecated("This field is deprecated and will be removed in the future.")
     val attachments: List<String>? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
     val tags: List<String>? = null,
@@ -78,6 +79,7 @@ class ApiResponseAnnouncement(
     val title: String,
     val content: String? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
+    @Deprecated("This field is deprecated and will be removed in the future.")
     val attachments: List<String>? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
     val tags: List<String>? = null,

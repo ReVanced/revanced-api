@@ -5,8 +5,6 @@ import app.revanced.api.configuration.routes.*
 import app.revanced.api.configuration.routes.announcementsRoute
 import app.revanced.api.configuration.routes.apiRoute
 import app.revanced.api.configuration.routes.patchesRoute
-import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.core.routes.swagger
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
@@ -51,8 +49,4 @@ internal fun Application.configureRouting() = routing {
 
         extensions("json", "asc")
     }
-
-    val specUrl = "/${configuration.apiVersion}/openapi.json"
-    swagger(pageTitle = "ReVanced API", path = "/", specUrl = specUrl)
-    redoc(pageTitle = "ReVanced API", path = "/redoc", specUrl = specUrl)
 }

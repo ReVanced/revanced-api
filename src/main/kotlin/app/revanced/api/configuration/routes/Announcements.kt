@@ -3,23 +3,18 @@ package app.revanced.api.configuration.routes
 import app.revanced.api.configuration.ApiAnnouncement
 import app.revanced.api.configuration.ApiResponseAnnouncement
 import app.revanced.api.configuration.ApiResponseAnnouncementId
-import app.revanced.api.configuration.canRespondUnauthorized
 import app.revanced.api.configuration.installCache
-import app.revanced.api.configuration.installNotarizedRoute
 import app.revanced.api.configuration.respondOrNotFound
 import app.revanced.api.configuration.services.AnnouncementService
-import io.bkbn.kompendium.core.metadata.DeleteInfo
-import io.bkbn.kompendium.core.metadata.GetInfo
-import io.bkbn.kompendium.core.metadata.PatchInfo
-import io.bkbn.kompendium.core.metadata.PostInfo
-import io.bkbn.kompendium.json.schema.definition.TypeDefinition
-import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.*
-import io.ktor.server.application.*
+import io.ktor.openapi.ExampleObject
+import io.ktor.openapi.Parameters
+import io.ktor.openapi.jsonSchema
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.routing.openapi.describe
 import io.ktor.server.util.*
 import kotlin.time.Duration.Companion.minutes
 import org.koin.ktor.ext.get as koinGet
@@ -29,8 +24,6 @@ internal fun Route.announcementsRoute() = route("announcements") {
 
     installCache(5.minutes)
 
-    installAnnouncementsRouteDocumentation()
-
     rateLimit(RateLimitName("strong")) {
         get {
             val cursor = call.parameters["cursor"]?.toInt() ?: Int.MAX_VALUE
@@ -38,6 +31,33 @@ internal fun Route.announcementsRoute() = route("announcements") {
             val tags = call.parameters.getAll("tag")
 
             call.respond(announcementService.paged(cursor, count, tags?.toSet()))
+        }.describe {
+            description = "Get a page of announcements"
+            summary = "Get announcements"
+
+            parameters {
+                query("cursor") {
+                    description =
+                        "The offset of the announcements. Default is Int.MAX_VALUE (Newest first)"
+                    required = false
+                }
+                query("count") {
+                    description = "The count of the announcements. Default is 16"
+                    required = false
+                }
+                query("tag") {
+                    description = "The tags to filter the announcements by. Default is all tags"
+                    required = false
+                }
+            }
+
+            responses {
+                HttpStatusCode.OK {
+                    description = "The announcements"
+                    schema = jsonSchema<Set<ApiResponseAnnouncement>>()
+                    ContentType.Application.Json()
+                }
+            }
         }
     }
 
@@ -47,12 +67,29 @@ internal fun Route.announcementsRoute() = route("announcements") {
                 announcementService.new(announcement)
 
                 call.respond(HttpStatusCode.OK)
+            }.describe {
+                description = "Create a new announcement"
+                summary = "Create announcement"
+
+                parameters {
+                    authHeaderParameter
+                }
+
+                requestBody {
+                    description = "The new announcement"
+                    schema = jsonSchema<ApiAnnouncement>()
+                }
+
+                responses {
+                    HttpStatusCode.OK {
+                        description = "The announcement is created"
+                    }
+                    HttpStatusCode.Unauthorized()
+                }
             }
         }
 
         route("latest") {
-            installAnnouncementsLatestRouteDocumentation()
-
             get {
                 val tags = call.parameters.getAll("tag")
 
@@ -61,30 +98,101 @@ internal fun Route.announcementsRoute() = route("announcements") {
                 } else {
                     call.respondOrNotFound(announcementService.latest())
                 }
-            }
+            }.describe {
+                description = "Get the latest announcement"
+                summary = "Get latest announcement"
 
-            route("id") {
-                installAnnouncementsLatestIdRouteDocumentation()
+                parameters {
+                    query("tag") {
+                        description = "The tags to filter the latest announcements by"
+                        required = false
+                    }
+                }
 
-                get {
-                    val tags = call.parameters.getAll("tag")
-
-                    if (tags?.isNotEmpty() == true) {
-                        call.respond(announcementService.latestId(tags.toSet()))
-                    } else {
-                        call.respondOrNotFound(announcementService.latestId())
+                responses {
+                    HttpStatusCode.OK {
+                        description = "The latest announcement"
+                        schema = jsonSchema<ApiResponseAnnouncement>()
+                        ContentType.Application.Json()
+                    }
+                    HttpStatusCode.OK {
+                        description = "The latest announcements"
+                        schema = jsonSchema<Set<ApiResponseAnnouncement>>()
+                        ContentType.Application.Json()
+                    }
+                    HttpStatusCode.NotFound {
+                        description = "No announcement exists"
                     }
                 }
             }
         }
 
-        route("{id}") {
-            installAnnouncementsIdRouteDocumentation()
+        route("id") {
+            get {
+                val tags = call.parameters.getAll("tag")
 
+                if (tags?.isNotEmpty() == true) {
+                    call.respond(announcementService.latestId(tags.toSet()))
+                } else {
+                    call.respondOrNotFound(announcementService.latestId())
+                }
+            }
+        }.describe {
+            description = "Get the ID of the latest announcement"
+            summary = "Get ID of latest announcement"
+
+            parameters {
+                query("tag") {
+                    description = "The tags to filter the latest announcements by"
+                    required = false
+                }
+            }
+
+            responses {
+                HttpStatusCode.OK {
+                    description = "The ID of the latest announcement"
+                    schema = jsonSchema<ApiResponseAnnouncementId>()
+                    ContentType.Application.Json()
+                }
+                HttpStatusCode.OK {
+                    description = "The IDs of the latest announcements"
+                    schema = jsonSchema<Set<ApiResponseAnnouncement>>()
+                    ContentType.Application.Json()
+                }
+                HttpStatusCode.NotFound {
+                    description = "No announcement exists"
+                }
+            }
+        }
+
+
+        route("{id}") {
             get {
                 val id: Int by call.parameters
 
                 call.respondOrNotFound(announcementService.get(id))
+            }.describe {
+                description = "Get an announcement"
+                summary = "Get announcement"
+
+                parameters {
+                    path("id") {
+                        description = "The ID of the announcement to get"
+                        required = true
+                    }
+                    authHeaderParameter
+                }
+
+                responses {
+                    HttpStatusCode.OK {
+                        description = "The announcement"
+                        schema = jsonSchema<ApiResponseAnnouncement>()
+                        ContentType.Application.Json()
+                    }
+                    HttpStatusCode.NotFound {
+                        description = "The announcement does not exist"
+                    }
+                }
             }
 
             authenticate("jwt") {
@@ -94,6 +202,29 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     announcementService.update(id, announcement)
 
                     call.respond(HttpStatusCode.OK)
+                }.describe {
+                    description = "Update an announcement"
+                    summary = "Update announcement"
+
+                    parameters {
+                        path("id") {
+                            description = "The ID of the announcement to update"
+                            required = true
+                        }
+                        authHeaderParameter
+                    }
+
+                    requestBody {
+                        description = "The new announcement"
+                        schema = jsonSchema<ApiAnnouncement>()
+                    }
+
+                    responses {
+                        HttpStatusCode.OK {
+                            description = "The announcement is updated"
+                        }
+                        HttpStatusCode.Unauthorized()
+                    }
                 }
 
                 delete {
@@ -102,219 +233,52 @@ internal fun Route.announcementsRoute() = route("announcements") {
                     announcementService.delete(id)
 
                     call.respond(HttpStatusCode.OK)
+                }.describe {
+                    description = "Delete an announcement"
+                    summary = "Delete announcement"
+
+                    parameters {
+                        path("id") {
+                            description = "The ID of the announcement to delete"
+                            required = true
+                        }
+                        authHeaderParameter
+                    }
+
+                    responses {
+                        HttpStatusCode.OK {
+                            description = "The announcement is deleted"
+                        }
+                        HttpStatusCode.Unauthorized()
+                    }
                 }
             }
         }
 
         route("tags") {
-            installAnnouncementsTagsRouteDocumentation()
-
             get {
                 call.respond(announcementService.tags())
+            }.describe {
+                description = "Get all announcement tags"
+                summary = "Get announcement tags"
+
+                responses {
+                    HttpStatusCode.OK {
+                        description = "The announcement tags"
+                        schema = jsonSchema<Set<String>>()
+                        ContentType.Application.Json()
+                    }
+                }
             }
         }
     }
+}.describe {
+    tag("Announcements")
 }
 
-private val authHeaderParameter = Parameter(
-    name = "Authorization",
-    `in` = Parameter.Location.header,
-    schema = TypeDefinition.STRING,
-    required = true,
-    examples = mapOf("Bearer authentication" to Parameter.Example("Bearer abc123")),
-)
-
-private fun Route.installAnnouncementsRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    get = GetInfo.builder {
-        description("Get a page of announcements")
-        summary("Get announcements")
-        parameters(
-            Parameter(
-                name = "cursor",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.INT,
-                description = "The offset of the announcements. Default is Int.MAX_VALUE (Newest first)",
-                required = false,
-            ),
-            Parameter(
-                name = "count",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.INT,
-                description = "The count of the announcements. Default is 16",
-                required = false,
-            ),
-            Parameter(
-                name = "tag",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.STRING,
-                description = "The tags to filter the announcements by. Default is all tags",
-                required = false,
-            ),
-        )
-        response {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The announcements")
-            responseType<Set<ApiResponseAnnouncement>>()
-        }
+private val Parameters.Builder.authHeaderParameter
+    get() = header("Authorization") {
+        description = "Whether to get the current manager prerelease"
+        required = false
+        example("Bearer authentication", ExampleObject("Bearer abc123"))
     }
-
-    post = PostInfo.builder {
-        description("Create a new announcement")
-        summary("Create announcement")
-        parameters(authHeaderParameter)
-        request {
-            requestType<ApiAnnouncement>()
-            description("The new announcement")
-        }
-        response {
-            description("The announcement is created")
-            responseCode(HttpStatusCode.OK)
-            responseType<Unit>()
-        }
-        canRespondUnauthorized()
-    }
-}
-
-private fun Route.installAnnouncementsLatestRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    get = GetInfo.builder {
-        description("Get the latest announcement")
-        summary("Get latest announcement")
-        parameters(
-            Parameter(
-                name = "tag",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.STRING,
-                description = "The tags to filter the latest announcements by",
-                required = false,
-            ),
-        )
-        response {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The latest announcement")
-            responseType<ApiResponseAnnouncement>()
-        }
-        canRespond {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The latest announcements")
-            responseType<Set<ApiResponseAnnouncement>>()
-        }
-        canRespond {
-            responseCode(HttpStatusCode.NotFound)
-            description("No announcement exists")
-            responseType<Unit>()
-        }
-    }
-}
-
-private fun Route.installAnnouncementsLatestIdRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    get = GetInfo.builder {
-        description("Get the ID of the latest announcement")
-        summary("Get ID of latest announcement")
-        parameters(
-            Parameter(
-                name = "tag",
-                `in` = Parameter.Location.query,
-                schema = TypeDefinition.STRING,
-                description = "The tags to filter the latest announcements by",
-                required = false,
-            ),
-        )
-        response {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The ID of the latest announcement")
-            responseType<ApiResponseAnnouncementId>()
-        }
-        canRespond {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The IDs of the latest announcements")
-            responseType<Set<ApiResponseAnnouncement>>()
-        }
-        canRespond {
-            responseCode(HttpStatusCode.NotFound)
-            description("No announcement exists")
-            responseType<Unit>()
-        }
-    }
-}
-
-private fun Route.installAnnouncementsIdRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    parameters = listOf(
-        Parameter(
-            name = "id",
-            `in` = Parameter.Location.path,
-            schema = TypeDefinition.INT,
-            description = "The ID of the announcement to update",
-            required = true,
-        ),
-        authHeaderParameter,
-    )
-
-    get = GetInfo.builder {
-        description("Get an announcement")
-        summary("Get announcement")
-        response {
-            description("The announcement")
-            responseCode(HttpStatusCode.OK)
-            responseType<ApiResponseAnnouncement>()
-        }
-        canRespond {
-            responseCode(HttpStatusCode.NotFound)
-            description("The announcement does not exist")
-            responseType<Unit>()
-        }
-    }
-
-    patch = PatchInfo.builder {
-        description("Update an announcement")
-        summary("Update announcement")
-        request {
-            requestType<ApiAnnouncement>()
-            description("The new announcement")
-        }
-        response {
-            description("The announcement is updated")
-            responseCode(HttpStatusCode.OK)
-            responseType<Unit>()
-        }
-        canRespondUnauthorized()
-    }
-
-    delete = DeleteInfo.builder {
-        description("Delete an announcement")
-        summary("Delete announcement")
-        response {
-            description("The announcement is deleted")
-            responseCode(HttpStatusCode.OK)
-            responseType<Unit>()
-        }
-        canRespondUnauthorized()
-    }
-}
-
-private fun Route.installAnnouncementsTagsRouteDocumentation() = installNotarizedRoute {
-    tags = setOf("Announcements")
-
-    get = GetInfo.builder {
-        description("Get all announcement tags")
-        summary("Get announcement tags")
-        response {
-            responseCode(HttpStatusCode.OK)
-            mediaTypes("application/json")
-            description("The announcement tags")
-            responseType<Set<String>>()
-        }
-    }
-}

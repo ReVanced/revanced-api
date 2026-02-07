@@ -6,14 +6,26 @@ import app.revanced.api.configuration.ApiResponseAnnouncement
 import app.revanced.api.configuration.ApiResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.v1.core.ReferenceOption
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.Transaction
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.inSubQuery
+import org.jetbrains.exposed.v1.core.lessEq
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.SizedCollection
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.transactions.experimental.newSuspendedTransaction
 
 internal class AnnouncementRepository(private val database: Database) {
     // This is better than doing a maxByOrNull { it.id } on every request.
@@ -36,7 +48,8 @@ internal class AnnouncementRepository(private val database: Database) {
     }
 
     private fun initializeLatestAnnouncements() {
-        latestAnnouncement = Announcement.all().orderBy(Announcements.id to SortOrder.DESC).firstOrNull()
+        latestAnnouncement =
+            Announcement.all().orderBy(Announcements.id to SortOrder.DESC).firstOrNull()
 
         Tag.all().map { it.name }.forEach(::updateLatestAnnouncementForTag)
     }
@@ -69,7 +82,8 @@ internal class AnnouncementRepository(private val database: Database) {
 
     fun latestId() = latestAnnouncement?.id?.value.toApiResponseAnnouncementId()
 
-    fun latestId(tags: Set<String>) = tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
+    fun latestId(tags: Set<String>) =
+        tags.map { tag -> latestAnnouncementByTag[tag]?.id?.value }.toApiResponseAnnouncementId()
 
     suspend fun paged(cursor: Int, count: Int, tags: Set<String>?) = transaction {
         Announcement.find {
@@ -79,11 +93,11 @@ internal class AnnouncementRepository(private val database: Database) {
                 idLessEq()
             } else {
                 fun hasTags() = Announcements.id inSubQuery (
-                    AnnouncementTags.innerJoin(Tags)
-                        .select(AnnouncementTags.announcement)
-                        .withDistinct()
-                        .where { Tags.name inList tags }
-                    )
+                        AnnouncementTags.innerJoin(Tags)
+                            .select(AnnouncementTags.announcement)
+                            .withDistinct()
+                            .where { Tags.name inList tags }
+                        )
 
                 idLessEq() and hasTags()
             }
@@ -104,7 +118,9 @@ internal class AnnouncementRepository(private val database: Database) {
             level = new.level
             if (new.tags != null) {
                 tags = SizedCollection(
-                    new.tags.map { tag -> Tag.find { Tags.name eq tag }.firstOrNull() ?: Tag.new { name = tag } },
+                    new.tags.map { tag ->
+                        Tag.find { Tags.name eq tag }.firstOrNull() ?: Tag.new { name = tag }
+                    },
                 )
             }
         }.apply {
@@ -167,7 +183,8 @@ internal class AnnouncementRepository(private val database: Database) {
 
         // If the deleted announcement is the latest announcement, set the new latest announcement.
         if (latestAnnouncement?.id?.value == id) {
-            latestAnnouncement = Announcement.all().orderBy(Announcements.id to SortOrder.DESC).firstOrNull()
+            latestAnnouncement =
+                Announcement.all().orderBy(Announcements.id to SortOrder.DESC).firstOrNull()
         }
 
         // The new announcement may be the latest for a specific tag. Set the new latest announcement for that tag.
@@ -180,7 +197,8 @@ internal class AnnouncementRepository(private val database: Database) {
         Tag.all().toList().toApiTag()
     }
 
-    private suspend fun <T> transaction(statement: suspend Transaction.() -> T) = newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
+    private suspend fun <T> transaction(statement: suspend Transaction.() -> T) =
+        newSuspendedTransaction(Dispatchers.IO, database, statement = statement)
 
     private object Announcements : IntIdTable() {
         val author = varchar("author", 32).nullable()
@@ -193,7 +211,8 @@ internal class AnnouncementRepository(private val database: Database) {
 
     private object Attachments : IntIdTable() {
         val url = varchar("url", 256)
-        val announcement = reference("announcement", Announcements, onDelete = ReferenceOption.CASCADE)
+        val announcement =
+            reference("announcement", Announcements, onDelete = ReferenceOption.CASCADE)
     }
 
     private object Tags : IntIdTable() {
@@ -202,7 +221,8 @@ internal class AnnouncementRepository(private val database: Database) {
 
     private object AnnouncementTags : Table() {
         val tag = reference("tag", Tags, onDelete = ReferenceOption.CASCADE)
-        val announcement = reference("announcement", Announcements, onDelete = ReferenceOption.CASCADE)
+        val announcement =
+            reference("announcement", Announcements, onDelete = ReferenceOption.CASCADE)
 
         init {
             uniqueIndex(tag, announcement)
@@ -250,11 +270,13 @@ internal class AnnouncementRepository(private val database: Database) {
         )
     }
 
-    private fun Iterable<Announcement>.toApiAnnouncement() = map { it.toApiResponseAnnouncement()!! }
+    private fun Iterable<Announcement>.toApiAnnouncement() =
+        map { it.toApiResponseAnnouncement()!! }
 
     private fun Iterable<Tag>.toApiTag() = map { ApiAnnouncementTag(it.name) }
 
     private fun Int?.toApiResponseAnnouncementId() = this?.let { ApiResponseAnnouncementId(this) }
 
-    private fun Iterable<Int?>.toApiResponseAnnouncementId() = map { it.toApiResponseAnnouncementId() }
+    private fun Iterable<Int?>.toApiResponseAnnouncementId() =
+        map { it.toApiResponseAnnouncementId() }
 }

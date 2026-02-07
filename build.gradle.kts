@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.ktor)
@@ -35,16 +33,17 @@ ktor {
     fatJar {
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
-}
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    openApi {
+        enabled = true
+        codeInferenceEnabled = false
+        onlyCommented = false
+    }
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
+        jvmToolchain(21)
     }
 }
 
@@ -53,21 +52,6 @@ tasks {
         useJUnitPlatform()
     }
 }
-
-repositories {
-    mavenCentral()
-    google()
-    mavenLocal()
-    maven {
-        // A repository must be specified for some reason. "registry" is a dummy.
-        url = uri("https://maven.pkg.github.com/revanced/registry")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-}
-
 dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
@@ -81,13 +65,15 @@ dependencies {
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.cors)
     implementation(libs.ktor.server.caching.headers)
+    implementation(libs.ktor.server.openapi)
     implementation(libs.ktor.server.rate.limit)
+    implementation(libs.ktor.server.routing.openapi)
+    implementation(libs.ktor.server.swagger)
     implementation(libs.ktor.server.host.common)
-    implementation(libs.ktor.server.jetty)
+    implementation(libs.ktor.server.jetty.jakarta)
     implementation(libs.ktor.server.call.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
-    implementation(libs.kompendium.core)
     implementation(libs.h2)
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)

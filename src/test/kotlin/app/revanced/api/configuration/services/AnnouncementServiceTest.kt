@@ -4,7 +4,7 @@ import app.revanced.api.configuration.ApiAnnouncement
 import app.revanced.api.configuration.repository.AnnouncementRepository
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toKotlinLocalDateTime
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,8 @@ private object AnnouncementServiceTest {
     @JvmStatic
     @BeforeAll
     fun setUp() {
-        val database = Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false")
+        val database =
+            Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false")
 
         announcementService = AnnouncementService(AnnouncementRepository(database))
     }
@@ -130,7 +131,12 @@ private object AnnouncementServiceTest {
 
     @Test
     fun `attachments work properly`() = runBlocking {
-        announcementService.new(ApiAnnouncement(title = "title", attachments = listOf("attachment1", "attachment2")))
+        announcementService.new(
+            ApiAnnouncement(
+                title = "title",
+                attachments = listOf("attachment1", "attachment2")
+            )
+        )
 
         val latestAnnouncement = announcementService.latest()!!
         val latestId = latestAnnouncement.id
@@ -158,7 +164,11 @@ private object AnnouncementServiceTest {
         assertEquals("title9", announcements.first().title, "Starts from the latest announcement")
 
         val announcements2 = announcementService.paged(5, 5, null)
-        assertEquals(5, announcements2.size, "Returns correct number of announcements when starting from the cursor")
+        assertEquals(
+            5,
+            announcements2.size,
+            "Returns correct number of announcements when starting from the cursor"
+        )
         assertEquals("title4", announcements2.first().title, "Starts from the cursor")
 
         (0..4).forEach { id ->
@@ -169,7 +179,8 @@ private object AnnouncementServiceTest {
                     tags = (0..id).map { "tag$it" },
                     archivedAt = if (id % 2 == 0) {
                         // Only two announcements will be archived.
-                        LocalDateTime.now().plusDays(2).minusDays(id.toLong()).toKotlinLocalDateTime()
+                        LocalDateTime.now().plusDays(2).minusDays(id.toLong())
+                            .toKotlinLocalDateTime()
                     } else {
                         null
                     },

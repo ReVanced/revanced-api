@@ -1,22 +1,20 @@
 [versions]
-kompendium-core = "3.14.4"
-kotlin = "2.0.20"
-logback = "1.5.6"
-exposed = "0.52.0"
-h2 = "2.2.224"
-koin = "3.5.3"
-dotenv = "6.4.1"
-ktor = "2.3.7"
-ktoml = "0.5.2"
-picocli = "4.7.6"
-datetime = "0.6.0"
+kotlin = "2.3.10"
+logback = "1.5.32"
+exposed = "1.0.0"
+h2 = "2.4.240"
+koin = "4.1.1"
+dotenv = "6.5.1"
+ktor = "3.4.0"
+ktoml = "0.7.1"
+picocli = "4.7.7"
+datetime = "0.7.1"
 revanced-patcher = "21.0.0"
-revanced-library = "3.0.2"
-caffeine = "3.1.8"
-bouncy-castle = "1.78.1"
+revanced-library = "3.2.0-dev.1"
+caffeine = "3.2.3"
+bouncy-castle = "1.83"
 
 [libraries]
-kompendium-core = { module = "io.bkbn:kompendium-core", version.ref = "kompendium-core" }
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
@@ -29,9 +27,12 @@ ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors" }
 ktor-server-caching-headers = { module = "io.ktor:ktor-server-caching-headers" }
+ktor-server-openapi = { module = "io.ktor:ktor-server-openapi" }
 ktor-server-rate-limit = { module = "io.ktor:ktor-server-rate-limit" }
+ktor-server-routing-openapi = { module = "io.ktor:ktor-server-routing-openapi" }
+ktor-server-swagger = { module = "io.ktor:ktor-server-swagger" }
 ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
-ktor-server-jetty = { module = "io.ktor:ktor-server-jetty" }
+ktor-server-jetty-jakarta = { module = "io.ktor:ktor-server-jetty-jakarta" }
 ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }

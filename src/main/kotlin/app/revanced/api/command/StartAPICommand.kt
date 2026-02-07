@@ -3,7 +3,7 @@ package app.revanced.api.command
 import app.revanced.api.configuration.*
 import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.engine.*
-import io.ktor.server.jetty.*
+import io.ktor.server.jetty.jakarta.Jetty
 import picocli.CommandLine
 import java.io.File
 
