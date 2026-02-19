@@ -79,6 +79,7 @@ Some of the features ReVanced API include:
 - 📢 **Announcements**: Post and get announcements
 - ℹ️ **About**: Get more information such as a description, ways to donate to,
   and links of the hoster of ReVanced API
+- 💊 **Manager**: Get the latest updates of ReVanced Manager and its downloaders
 - 🧩 **Patches**: Get the latest updates of ReVanced Patches, directly from ReVanced API
 - 👥 **Contributors**: List all contributors involved in the project
 

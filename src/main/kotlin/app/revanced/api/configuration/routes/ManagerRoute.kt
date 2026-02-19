@@ -35,6 +35,26 @@ internal fun Route.managerRoute() = route("manager") {
                 call.respond(managerService.latestVersion(prerelease))
             }
         }
+        
+        route("downloaders") {
+            installManagerDownloadersRouteDocumentation()
+            
+            get {
+                val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+                call.respond(managerService.latestDownloadersRelease(prerelease))
+            }
+
+            route("version") {
+                installManagerDownloadersVersionRouteDocumentation()
+                
+                get {
+                    val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+
+                    call.respond(managerService.latestDownloadersVersion(prerelease))
+                }
+            }
+        }
     }
 }
 
@@ -71,6 +91,38 @@ private fun Route.installManagerVersionRouteDocumentation() = installNotarizedRo
         parameters(prereleaseParameter)
         response {
             description("The current manager release version")
+            mediaTypes("application/json")
+            responseCode(HttpStatusCode.OK)
+            responseType<ApiReleaseVersion>()
+        }
+    }
+}
+
+private fun Route.installManagerDownloadersRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Manager")
+
+    get = GetInfo.builder {
+        description("Get the current manager downloaders release")
+        summary("Get current manager downloaders release")
+        parameters(prereleaseParameter)
+        response {
+            description("The latest manager downloaders release")
+            mediaTypes("application/json")
+            responseCode(HttpStatusCode.OK)
+            responseType<ApiRelease>()
+        }
+    }
+}
+
+private fun Route.installManagerDownloadersVersionRouteDocumentation() = installNotarizedRoute {
+    tags = setOf("Manager")
+
+    get = GetInfo.builder {
+        description("Get the current manager downloaders release version")
+        summary("Get current manager downloaders release version")
+        parameters(prereleaseParameter)
+        response {
+            description("The current manager downloaders release version")
             mediaTypes("application/json")
             responseCode(HttpStatusCode.OK)
             responseType<ApiReleaseVersion>()

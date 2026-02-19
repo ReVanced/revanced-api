@@ -23,8 +23,8 @@ import kotlin.io.path.createDirectories
  * The repository storing the configuration for the API.
  *
  * @property organization The API backends organization name where the repositories are.
- * @property patches The source of the patches.
- * @property manager The source of the manager.
+ * @property patches The configuration for patches.
+ * @property manager The configuration for the manager.
  * @property contributorsRepositoryNames The friendly name of repos mapped to the repository names to get contributors from.
  * @property backendServiceName The name of the backend service to use for the repositories, contributors, etc.
  * @property apiVersion The version to use for the API.
@@ -38,8 +38,8 @@ import kotlin.io.path.createDirectories
 @Serializable
 internal class ConfigurationRepository(
     val organization: String,
-    val patches: SignedAssetConfiguration,
-    val manager: AssetConfiguration,
+    val patches: PatchesConfiguration,
+    val manager: ManagerConfiguration,
     @SerialName("contributors-repositories")
     val contributorsRepositoryNames: Map<String, String>,
     @SerialName("backend-service-name")
@@ -65,22 +65,20 @@ internal class ConfigurationRepository(
     }
 
     /**
-     * Am asset configuration whose asset is signed.
+     * A configuration for [PatchesService].
      *
-     * [PatchesService] for example uses [BackendRepository] to get assets from its releases.
-     * A release contains multiple assets.
-     *
-     * This configuration is used in [ConfigurationRepository]
-     * to determine which release assets from repositories to get and to verify them.
-     *
-     * @property repository The repository in which releases are made to get an asset.
-     * @property assetRegex The regex matching the asset name.
-     * @property signatureAssetRegex The regex matching the signature asset name to verify the asset.
-     * @property publicKeyFile The public key file to verify the signature of the asset.
-     * @property publicKeyId The ID of the public key to verify the signature of the asset.
+     * @property repository The patches repository.
+     * @property assetRegex The regex matching the patches asset name
+     * in releases from the patches repository. 
+     * @property signatureAssetRegex The regex matching the patches signature asset name
+     * in releases from the patches repository.
+     * @property publicKeyFile The public key file to verify the signature of the patches asset
+     * in releases from the patches repository.
+     * @property publicKeyId The ID of the public key to verify the signature of the patches asset
+     * in releases from the patches repository.
      */
     @Serializable
-    internal class SignedAssetConfiguration(
+    internal class PatchesConfiguration(
         val repository: String,
         @Serializable(with = RegexSerializer::class)
         @SerialName("asset-regex")
@@ -96,23 +94,26 @@ internal class ConfigurationRepository(
     )
 
     /**
-     * Am asset configuration.
-     *
-     * [ManagerService] for example uses [BackendRepository] to get assets from its releases.
-     * A release contains multiple assets.
-     *
-     * This configuration is used in [ConfigurationRepository]
-     * to determine which release assets from repositories to get and to verify them.
-     *
-     * @property repository The repository in which releases are made to get an asset.
-     * @property assetRegex The regex matching the asset name.
+     * A configuration for [ManagerService].
+
+     * @property repository The manager repository.
+     * @property assetRegex The regex matching the manager asset name
+     * in releases from the manager repository.
+     * @property downloadersRepository The manager downloaders repository.
+     * @property downloadersAssetRegex The regex matching the manager downloaders asset name
+     * in releases from the manager downloaders repository.
      */
     @Serializable
-    internal class AssetConfiguration(
+    internal class ManagerConfiguration(
         val repository: String,
         @Serializable(with = RegexSerializer::class)
         @SerialName("asset-regex")
         val assetRegex: Regex,
+        @SerialName("downloaders-repository")
+        val downloadersRepository: String,
+        @Serializable(with = RegexSerializer::class)
+        @SerialName("downloaders-asset-regex")
+        val downloadersAssetRegex: Regex,
     )
 }
 
