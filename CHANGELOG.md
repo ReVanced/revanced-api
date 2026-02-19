@@ -1,3 +1,10 @@
+# [1.7.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.6.1...v1.7.0-dev.1) (2026-02-19)
+
+
+### Features
+
+* Add `downloaders` route ([#208](https://github.com/ReVanced/revanced-api/issues/208)) ([64f9431](https://github.com/ReVanced/revanced-api/commit/64f9431b50de681a662f0a6ed773dcbdecd29045))
+
 ## [1.6.1](https://github.com/ReVanced/revanced-api/compare/v1.6.0...v1.6.1) (2025-07-11)
 
 
