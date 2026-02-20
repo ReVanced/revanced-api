@@ -3,7 +3,7 @@ package app.revanced.api.server.routes
 import app.revanced.api.server.*
 import app.revanced.api.server.installCache
 import app.revanced.api.server.installNoCache
-import app.revanced.api.server.repository.ConfigurationRepository
+import app.revanced.api.server.repositories.ConfigurationRepository
 import app.revanced.api.server.respondOrNotFound
 import app.revanced.api.server.services.ApiService
 import app.revanced.api.server.services.AuthenticationService

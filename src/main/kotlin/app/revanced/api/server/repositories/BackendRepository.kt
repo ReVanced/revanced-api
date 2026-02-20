@@ -1,4 +1,4 @@
-package app.revanced.api.server.repository
+package app.revanced.api.server.repositories
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*

@@ -1,4 +1,4 @@
-package app.revanced.api.server.repository
+package app.revanced.api.server.repositories
 
 import app.revanced.api.server.ApiAnnouncement
 import app.revanced.api.server.ApiAnnouncementTag
