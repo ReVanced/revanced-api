@@ -1,3 +1,10 @@
+# [1.7.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.1...v1.7.0-dev.2) (2026-02-20)
+
+
+### Features
+
+* Add history route ([f0c9d4b](https://github.com/ReVanced/revanced-api/commit/f0c9d4bab0eca4b00e9d174ec6b44018882ee74d))
+
 # [1.7.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.6.1...v1.7.0-dev.1) (2026-02-19)
 
 
