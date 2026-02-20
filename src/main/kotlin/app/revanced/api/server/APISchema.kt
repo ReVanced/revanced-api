@@ -1,6 +1,6 @@
 package app.revanced.api.server
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -58,6 +58,11 @@ class ApiReleaseVersion(
 )
 
 @Serializable
+class ApiReleaseHistory(
+    val history: String,
+)
+
+@Serializable
 class ApiAnnouncement(
     val author: String? = null,
     val title: String,
@@ -67,7 +72,8 @@ class ApiAnnouncement(
     val attachments: List<String>? = null,
     // Using a list instead of a set because set semantics are unnecessary here.
     val tags: List<String>? = null,
-    val createdAt: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+    val createdAt: LocalDateTime = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()),
     val archivedAt: LocalDateTime? = null,
     val level: Int = 0,
 )

@@ -44,6 +44,10 @@ internal class ConfigurationRepository(
     val contributorsRepositoryNames: Map<String, String>,
     @SerialName("backend-service-name")
     val backendServiceName: String,
+    @SerialName("backend-service-main-branch")
+    val backendServiceMainBranch: String,
+    @SerialName("backend-service-prerelease-branch")
+    val backendServicePrereleaseBranch: String,
     @SerialName("api-version")
     val apiVersion: String = "v1",
     @SerialName("cors-allowed-hosts")
@@ -76,6 +80,7 @@ internal class ConfigurationRepository(
      * in releases from the patches repository.
      * @property publicKeyId The ID of the public key to verify the signature of the patches asset
      * in releases from the patches repository.
+     * @property historyFile The file containing the patches release history.
      */
     @Serializable
     internal class PatchesConfiguration(
@@ -91,6 +96,8 @@ internal class ConfigurationRepository(
         val publicKeyFile: File,
         @SerialName("public-key-id")
         val publicKeyId: Long,
+        @SerialName("history-file")
+        val historyFile: String?,
     )
 
     /**
@@ -102,6 +109,7 @@ internal class ConfigurationRepository(
      * @property downloadersRepository The manager downloaders repository.
      * @property downloadersAssetRegex The regex matching the manager downloaders asset name
      * in releases from the manager downloaders repository.
+     * @property historyFile The file containing the manager release history.
      */
     @Serializable
     internal class ManagerConfiguration(
@@ -114,11 +122,14 @@ internal class ConfigurationRepository(
         @Serializable(with = RegexSerializer::class)
         @SerialName("downloaders-asset-regex")
         val downloadersAssetRegex: Regex,
+        @SerialName("history-file")
+        val historyFile: String?,
     )
 }
 
 private object RegexSerializer : KSerializer<Regex> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Regex", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("Regex", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Regex) = encoder.encodeString(value.pattern)
 
@@ -126,7 +137,8 @@ private object RegexSerializer : KSerializer<Regex> {
 }
 
 private object FileSerializer : KSerializer<File> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("File", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("File", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: File) = encoder.encodeString(value.path)
 
@@ -134,7 +146,8 @@ private object FileSerializer : KSerializer<File> {
 }
 
 private object PathSerializer : KSerializer<Path> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Path", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("Path", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Path) = encoder.encodeString(value.toString())
 
@@ -142,9 +155,11 @@ private object PathSerializer : KSerializer<Path> {
 }
 
 private object AboutSerializer : KSerializer<APIAbout> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("APIAbout", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("APIAbout", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: APIAbout) = error("Serializing APIAbout is not supported")
+    override fun serialize(encoder: Encoder, value: APIAbout) =
+        error("Serializing APIAbout is not supported")
 
     @OptIn(ExperimentalSerializationApi::class)
     val json = Json { namingStrategy = JsonNamingStrategy.SnakeCase }

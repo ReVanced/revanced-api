@@ -1,6 +1,7 @@
 package app.revanced.api.server.routes
 
 import app.revanced.api.server.ApiRelease
+import app.revanced.api.server.ApiReleaseHistory
 import app.revanced.api.server.ApiReleaseVersion
 import app.revanced.api.server.services.ManagerService
 import io.ktor.http.*
@@ -33,6 +34,32 @@ internal fun Route.managerRoute() = route("manager") {
                     description = "The latest manager release"
                     schema = jsonSchema<ApiRelease>()
                     ContentType.Application.Json()
+                }
+            }
+        }
+
+        get("history") {
+            val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
+            val history = managerService.history(prerelease)
+
+            if (history != null) call.respond(history)
+            else call.respond(HttpStatusCode.NotFound)
+        }.describe {
+            description = "Get the manager release history"
+            summary = "Get manager release history"
+
+            parameters {
+                prereleaseParameter
+            }
+
+            responses {
+                HttpStatusCode.OK {
+                    description = "The manager release history"
+                    schema = jsonSchema<ApiReleaseHistory>()
+                    ContentType.Application.Json()
+                }
+                HttpStatusCode.NotFound {
+                    description = "No manager release history found"
                 }
             }
         }

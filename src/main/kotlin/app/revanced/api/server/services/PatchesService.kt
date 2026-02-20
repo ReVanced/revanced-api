@@ -2,6 +2,7 @@ package app.revanced.api.server.services
 
 import app.revanced.api.server.ApiAssetPublicKey
 import app.revanced.api.server.ApiRelease
+import app.revanced.api.server.ApiReleaseHistory
 import app.revanced.api.server.ApiReleaseVersion
 import app.revanced.api.server.repositories.BackendRepository
 import app.revanced.api.server.repositories.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
@@ -19,6 +20,25 @@ internal class PatchesService(
     private val backendRepository: BackendRepository,
     private val configurationRepository: ConfigurationRepository,
 ) {
+    suspend fun history(
+        prerelease: Boolean
+    ): ApiReleaseHistory? {
+        val historyFile = configurationRepository.patches.historyFile ?: return null
+
+        val path = (
+                if (prerelease) configurationRepository.backendServicePrereleaseBranch
+                else configurationRepository.backendServiceMainBranch
+                ) + "/" + historyFile
+
+        return ApiReleaseHistory(
+            backendRepository.file(
+                configurationRepository.organization,
+                configurationRepository.patches.repository,
+                path,
+            )
+        )
+    }
+
     suspend fun latestRelease(prerelease: Boolean): ApiRelease {
         val patchesRelease = backendRepository.release(
             configurationRepository.organization,

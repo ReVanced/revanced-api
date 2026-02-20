@@ -10,17 +10,27 @@ import app.revanced.api.server.repositories.Organization.Repository.Contributors
 import app.revanced.api.server.repositories.Organization.Repository.Releases
 import io.ktor.client.call.*
 import io.ktor.client.plugins.resources.*
+import io.ktor.client.request.get
 import io.ktor.resources.*
+import kotlin.time.Instant
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class GitHubBackendRepository : BackendRepository("https://api.github.com", "https://github.com") {
+class GitHubBackendRepository : BackendRepository(
+    "https://api.github.com",
+    "https://github.com",
+) {
+    override suspend fun file(
+        owner: String,
+        repository: String,
+        path: String
+    ) = client.get("https://raw.githubusercontent.com/$owner/$repository/$path").body<String>()
+
     override suspend fun release(
         owner: String,
         repository: String,
@@ -82,7 +92,8 @@ class GitHubBackendRepository : BackendRepository("https://api.github.com", "htt
                         },
                         async {
                             // Get the GPG key of the user.
-                            client.get(User.GpgKeys(member.login)).body<List<GitHubUser.GitHubGpgKey>>()
+                            client.get(User.GpgKeys(member.login))
+                                .body<List<GitHubUser.GitHubGpgKey>>()
                         },
                     )
                 }
@@ -200,10 +211,18 @@ class Organization {
 
     class Repository {
         @Resource("/repos/{owner}/{repo}/contributors")
-        class Contributors(val owner: String, val repo: String, @SerialName("per_page") val perPage: Int = 100)
+        class Contributors(
+            val owner: String,
+            val repo: String,
+            @SerialName("per_page") val perPage: Int = 100
+        )
 
         @Resource("/repos/{owner}/{repo}/releases")
-        class Releases(val owner: String, val repo: String, @SerialName("per_page") val perPage: Int = 1) {
+        class Releases(
+            val owner: String,
+            val repo: String,
+            @SerialName("per_page") val perPage: Int = 1
+        ) {
             @Resource("/repos/{owner}/{repo}/releases/latest")
             class Latest(val owner: String, val repo: String)
         }

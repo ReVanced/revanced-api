@@ -7,6 +7,8 @@ endpoint = "https://api.revanced.app"
 static-files-path = "static/root"
 versioned-static-files-path = "static/versioned"
 backend-service-name = "GitHub"
+backend-service-main-branch = "main"
+backend-service-prerelease-branch = "dev"
 about-json-file-path = "about.json"
 organization = "revanced"
 
@@ -16,6 +18,7 @@ asset-regex = "rvp$"
 signature-asset-regex = "asc$"
 public-key-file = "static/root/keys.asc"
 public-key-id = 3897925568445097277
+history-file = "CHANGELOG.md"
 
 [manager]
 repository = "revanced-manager"

@@ -147,7 +147,8 @@ abstract class BackendRepository internal constructor(
                 val assets: List<BackendAsset>,
             ) {
                 companion object {
-                    fun List<BackendAsset>.first(assetRegex: Regex) = first { assetRegex.containsMatchIn(it.name) }
+                    fun List<BackendAsset>.first(assetRegex: Regex) =
+                        first { assetRegex.containsMatchIn(it.name) }
                 }
 
                 /**
@@ -176,6 +177,20 @@ abstract class BackendRepository internal constructor(
         val remaining: Int,
         val reset: LocalDateTime,
     )
+
+    /**
+     * Get the content of a file in a repository.
+     *
+     * @param owner The owner of the repository.
+     * @param repository The name of the repository.
+     * @param path The path to the file in the repository.
+     * @return The content of the file.
+     */
+    abstract suspend fun file(
+        owner: String,
+        repository: String,
+        path: String,
+    ): String
 
     /**
      * Get a release of a repository.
