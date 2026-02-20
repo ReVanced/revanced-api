@@ -1,10 +1,10 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
-import app.revanced.api.configuration.repository.AnnouncementRepository
-import app.revanced.api.configuration.repository.BackendRepository
-import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.repository.GitHubBackendRepository
-import app.revanced.api.configuration.services.*
+import app.revanced.api.server.repository.AnnouncementRepository
+import app.revanced.api.server.repository.BackendRepository
+import app.revanced.api.server.repository.ConfigurationRepository
+import app.revanced.api.server.repository.GitHubBackendRepository
+import app.revanced.api.server.services.*
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.source.decodeFromStream
 import io.ktor.server.application.*

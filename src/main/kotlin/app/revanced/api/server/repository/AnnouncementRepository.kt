@@ -1,9 +1,9 @@
-package app.revanced.api.configuration.repository
+package app.revanced.api.server.repository
 
-import app.revanced.api.configuration.ApiAnnouncement
-import app.revanced.api.configuration.ApiAnnouncementTag
-import app.revanced.api.configuration.ApiResponseAnnouncement
-import app.revanced.api.configuration.ApiResponseAnnouncementId
+import app.revanced.api.server.ApiAnnouncement
+import app.revanced.api.server.ApiAnnouncementTag
+import app.revanced.api.server.ApiResponseAnnouncement
+import app.revanced.api.server.ApiResponseAnnouncementId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.v1.core.ReferenceOption

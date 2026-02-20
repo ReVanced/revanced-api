@@ -1,4 +1,4 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*

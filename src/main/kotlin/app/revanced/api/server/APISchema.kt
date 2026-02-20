@@ -1,4 +1,4 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

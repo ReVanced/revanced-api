@@ -1,8 +1,8 @@
-package app.revanced.api.configuration.repository
+package app.revanced.api.server.repository
 
-import app.revanced.api.configuration.APIAbout
-import app.revanced.api.configuration.services.ManagerService
-import app.revanced.api.configuration.services.PatchesService
+import app.revanced.api.server.APIAbout
+import app.revanced.api.server.services.ManagerService
+import app.revanced.api.server.services.PatchesService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName

@@ -1,8 +1,8 @@
-package app.revanced.api.configuration.routes
+package app.revanced.api.server.routes
 
-import app.revanced.api.configuration.ApiRelease
-import app.revanced.api.configuration.ApiReleaseVersion
-import app.revanced.api.configuration.services.ManagerService
+import app.revanced.api.server.ApiRelease
+import app.revanced.api.server.ApiReleaseVersion
+import app.revanced.api.server.services.ManagerService
 import io.ktor.http.*
 import io.ktor.openapi.Parameters
 import io.ktor.openapi.jsonSchema

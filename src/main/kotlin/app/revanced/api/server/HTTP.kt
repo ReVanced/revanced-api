@@ -1,6 +1,6 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
-import app.revanced.api.configuration.repository.ConfigurationRepository
+import app.revanced.api.server.repository.ConfigurationRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*

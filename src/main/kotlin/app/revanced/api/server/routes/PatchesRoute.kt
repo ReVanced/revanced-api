@@ -1,10 +1,10 @@
-package app.revanced.api.configuration.routes
+package app.revanced.api.server.routes
 
-import app.revanced.api.configuration.ApiAssetPublicKey
-import app.revanced.api.configuration.ApiRelease
-import app.revanced.api.configuration.ApiReleaseVersion
-import app.revanced.api.configuration.installCache
-import app.revanced.api.configuration.services.PatchesService
+import app.revanced.api.server.ApiAssetPublicKey
+import app.revanced.api.server.ApiRelease
+import app.revanced.api.server.ApiReleaseVersion
+import app.revanced.api.server.installCache
+import app.revanced.api.server.services.PatchesService
 import io.ktor.http.*
 import io.ktor.openapi.Parameters
 import io.ktor.openapi.jsonSchema

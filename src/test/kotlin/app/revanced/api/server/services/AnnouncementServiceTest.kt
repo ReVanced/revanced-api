@@ -1,7 +1,7 @@
-package app.revanced.api.configuration.services
+package app.revanced.api.server.services
 
-import app.revanced.api.configuration.ApiAnnouncement
-import app.revanced.api.configuration.repository.AnnouncementRepository
+import app.revanced.api.server.ApiAnnouncement
+import app.revanced.api.server.repository.AnnouncementRepository
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.v1.jdbc.Database

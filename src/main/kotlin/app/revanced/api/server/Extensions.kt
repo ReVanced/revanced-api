@@ -1,4 +1,4 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
 import io.ktor.http.*
 import io.ktor.http.content.*

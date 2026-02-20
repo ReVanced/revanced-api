@@ -1,4 +1,4 @@
-package app.revanced.api.configuration.services
+package app.revanced.api.server.services
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.bouncycastle.openpgp.*

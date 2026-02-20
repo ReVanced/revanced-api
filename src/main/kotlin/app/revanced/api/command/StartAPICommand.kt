@@ -1,6 +1,6 @@
 package app.revanced.api.command
 
-import app.revanced.api.configuration.*
+import app.revanced.api.server.*
 import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.engine.*
 import io.ktor.server.jetty.jakarta.Jetty

@@ -1,10 +1,10 @@
-package app.revanced.api.configuration
+package app.revanced.api.server
 
-import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.routes.*
-import app.revanced.api.configuration.routes.announcementsRoute
-import app.revanced.api.configuration.routes.apiRoute
-import app.revanced.api.configuration.routes.patchesRoute
+import app.revanced.api.server.repository.ConfigurationRepository
+import app.revanced.api.server.routes.*
+import app.revanced.api.server.routes.announcementsRoute
+import app.revanced.api.server.routes.apiRoute
+import app.revanced.api.server.routes.patchesRoute
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*

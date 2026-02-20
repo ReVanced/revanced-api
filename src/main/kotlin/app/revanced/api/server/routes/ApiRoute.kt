@@ -1,12 +1,12 @@
-package app.revanced.api.configuration.routes
+package app.revanced.api.server.routes
 
-import app.revanced.api.configuration.*
-import app.revanced.api.configuration.installCache
-import app.revanced.api.configuration.installNoCache
-import app.revanced.api.configuration.repository.ConfigurationRepository
-import app.revanced.api.configuration.respondOrNotFound
-import app.revanced.api.configuration.services.ApiService
-import app.revanced.api.configuration.services.AuthenticationService
+import app.revanced.api.server.*
+import app.revanced.api.server.installCache
+import app.revanced.api.server.installNoCache
+import app.revanced.api.server.repository.ConfigurationRepository
+import app.revanced.api.server.respondOrNotFound
+import app.revanced.api.server.services.ApiService
+import app.revanced.api.server.services.AuthenticationService
 import io.ktor.http.*
 import io.ktor.openapi.ExampleObject
 import io.ktor.openapi.jsonSchema

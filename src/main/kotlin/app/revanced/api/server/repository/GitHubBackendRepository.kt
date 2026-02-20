@@ -1,13 +1,13 @@
-package app.revanced.api.configuration.repository
+package app.revanced.api.server.repository
 
-import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendMember
-import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendContributor
-import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease
-import app.revanced.api.configuration.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.BackendAsset
-import app.revanced.api.configuration.repository.GitHubOrganization.GitHubRepository.GitHubContributor
-import app.revanced.api.configuration.repository.GitHubOrganization.GitHubRepository.GitHubRelease
-import app.revanced.api.configuration.repository.Organization.Repository.Contributors
-import app.revanced.api.configuration.repository.Organization.Repository.Releases
+import app.revanced.api.server.repository.BackendRepository.BackendOrganization.BackendMember
+import app.revanced.api.server.repository.BackendRepository.BackendOrganization.BackendRepository.BackendContributor
+import app.revanced.api.server.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease
+import app.revanced.api.server.repository.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.BackendAsset
+import app.revanced.api.server.repository.GitHubOrganization.GitHubRepository.GitHubContributor
+import app.revanced.api.server.repository.GitHubOrganization.GitHubRepository.GitHubRelease
+import app.revanced.api.server.repository.Organization.Repository.Contributors
+import app.revanced.api.server.repository.Organization.Repository.Releases
 import io.ktor.client.call.*
 import io.ktor.client.plugins.resources.*
 import io.ktor.resources.*
