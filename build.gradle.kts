@@ -26,7 +26,7 @@ tasks {
 }
 
 application {
-    mainClass.set("app.revanced.api.command.MainCommandKt")
+    mainClass.set("app.revanced.api.MainKt")
 }
 
 ktor {
