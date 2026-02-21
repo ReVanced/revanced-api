@@ -44,6 +44,11 @@ ktor {
 kotlin {
     compilerOptions {
         jvmToolchain(21)
+
+        freeCompilerArgs.addAll(
+            "-Xexplicit-backing-fields",
+            "-Xcontext-parameters",
+        )
     }
 }
 

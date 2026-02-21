@@ -8,7 +8,7 @@ import app.revanced.api.server.repositories.BackendRepository
 import app.revanced.api.server.repositories.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
 import app.revanced.api.server.repositories.ConfigurationRepository
 import app.revanced.library.serializeTo
-import app.revanced.patcher.patch.loadPatchesFromJar
+import app.revanced.patcher.patch.loadPatches
 import com.github.benmanes.caffeine.cache.Caffeine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -97,7 +97,7 @@ internal class PatchesService(
                         configurationRepository.patches.publicKeyId,
                     )
                 ) {
-                    loadPatchesFromJar(setOf(patchesFile))
+                    loadPatches(patchesFile)
                 } else {
                     // Use an empty set of patches if the signature is invalid.
                     emptySet()
