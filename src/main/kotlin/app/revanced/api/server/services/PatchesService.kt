@@ -2,7 +2,7 @@ package app.revanced.api.server.services
 
 import app.revanced.api.server.ApiAssetPublicKey
 import app.revanced.api.server.ApiRelease
-import app.revanced.api.server.ApiReleaseHistory
+import app.revanced.api.server.ApiReleaseSimple
 import app.revanced.api.server.ApiReleaseVersion
 import app.revanced.api.server.repositories.BackendRepository
 import app.revanced.api.server.repositories.BackendRepository.BackendOrganization.BackendRepository.BackendRelease.Companion.first
@@ -22,47 +22,49 @@ internal class PatchesService(
 ) {
     suspend fun history(
         prerelease: Boolean
-    ): ApiReleaseHistory? {
-        val historyFile = configurationRepository.patches.historyFile ?: return null
+    ): List<ApiReleaseSimple> {
+        val releases = backendRepository.releases(
+            configurationRepository.organization,
+            configurationRepository.patches.repository,
+            100,
+        ).let {
+            if (!prerelease) it.filter { release -> !release.prerelease } else it
+        }
 
-        val path = (
-                if (prerelease) configurationRepository.backendServicePrereleaseBranch
-                else configurationRepository.backendServiceMainBranch
-                ) + "/" + historyFile
 
-        return ApiReleaseHistory(
-            backendRepository.file(
-                configurationRepository.organization,
-                configurationRepository.patches.repository,
-                path,
+        return releases.map {
+            ApiReleaseSimple(
+                it.tag,
+                it.createdAt,
+                it.releaseNote,
             )
-        )
+        }
     }
 
     suspend fun latestRelease(prerelease: Boolean): ApiRelease {
-        val patchesRelease = backendRepository.release(
+        val release = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
             prerelease,
         )
 
         return ApiRelease(
-            patchesRelease.tag,
-            patchesRelease.createdAt,
-            patchesRelease.releaseNote,
-            patchesRelease.assets.first(configurationRepository.patches.assetRegex).downloadUrl,
-            patchesRelease.assets.first(configurationRepository.patches.signatureAssetRegex).downloadUrl,
+            release.tag,
+            release.createdAt,
+            release.releaseNote,
+            release.assets.first(configurationRepository.patches.assetRegex).downloadUrl,
+            release.assets.first(configurationRepository.patches.signatureAssetRegex).downloadUrl,
         )
     }
 
     suspend fun latestVersion(prerelease: Boolean): ApiReleaseVersion {
-        val patchesRelease = backendRepository.release(
+        val release = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
             prerelease,
         )
 
-        return ApiReleaseVersion(patchesRelease.tag)
+        return ApiReleaseVersion(release.tag)
     }
 
     private val patchesListCache = Caffeine
@@ -71,18 +73,18 @@ internal class PatchesService(
         .build<String, ByteArray>()
 
     suspend fun list(prerelease: Boolean): ByteArray {
-        val patchesRelease = backendRepository.release(
+        val release = backendRepository.release(
             configurationRepository.organization,
             configurationRepository.patches.repository,
             prerelease,
         )
 
         return withContext(Dispatchers.IO) {
-            patchesListCache.get(patchesRelease.tag) {
-                val patchesDownloadUrl = patchesRelease.assets
+            patchesListCache.get(release.tag) {
+                val patchesDownloadUrl = release.assets
                     .first(configurationRepository.patches.assetRegex).downloadUrl
 
-                val signatureDownloadUrl = patchesRelease.assets
+                val signatureDownloadUrl = release.assets
                     .first(configurationRepository.patches.signatureAssetRegex).downloadUrl
 
                 val patchesFile = kotlin.io.path.createTempFile().toFile().apply {

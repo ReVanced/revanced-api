@@ -58,8 +58,10 @@ class ApiReleaseVersion(
 )
 
 @Serializable
-class ApiReleaseHistory(
-    val history: String,
+class ApiReleaseSimple(
+    val version: String,
+    val createdAt: LocalDateTime,
+    val description: String,
 )
 
 @Serializable

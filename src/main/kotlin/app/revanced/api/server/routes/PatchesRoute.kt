@@ -2,7 +2,7 @@ package app.revanced.api.server.routes
 
 import app.revanced.api.server.ApiAssetPublicKey
 import app.revanced.api.server.ApiRelease
-import app.revanced.api.server.ApiReleaseHistory
+import app.revanced.api.server.ApiReleaseSimple
 import app.revanced.api.server.ApiReleaseVersion
 import app.revanced.api.server.installCache
 import app.revanced.api.server.services.PatchesService
@@ -45,8 +45,7 @@ internal fun Route.patchesRoute() = route("patches") {
             val prerelease = call.parameters["prerelease"]?.toBoolean() ?: false
             val history = patchesService.history(prerelease)
 
-            if (history != null) call.respond(history)
-            else call.respond(HttpStatusCode.NotFound)
+            call.respond(history)
         }.describe {
             description = "Get the patches release history"
             summary = "Get patches release history"
@@ -58,11 +57,8 @@ internal fun Route.patchesRoute() = route("patches") {
             responses {
                 HttpStatusCode.OK {
                     description = "The patches release history"
-                    schema = jsonSchema<ApiReleaseHistory>()
+                    schema = jsonSchema<List<ApiReleaseSimple>>()
                     ContentType.Application.Json()
-                }
-                HttpStatusCode.NotFound {
-                    description = "No patches release history found"
                 }
             }
         }
