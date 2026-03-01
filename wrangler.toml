@@ -1,0 +1,31 @@
+name = "revanced-api"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+
+# Drizzle ORM migrations directory
+[vars]
+ORGANIZATION = "revanced"
+PATCHES_REPO = "revanced-patches"
+PATCHES_ASSET_REGEX = "rvp$"
+PATCHES_SIGNATURE_ASSET_REGEX = "asc$"
+PATCHES_HISTORY_FILE = "CHANGELOG.md"
+MANAGER_REPO = "revanced-manager"
+MANAGER_ASSET_REGEX = "apk$"
+MANAGER_DOWNLOADERS_REPO = "revanced-manager-downloaders"
+MANAGER_DOWNLOADERS_ASSET_REGEX = "apk$"
+MANAGER_HISTORY_FILE = ""
+MAIN_BRANCH = "main"
+PRERELEASE_BRANCH = "dev"
+CONTRIBUTORS_REPOS = "revanced-patcher:ReVanced Patcher,revanced-patches:ReVanced Patches,revanced-website:ReVanced Website,revanced-cli:ReVanced CLI,revanced-manager:ReVanced Manager"
+API_VERSION = "v1"
+
+# Secrets (set via `wrangler secret put` or Cloudflare dashboard):
+# API_TOKEN      — Bearer token for protected routes
+# GITHUB_TOKEN   — GitHub API token (optional, increases rate limits)
+# PATCHES_PUBLIC_KEY is set via `wrangler secret put PATCHES_PUBLIC_KEY` (contains the PGP public key for verifying patches assets)
+
+[[d1_databases]]
+binding = "DB"
+database_name = "revanced-api"
+database_id = "<to-be-filled>"
+migrations_dir = "drizzle/migrations"
