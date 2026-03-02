@@ -1,8 +1,8 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import type { Env } from "../types";
+import type { Env, AppVariables } from "../types";
 import aboutData from "../data/about.json";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
 // Define the about schema to match about.example.json
 const AboutResponse = z
@@ -62,7 +62,7 @@ const AboutResponse = z
   })
   .openapi("About");
 
-/* GET /v1/about -- 1 day cache, rate limit strong 30/2min */
+// GET /about
 
 const getAboutRoute = createRoute({
   method: "get",

@@ -1,6 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
-import type { Env } from "./types";
+import type { Env, AppVariables } from "./types";
+import { GitHubBackend } from "./backend/github";
+import { createDb } from "./db/client";
 
 import patchesApp from "./routes/patches";
 import managerApp from "./routes/manager";
@@ -8,27 +10,50 @@ import announcementsApp from "./routes/announcements";
 import contributorsApp from "./routes/contributors";
 import teamApp from "./routes/team";
 import aboutApp from "./routes/about";
-import rateLimitApp from "./routes/rate-limit";
-import pingApp from "./routes/ping";
 
-/* version string, bundled at build time (from package.json i think) */
+// Version string
 const VERSION = "1.0.0";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+type AppBindings = { Bindings: Env; Variables: AppVariables };
 
-// mounting all the route groups under /v1
+const app = new OpenAPIHono<AppBindings>();
 
-app.route("/v1/patches", patchesApp);
-app.route("/v1/manager", managerApp);
-app.route("/v1/announcements", announcementsApp);
-app.route("/v1/contributors", contributorsApp);
-app.route("/v1/team", teamApp);
-app.route("/v1/about", aboutApp);
-app.route("/v1/backend/rate_limit", rateLimitApp);
-app.route("/v1/ping", pingApp);
+// v1 sub-app — all routes are mounted here under a single prefix
+const v1 = new OpenAPIHono<AppBindings>();
 
-/* openapi spec endpoint -- serves the json spec at /openapi */
+// Middleware: share GitHubBackend, db, and parsed config across all routes
+v1.use("*", async (c, next) => {
+  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const db = createDb(c.env.DB);
 
+  const config = {
+    patchesAssetRegex: new RegExp(c.env.PATCHES_ASSET_REGEX),
+    patchesSignatureAssetRegex: new RegExp(c.env.PATCHES_SIGNATURE_ASSET_REGEX),
+    managerAssetRegex: new RegExp(c.env.MANAGER_ASSET_REGEX),
+    managerDownloadersAssetRegex: new RegExp(c.env.MANAGER_DOWNLOADERS_ASSET_REGEX),
+    contributorRepos: c.env.CONTRIBUTORS_REPOS.split(",").map((entry) => {
+      const [repo, ...nameParts] = entry.trim().split(":");
+      return { repo: repo.trim(), name: nameParts.join(":").trim() };
+    }),
+  };
+
+  c.set("backend", backend);
+  c.set("db", db);
+  c.set("config", config);
+
+  await next();
+});
+
+v1.route("/patches", patchesApp);
+v1.route("/manager", managerApp);
+v1.route("/announcements", announcementsApp);
+v1.route("/contributors", contributorsApp);
+v1.route("/team", teamApp);
+v1.route("/about", aboutApp);
+
+app.route("/v1", v1);
+
+// OpenAPI spec endpoint
 app.doc("/openapi", () => ({
   openapi: "3.1.0",
   info: {
@@ -51,9 +76,7 @@ app.doc("/openapi", () => ({
   ],
 }));
 
-// swagger ui served at root "/" so you can see the api docs
-
+// Swagger UI served at root
 app.get("/", swaggerUI({ url: "/openapi" }));
 
-/* default export for cloudflare workers - for node.js do: import { serve } from '@hono/node-server' then serve(app), for vercel: import { handle } from 'hono/vercel' then export const GET = handle(app) and POST too */
 export default app;

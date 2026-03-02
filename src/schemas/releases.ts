@@ -41,11 +41,3 @@ export const PublicKeyResponse = z
     }),
   })
   .openapi("PublicKey");
-
-export const RateLimitResponse = z
-  .object({
-    limit: z.number().int().openapi({ example: 60 }),
-    remaining: z.number().int().openapi({ example: 58 }),
-    reset: z.string().openapi({ example: "2025-01-15T11:00:00" }),
-  })
-  .openapi("RateLimit");

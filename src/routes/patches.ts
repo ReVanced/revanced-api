@@ -1,13 +1,11 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env } from "../types";
-import { GitHubBackend } from "../backend/github";
+import type { Env, AppVariables } from "../types";
 import { PrereleaseQuery, ErrorResponse } from "../schemas/common";
 import { ReleaseResponse, VersionResponse, HistoryResponse, PublicKeyResponse } from "../schemas/releases";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
-/* GET /v1/patches (cache: 5min, rate limit: weak 5/1min) */
-
+// GET /patches
 const getPatchesRoute = createRoute({
   method: "get",
   path: "/",
@@ -23,14 +21,13 @@ const getPatchesRoute = createRoute({
 
 app.openapi(getPatchesRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
-  const assetRegex = new RegExp(c.env.PATCHES_ASSET_REGEX);
-  const sigRegex = new RegExp(c.env.PATCHES_SIGNATURE_ASSET_REGEX);
+  const backend = c.get("backend");
+  const { patchesAssetRegex, patchesSignatureAssetRegex } = c.get("config");
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.PATCHES_REPO, prerelease === "true");
-    const asset = release.assets.find((a) => assetRegex.test(a.name));
-    const sigAsset = release.assets.find((a) => sigRegex.test(a.name));
+    const asset = release.assets.find((a) => patchesAssetRegex.test(a.name));
+    const sigAsset = release.assets.find((a) => patchesSignatureAssetRegex.test(a.name));
 
     return c.json({
       version: release.tag,
@@ -44,8 +41,7 @@ app.openapi(getPatchesRoute, async (c) => {
   }
 });
 
-// GET /v1/patches/version -- cache 5min, rate limit weak 5/1min
-
+// GET /patches/version
 const getPatchesVersionRoute = createRoute({
   method: "get",
   path: "/version",
@@ -61,7 +57,7 @@ const getPatchesVersionRoute = createRoute({
 
 app.openapi(getPatchesVersionRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.PATCHES_REPO, prerelease === "true");
@@ -71,8 +67,7 @@ app.openapi(getPatchesVersionRoute, async (c) => {
   }
 });
 
-/* GET /v1/patches/history */ // cache 5min, rate limit weak 5/1min
-
+// GET /patches/history
 const getPatchesHistoryRoute = createRoute({
   method: "get",
   path: "/history",
@@ -95,7 +90,7 @@ app.openapi(getPatchesHistoryRoute, async (c) => {
     return c.body(null, 404);
   }
 
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
   const branch = prerelease === "true" ? c.env.PRERELEASE_BRANCH : c.env.MAIN_BRANCH;
 
   try {
@@ -106,8 +101,7 @@ app.openapi(getPatchesHistoryRoute, async (c) => {
   }
 });
 
-// GET /v1/patches/keys (cache: 356 days -- basically forever | rate limit: strong 30/2min)
-
+// GET /patches/keys
 const getPatchesKeysRoute = createRoute({
   method: "get",
   path: "/keys",

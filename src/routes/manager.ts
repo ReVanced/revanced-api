@@ -1,13 +1,11 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env } from "../types";
-import { GitHubBackend } from "../backend/github";
+import type { Env, AppVariables } from "../types";
 import { PrereleaseQuery, ErrorResponse } from "../schemas/common";
 import { ReleaseResponse, VersionResponse, HistoryResponse } from "../schemas/releases";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
-/* GET /v1/manager - cache 5min, rate limit weak (5/1min) */
-
+// GET /manager
 const getManagerRoute = createRoute({
   method: "get",
   path: "/",
@@ -23,12 +21,12 @@ const getManagerRoute = createRoute({
 
 app.openapi(getManagerRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
-  const assetRegex = new RegExp(c.env.MANAGER_ASSET_REGEX);
+  const backend = c.get("backend");
+  const { managerAssetRegex } = c.get("config");
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.MANAGER_REPO, prerelease === "true");
-    const asset = release.assets.find((a) => assetRegex.test(a.name));
+    const asset = release.assets.find((a) => managerAssetRegex.test(a.name));
 
     return c.json({
       version: release.tag,
@@ -41,8 +39,7 @@ app.openapi(getManagerRoute, async (c) => {
   }
 });
 
-// GET /v1/manager/version -- cache 5min, rate limit weak
-
+// GET /manager/version
 const getManagerVersionRoute = createRoute({
   method: "get",
   path: "/version",
@@ -58,7 +55,7 @@ const getManagerVersionRoute = createRoute({
 
 app.openapi(getManagerVersionRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.MANAGER_REPO, prerelease === "true");
@@ -68,8 +65,7 @@ app.openapi(getManagerVersionRoute, async (c) => {
   }
 });
 
-/* GET /v1/manager/history (cache 5min) */ // rate limit weak 5/1min
-
+// GET /manager/history
 const getManagerHistoryRoute = createRoute({
   method: "get",
   path: "/history",
@@ -92,7 +88,7 @@ app.openapi(getManagerHistoryRoute, async (c) => {
     return c.body(null, 404);
   }
 
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
   const branch = prerelease === "true" ? c.env.PRERELEASE_BRANCH : c.env.MAIN_BRANCH;
 
   try {
@@ -103,8 +99,7 @@ app.openapi(getManagerHistoryRoute, async (c) => {
   }
 });
 
-// GET /v1/manager/downloaders (cache: 5min, rate limit: weak)
-
+// GET /manager/downloaders
 const getDownloadersRoute = createRoute({
   method: "get",
   path: "/downloaders",
@@ -120,8 +115,8 @@ const getDownloadersRoute = createRoute({
 
 app.openapi(getDownloadersRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
-  const assetRegex = new RegExp(c.env.MANAGER_DOWNLOADERS_ASSET_REGEX);
+  const backend = c.get("backend");
+  const { managerDownloadersAssetRegex } = c.get("config");
 
   try {
     const release = await backend.release(
@@ -129,7 +124,7 @@ app.openapi(getDownloadersRoute, async (c) => {
       c.env.MANAGER_DOWNLOADERS_REPO,
       prerelease === "true",
     );
-    const asset = release.assets.find((a) => assetRegex.test(a.name));
+    const asset = release.assets.find((a) => managerDownloadersAssetRegex.test(a.name));
 
     return c.json({
       version: release.tag,
@@ -142,8 +137,7 @@ app.openapi(getDownloadersRoute, async (c) => {
   }
 });
 
-/* GET /v1/manager/downloaders/version -- same cache and rate limit as the other manager ones */
-
+// GET /manager/downloaders/version
 const getDownloadersVersionRoute = createRoute({
   method: "get",
   path: "/downloaders/version",
@@ -159,7 +153,7 @@ const getDownloadersVersionRoute = createRoute({
 
 app.openapi(getDownloadersVersionRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
 
   try {
     const release = await backend.release(

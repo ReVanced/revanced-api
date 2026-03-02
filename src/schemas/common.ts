@@ -12,10 +12,9 @@ export const ErrorResponse = z.object({
   error: z.string().openapi({ example: "Something went wrong" }),
 });
 
-export const IdParam = z.object({
-  id: z
-    .string()
-    .regex(/^\d+$/)
-    .transform(Number)
-    .openapi({ description: "Announcement ID", example: "1", param: { in: "path" } }),
+export const AnnouncementIdParam = z.object({
+  id: z.coerce
+    .number()
+    .int()
+    .openapi({ description: "Announcement ID", example: 1, param: { in: "path" } }),
 });

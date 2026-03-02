@@ -2,7 +2,6 @@ name = "revanced-api"
 main = "src/index.ts"
 compatibility_date = "2025-02-01"
 
-# Drizzle ORM migrations directory
 [vars]
 ORGANIZATION = "revanced"
 PATCHES_REPO = "revanced-patches"

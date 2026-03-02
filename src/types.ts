@@ -1,15 +1,22 @@
-/* env bindings for cloudflare workers (d1 database bindings plus all the env vars) */
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type * as schema from "./db/schema";
+import type { GitHubBackend } from "./backend/github";
+
+export type Database = DrizzleD1Database<typeof schema>;
+
+// Env bindings for Cloudflare Workers (D1 database bindings plus all the env vars)
 export interface Env {
-  /* d1 db */
+  // D1 database
   DB: D1Database;
 
-  // auth stuff
+  // Auth
   API_TOKEN: string;
 
-  /* github */ GITHUB_TOKEN?: string;
+  // GitHub
+  GITHUB_TOKEN?: string;
   ORGANIZATION: string;
 
-  // repo config stuff
+  // Repo config
   PATCHES_REPO: string;
   PATCHES_ASSET_REGEX: string;
   PATCHES_SIGNATURE_ASSET_REGEX: string;
@@ -21,12 +28,29 @@ export interface Env {
   MANAGER_DOWNLOADERS_ASSET_REGEX: string;
   MANAGER_HISTORY_FILE: string;
 
-  /* branches */ MAIN_BRANCH: string;
+  // Branches
+  MAIN_BRANCH: string;
   PRERELEASE_BRANCH: string;
 
-  // contributors
+  // Contributors
   CONTRIBUTORS_REPOS: string;
 
-  /* api stuff */
+  // API
   API_VERSION: string;
+}
+
+// Parsed configuration that is computed once per request via middleware
+export interface AppConfig {
+  patchesAssetRegex: RegExp;
+  patchesSignatureAssetRegex: RegExp;
+  managerAssetRegex: RegExp;
+  managerDownloadersAssetRegex: RegExp;
+  contributorRepos: { repo: string; name: string }[];
+}
+
+// Variables set by middleware and available on all route handlers
+export interface AppVariables {
+  backend: GitHubBackend;
+  db: Database;
+  config: AppConfig;
 }

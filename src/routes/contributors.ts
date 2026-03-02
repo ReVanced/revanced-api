@@ -1,13 +1,11 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env } from "../types";
-import { GitHubBackend } from "../backend/github";
+import type { Env, AppVariables } from "../types";
 import { ErrorResponse } from "../schemas/common";
 import { ContributorsResponse } from "../schemas/contributors";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
-/* GET /v1/contributors (cache: 1 day, rate limit: strong 30/2min) */
-
+// GET /contributors
 const getContributorsRoute = createRoute({
   method: "get",
   path: "/",
@@ -27,27 +25,22 @@ const getContributorsRoute = createRoute({
 });
 
 app.openapi(getContributorsRoute, async (c) => {
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
+  const { contributorRepos } = c.get("config");
   const org = c.env.ORGANIZATION;
-
-  /* parse the "repo:Friendly Name,repo2:Friendly Name 2" format from the env var */
-  const repoEntries = c.env.CONTRIBUTORS_REPOS.split(",").map((entry) => {
-    const [repo, ...nameParts] = entry.trim().split(":");
-    return { repo: repo.trim(), name: nameParts.join(":").trim() };
-  });
 
   try {
     const results = await Promise.all(
-      repoEntries.map(async ({ repo, name }) => {
+      contributorRepos.map(async ({ repo, name }) => {
         const contributors = await backend.contributors(org, repo);
         return {
           name,
           url: `https://github.com/${org}/${repo}`,
-          contributors: contributors.map((c) => ({
-            name: c.name,
-            avatar_url: c.avatarUrl,
-            url: c.url,
-            contributions: c.contributions,
+          contributors: contributors.map((contributor) => ({
+            name: contributor.name,
+            avatar_url: contributor.avatarUrl,
+            url: contributor.url,
+            contributions: contributor.contributions,
           })),
         };
       }),

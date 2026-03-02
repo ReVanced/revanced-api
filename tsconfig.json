@@ -10,8 +10,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
     "lib": ["ESNext"],
     "types": ["@cloudflare/workers-types"],
     "paths": {

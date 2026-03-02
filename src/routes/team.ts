@@ -1,13 +1,11 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env } from "../types";
-import { GitHubBackend } from "../backend/github";
+import type { Env, AppVariables } from "../types";
 import { ErrorResponse } from "../schemas/common";
 import { TeamResponse } from "../schemas/contributors";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
-// GET /v1/team -- cache 1 day, rate limit strong (30/2min)
-
+// GET /team
 const getTeamRoute = createRoute({
   method: "get",
   path: "/",
@@ -27,7 +25,7 @@ const getTeamRoute = createRoute({
 });
 
 app.openapi(getTeamRoute, async (c) => {
-  const backend = new GitHubBackend(c.env.GITHUB_TOKEN);
+  const backend = c.get("backend");
 
   try {
     const members = await backend.members(c.env.ORGANIZATION);
@@ -38,10 +36,9 @@ app.openapi(getTeamRoute, async (c) => {
         avatar_url: m.avatarUrl,
         url: m.url,
         bio: m.bio,
-        gpg_key:
-          m.gpgKeys.ids.length > 0
-            ? { id: m.gpgKeys.ids[0], url: m.gpgKeys.url }
-            : null,
+        gpg_key: m.gpgKeys.ids[0]
+          ? { id: m.gpgKeys.ids[0], url: m.gpgKeys.url }
+          : null,
       })),
       200,
     );

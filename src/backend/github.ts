@@ -4,10 +4,9 @@ import type {
   BackendAsset,
   BackendContributor,
   BackendMember,
-  BackendRateLimit,
-} from "./backend";
+} from "./types";
 
-/* github api response types -- all the shapes that github sends back */
+// GitHub API response types — all the shapes that GitHub sends back
 
 interface GitHubAsset {
   name: string;
@@ -46,30 +45,16 @@ interface GitHubGpgKey {
   key_id: string;
 }
 
-interface GitHubRateLimitResponse {
-  rate: {
-    limit: number;
-    remaining: number;
-    reset: number; // Unix epoch seconds
-  };
-}
-
-// helper functions
-
-/* formats an ISO 8601 datetime to bare datetime without timezone suffix -- so "2025-01-15T10:30:00Z" becomes "2025-01-15T10:30:00" */
+// Formats an ISO 8601 datetime to bare datetime without timezone suffix or milliseconds.
+// "2025-01-15T10:30:00.123Z" becomes "2025-01-15T10:30:00"
 function formatDatetime(isoString: string): string {
-  // Strip trailing Z or timezone offset
-  return isoString.replace(/Z$/, "").replace(/[+-]\d{2}:\d{2}$/, "");
+  return isoString
+    .replace(/\.\d{3}Z$/, "")
+    .replace(/Z$/, "")
+    .replace(/[+-]\d{2}:\d{2}$/, "");
 }
 
-// converts unix epoch seconds to a bare utc datetime string
-function epochToDatetime(epoch: number): string {
-  const d = new Date(epoch * 1000);
-  return d.toISOString().replace(/\.\d{3}Z$/, "");
-}
-
-/* GitHubBackend class -- implements the Backend interface using the github api */
-
+// GitHubBackend class — implements the Backend interface using the GitHub API
 export class GitHubBackend implements Backend {
   private readonly baseUrl = "https://api.github.com";
   private readonly rawBaseUrl = "https://raw.githubusercontent.com";
@@ -177,18 +162,5 @@ export class GitHubBackend implements Backend {
     );
 
     return members;
-  }
-
-  async rateLimit(): Promise<BackendRateLimit | null> {
-    try {
-      const data = await this.fetchJson<GitHubRateLimitResponse>(`${this.baseUrl}/rate_limit`);
-      return {
-        limit: data.rate.limit,
-        remaining: data.rate.remaining,
-        reset: epochToDatetime(data.rate.reset),
-      };
-    } catch {
-      return null;
-    }
   }
 }

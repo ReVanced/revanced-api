@@ -1,10 +1,9 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import type { Env } from "../types";
-import { createDb } from "../db/client";
+import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import type { Env, AppVariables } from "../types";
 import { announcements } from "../db/schema";
 import { eq, desc } from "drizzle-orm";
 import { authMiddleware } from "../auth/auth";
-import { ErrorResponse } from "../schemas/common";
+import { ErrorResponse, AnnouncementIdParam } from "../schemas/common";
 import {
   AnnouncementResponse,
   AnnouncementsResponse,
@@ -12,10 +11,9 @@ import {
   UpdateAnnouncementBody,
 } from "../schemas/announcements";
 
-const app = new OpenAPIHono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
-/* GET /v1/announcements -- returns all announcements as a flat array ordered by id desc, no auth needed, designed for full edge caching (cache: 5min, rate limit: strong 30/2min) */
-
+// GET /announcements — list all announcements ordered by newest first
 const listRoute = createRoute({
   method: "get",
   path: "/",
@@ -31,7 +29,7 @@ const listRoute = createRoute({
 });
 
 app.openapi(listRoute, async (c) => {
-  const db = createDb(c.env.DB);
+  const db = c.get("db");
   const rows = await db.select().from(announcements).orderBy(desc(announcements.id));
 
   return c.json(
@@ -48,8 +46,7 @@ app.openapi(listRoute, async (c) => {
   );
 });
 
-// POST /v1/announcements (protected, needs bearer token auth)
-
+// POST /announcements — create an announcement (protected)
 const createAnnouncementRoute = createRoute({
   method: "post",
   path: "/",
@@ -57,6 +54,7 @@ const createAnnouncementRoute = createRoute({
   summary: "Create an announcement",
   description: "Create a new announcement. Requires bearer token authentication.",
   security: [{ Bearer: [] }],
+  middleware: [authMiddleware()],
   request: {
     body: { content: { "application/json": { schema: CreateAnnouncementBody } } },
   },
@@ -70,17 +68,9 @@ const createAnnouncementRoute = createRoute({
   },
 });
 
-app.use("/", async (c, next) => {
-  // Only apply auth to non-GET requests
-  if (c.req.method !== "GET") {
-    return authMiddleware()(c, next);
-  }
-  await next();
-});
-
 app.openapi(createAnnouncementRoute, async (c) => {
   const body = c.req.valid("json");
-  const db = createDb(c.env.DB);
+  const db = c.get("db");
   const now = new Date().toISOString().replace(/\.\d{3}Z$/, "");
 
   const result = await db
@@ -110,24 +100,14 @@ app.openapi(createAnnouncementRoute, async (c) => {
   );
 });
 
-/* shared id param schema used by the /:id routes below */
-
-const IdParam = z.object({
-  id: z
-    .string()
-    .regex(/^\d+$/)
-    .openapi({ description: "Announcement ID", example: "1", param: { in: "path" } }),
-});
-
-// GET /v1/announcements/:id - gets one announcement by id, no auth (cache: 5min, rate limit: weak 5/1min)
-
+// GET /announcements/:id — get a single announcement by id
 const getAnnouncementRoute = createRoute({
   method: "get",
   path: "/{id}",
   tags: ["Announcements"],
   summary: "Get an announcement",
   description: "Get an announcement by its ID",
-  request: { params: IdParam },
+  request: { params: AnnouncementIdParam },
   responses: {
     200: {
       content: { "application/json": { schema: AnnouncementResponse } },
@@ -142,29 +122,30 @@ const getAnnouncementRoute = createRoute({
 
 app.openapi(getAnnouncementRoute, async (c) => {
   const { id } = c.req.valid("param");
-  const db = createDb(c.env.DB);
-  const numId = Number(id);
+  const db = c.get("db");
 
-  const rows = await db.select().from(announcements).where(eq(announcements.id, numId));
+  const rows = await db.select().from(announcements).where(eq(announcements.id, id));
 
   if (rows.length === 0) {
     return c.json({ error: "Announcement not found" }, 404);
   }
 
   const row = rows[0];
-  return c.json({
-    id: row.id,
-    author: row.author,
-    title: row.title,
-    content: row.content,
-    created_at: row.createdAt,
-    archived_at: row.archivedAt,
-    level: row.level,
-  }, 200);
+  return c.json(
+    {
+      id: row.id,
+      author: row.author,
+      title: row.title,
+      content: row.content,
+      created_at: row.createdAt,
+      archived_at: row.archivedAt,
+      level: row.level,
+    },
+    200,
+  );
 });
 
-/* PATCH /v1/announcements/:id (bearer token required) */
-
+// PATCH /announcements/:id — update an announcement (protected)
 const updateAnnouncementRoute = createRoute({
   method: "patch",
   path: "/{id}",
@@ -172,8 +153,9 @@ const updateAnnouncementRoute = createRoute({
   summary: "Update an announcement",
   description: "Update an existing announcement. Requires bearer token authentication.",
   security: [{ Bearer: [] }],
+  middleware: [authMiddleware()],
   request: {
-    params: IdParam,
+    params: AnnouncementIdParam,
     body: { content: { "application/json": { schema: UpdateAnnouncementBody } } },
   },
   responses: {
@@ -187,49 +169,44 @@ const updateAnnouncementRoute = createRoute({
   },
 });
 
-app.use("/:id", async (c, next) => {
-  if (c.req.method !== "GET") {
-    return authMiddleware()(c, next);
-  }
-  await next();
-});
-
 app.openapi(updateAnnouncementRoute, async (c) => {
   const { id } = c.req.valid("param");
   const body = c.req.valid("json");
-  const db = createDb(c.env.DB);
-  const numId = Number(id);
+  const db = c.get("db");
 
-  // only update fields that were actually sent in the body
+  // Only update fields that were actually sent in the body
   const updates: Record<string, unknown> = {};
   if (body.author !== undefined) updates.author = body.author;
-  if (body.title !== undefined) updates.title = body.title;
+  if (body.title !== undefined && body.title !== null) updates.title = body.title;
   if (body.content !== undefined) updates.content = body.content;
   if (body.archived_at !== undefined) updates.archivedAt = body.archived_at;
   if (body.level !== undefined) updates.level = body.level;
 
   if (Object.keys(updates).length === 0) {
     // Nothing to update — just return the existing row
-    const existing = await db.select().from(announcements).where(eq(announcements.id, numId));
+    const existing = await db.select().from(announcements).where(eq(announcements.id, id));
     if (existing.length === 0) {
       return c.json({ error: "Announcement not found" }, 404);
     }
     const row = existing[0];
-    return c.json({
-      id: row.id,
-      author: row.author,
-      title: row.title,
-      content: row.content,
-      created_at: row.createdAt,
-      archived_at: row.archivedAt,
-      level: row.level,
-    }, 200);
+    return c.json(
+      {
+        id: row.id,
+        author: row.author,
+        title: row.title,
+        content: row.content,
+        created_at: row.createdAt,
+        archived_at: row.archivedAt,
+        level: row.level,
+      },
+      200,
+    );
   }
 
   const result = await db
     .update(announcements)
     .set(updates)
-    .where(eq(announcements.id, numId))
+    .where(eq(announcements.id, id))
     .returning();
 
   if (result.length === 0) {
@@ -237,19 +214,21 @@ app.openapi(updateAnnouncementRoute, async (c) => {
   }
 
   const row = result[0];
-  return c.json({
-    id: row.id,
-    author: row.author,
-    title: row.title,
-    content: row.content,
-    created_at: row.createdAt,
-    archived_at: row.archivedAt,
-    level: row.level,
-  }, 200);
+  return c.json(
+    {
+      id: row.id,
+      author: row.author,
+      title: row.title,
+      content: row.content,
+      created_at: row.createdAt,
+      archived_at: row.archivedAt,
+      level: row.level,
+    },
+    200,
+  );
 });
 
-// DELETE /v1/announcements/:id -- also needs auth
-
+// DELETE /announcements/:id — delete an announcement (protected)
 const deleteAnnouncementRoute = createRoute({
   method: "delete",
   path: "/{id}",
@@ -257,7 +236,8 @@ const deleteAnnouncementRoute = createRoute({
   summary: "Delete an announcement",
   description: "Delete an announcement. Requires bearer token authentication.",
   security: [{ Bearer: [] }],
-  request: { params: IdParam },
+  middleware: [authMiddleware()],
+  request: { params: AnnouncementIdParam },
   responses: {
     204: { description: "Announcement deleted" },
     401: { content: { "application/json": { schema: ErrorResponse } }, description: "Unauthorized" },
@@ -268,10 +248,9 @@ const deleteAnnouncementRoute = createRoute({
 
 app.openapi(deleteAnnouncementRoute, async (c) => {
   const { id } = c.req.valid("param");
-  const db = createDb(c.env.DB);
-  const numId = Number(id);
+  const db = c.get("db");
 
-  const result = await db.delete(announcements).where(eq(announcements.id, numId)).returning();
+  const result = await db.delete(announcements).where(eq(announcements.id, id)).returning();
 
   if (result.length === 0) {
     return c.json({ error: "Announcement not found" }, 404);
