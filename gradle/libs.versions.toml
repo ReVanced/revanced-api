@@ -9,8 +9,8 @@ ktor = "3.4.0"
 ktoml = "0.7.1"
 picocli = "4.7.7"
 datetime = "0.7.1"
-revanced-patcher = "21.0.0"
-revanced-library = "3.2.0-dev.1"
+revanced-patcher = "22.0.0"
+revanced-library = "4.0.0"
 caffeine = "3.2.3"
 bouncy-castle = "1.83"
 
@@ -47,8 +47,8 @@ ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
 ktoml-file = { module = "com.akuleshov7:ktoml-file", version.ref = "ktoml" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
-revanced-patcher = { module = "app.revanced:revanced-patcher", version.ref = "revanced-patcher" }
-revanced-library = { module = "app.revanced:revanced-library", version.ref = "revanced-library" }
+revanced-patcher = { module = "app.revanced:patcher", version.ref = "revanced-patcher" }
+revanced-library = { module = "app.revanced:library", version.ref = "revanced-library" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
 bouncy-castle-provider = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncy-castle" }
 bouncy-castle-pgp = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncy-castle" }

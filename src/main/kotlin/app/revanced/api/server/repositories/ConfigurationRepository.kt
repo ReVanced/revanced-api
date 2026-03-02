@@ -44,10 +44,6 @@ internal class ConfigurationRepository(
     val contributorsRepositoryNames: Map<String, String>,
     @SerialName("backend-service-name")
     val backendServiceName: String,
-    @SerialName("backend-service-main-branch")
-    val backendServiceMainBranch: String,
-    @SerialName("backend-service-prerelease-branch")
-    val backendServicePrereleaseBranch: String,
     @SerialName("api-version")
     val apiVersion: String = "v1",
     @SerialName("cors-allowed-hosts")
@@ -96,8 +92,6 @@ internal class ConfigurationRepository(
         val publicKeyFile: File,
         @SerialName("public-key-id")
         val publicKeyId: Long,
-        @SerialName("history-file")
-        val historyFile: String?,
     )
 
     /**
@@ -122,8 +116,6 @@ internal class ConfigurationRepository(
         @Serializable(with = RegexSerializer::class)
         @SerialName("downloaders-asset-regex")
         val downloadersAssetRegex: Regex,
-        @SerialName("history-file")
-        val historyFile: String?,
     )
 }
 

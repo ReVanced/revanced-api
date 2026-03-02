@@ -179,20 +179,6 @@ abstract class BackendRepository internal constructor(
     )
 
     /**
-     * Get the content of a file in a repository.
-     *
-     * @param owner The owner of the repository.
-     * @param repository The name of the repository.
-     * @param path The path to the file in the repository.
-     * @return The content of the file.
-     */
-    abstract suspend fun file(
-        owner: String,
-        repository: String,
-        path: String,
-    ): String
-
-    /**
      * Get a release of a repository.
      *
      * @param owner The owner of the repository.
@@ -205,6 +191,19 @@ abstract class BackendRepository internal constructor(
         repository: String,
         prerelease: Boolean,
     ): BackendOrganization.BackendRepository.BackendRelease
+
+    /**
+     * Get the releases of a repository.
+     *
+     * @param owner The owner of the repository.
+     * @param repository The name of the repository.
+     * @param count The maximum number of releases to get.
+     */
+    abstract suspend fun releases(
+        owner: String,
+        repository: String,
+        count: Int,
+    ): List<BackendOrganization.BackendRepository.BackendRelease>
 
     /**
      * Get the contributors of a repository.

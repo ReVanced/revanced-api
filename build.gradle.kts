@@ -44,6 +44,11 @@ ktor {
 kotlin {
     compilerOptions {
         jvmToolchain(21)
+
+        freeCompilerArgs.addAll(
+            "-Xexplicit-backing-fields",
+            "-Xcontext-parameters",
+        )
     }
 }
 
@@ -96,10 +101,6 @@ dependencies {
 
 // The maven-publish plugin is necessary to make signing work.
 publishing {
-    repositories {
-        mavenLocal()
-    }
-
     publications {
         create<MavenPublication>("revanced-api-publication") {
             from(components["java"])

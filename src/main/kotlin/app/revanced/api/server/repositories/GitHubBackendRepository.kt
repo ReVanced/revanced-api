@@ -25,12 +25,6 @@ class GitHubBackendRepository : BackendRepository(
     "https://api.github.com",
     "https://github.com",
 ) {
-    override suspend fun file(
-        owner: String,
-        repository: String,
-        path: String
-    ) = client.get("https://raw.githubusercontent.com/$owner/$repository/$path").body<String>()
-
     override suspend fun release(
         owner: String,
         repository: String,
@@ -54,6 +48,35 @@ class GitHubBackendRepository : BackendRepository(
                 )
             },
         )
+    }
+
+    override suspend fun releases(
+        owner: String,
+        repository: String,
+        count: Int
+    ): List<BackendRelease> {
+        val releases: List<GitHubRelease> = client.get(
+            Releases(
+                owner,
+                repository,
+                perPage = count,
+            ),
+        ).body()
+
+        return releases.map {
+            BackendRelease(
+                tag = it.tagName,
+                releaseNote = it.body,
+                createdAt = it.createdAt.toLocalDateTime(TimeZone.UTC),
+                prerelease = it.prerelease,
+                assets = it.assets.map { asset ->
+                    BackendAsset(
+                        name = asset.name,
+                        downloadUrl = asset.browserDownloadUrl,
+                    )
+                },
+            )
+        }
     }
 
     override suspend fun contributors(
