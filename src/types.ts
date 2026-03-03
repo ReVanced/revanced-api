@@ -21,7 +21,6 @@ export interface Env {
   PATCHES_ASSET_REGEX: string;
   PATCHES_SIGNATURE_ASSET_REGEX: string;
   PATCHES_HISTORY_FILE: string;
-  PATCHES_PUBLIC_KEY: string;
   MANAGER_REPO: string;
   MANAGER_ASSET_REGEX: string;
   MANAGER_DOWNLOADERS_REPO: string;
@@ -39,18 +38,8 @@ export interface Env {
   API_VERSION: string;
 }
 
-// Parsed configuration that is computed once per request via middleware
-export interface AppConfig {
-  patchesAssetRegex: RegExp;
-  patchesSignatureAssetRegex: RegExp;
-  managerAssetRegex: RegExp;
-  managerDownloadersAssetRegex: RegExp;
-  contributorRepos: { repo: string; name: string }[];
-}
-
 // Variables set by middleware and available on all route handlers
 export interface AppVariables {
   backend: GitHubBackend;
   db: Database;
-  config: AppConfig;
 }

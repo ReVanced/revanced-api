@@ -2,6 +2,7 @@ import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import type { Env, AppVariables } from "../types";
 import { PrereleaseQuery, ErrorResponse } from "../schemas/common";
 import { ReleaseResponse, VersionResponse, HistoryResponse, PublicKeyResponse } from "../schemas/releases";
+import patchesPublicKey from "../data/patches-public-key.txt";
 
 const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
 
@@ -19,10 +20,16 @@ const getPatchesRoute = createRoute({
   },
 });
 
+let _patchesAssetRegex: RegExp | undefined;
+let _patchesSignatureAssetRegex: RegExp | undefined;
+
 app.openapi(getPatchesRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
   const backend = c.get("backend");
-  const { patchesAssetRegex, patchesSignatureAssetRegex } = c.get("config");
+  _patchesAssetRegex ??= new RegExp(c.env.PATCHES_ASSET_REGEX);
+  _patchesSignatureAssetRegex ??= new RegExp(c.env.PATCHES_SIGNATURE_ASSET_REGEX);
+  const patchesAssetRegex = _patchesAssetRegex;
+  const patchesSignatureAssetRegex = _patchesSignatureAssetRegex;
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.PATCHES_REPO, prerelease === "true");
@@ -118,7 +125,7 @@ const getPatchesKeysRoute = createRoute({
 
 app.openapi(getPatchesKeysRoute, (c) => {
   return c.json({
-    patches_public_key: c.env.PATCHES_PUBLIC_KEY,
+    patches_public_key: patchesPublicKey,
   }, 200);
 });
 

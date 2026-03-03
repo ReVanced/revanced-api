@@ -24,9 +24,15 @@ const getContributorsRoute = createRoute({
   },
 });
 
+let _contributorRepos: { repo: string; name: string }[] | undefined;
+
 app.openapi(getContributorsRoute, async (c) => {
   const backend = c.get("backend");
-  const { contributorRepos } = c.get("config");
+  _contributorRepos ??= c.env.CONTRIBUTORS_REPOS.split(",").map((entry) => {
+    const [repo, ...nameParts] = entry.trim().split(":");
+    return { repo: repo.trim(), name: nameParts.join(":").trim() };
+  });
+  const contributorRepos = _contributorRepos;
   const org = c.env.ORGANIZATION;
 
   try {

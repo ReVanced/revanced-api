@@ -19,10 +19,13 @@ const getManagerRoute = createRoute({
   },
 });
 
+let _managerAssetRegex: RegExp | undefined;
+
 app.openapi(getManagerRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
   const backend = c.get("backend");
-  const { managerAssetRegex } = c.get("config");
+  _managerAssetRegex ??= new RegExp(c.env.MANAGER_ASSET_REGEX);
+  const managerAssetRegex = _managerAssetRegex;
 
   try {
     const release = await backend.release(c.env.ORGANIZATION, c.env.MANAGER_REPO, prerelease === "true");
@@ -113,10 +116,13 @@ const getDownloadersRoute = createRoute({
   },
 });
 
+let _managerDownloadersAssetRegex: RegExp | undefined;
+
 app.openapi(getDownloadersRoute, async (c) => {
   const { prerelease } = c.req.valid("query");
   const backend = c.get("backend");
-  const { managerDownloadersAssetRegex } = c.get("config");
+  _managerDownloadersAssetRegex ??= new RegExp(c.env.MANAGER_DOWNLOADERS_ASSET_REGEX);
+  const managerDownloadersAssetRegex = _managerDownloadersAssetRegex;
 
   try {
     const release = await backend.release(

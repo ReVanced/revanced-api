@@ -21,7 +21,10 @@ API_VERSION = "v1"
 # Secrets (set via `wrangler secret put` or Cloudflare dashboard):
 # API_TOKEN      — Bearer token for protected routes
 # GITHUB_TOKEN   — GitHub API token (optional, increases rate limits)
-# PATCHES_PUBLIC_KEY is set via `wrangler secret put PATCHES_PUBLIC_KEY` (contains the PGP public key for verifying patches assets)
+
+[[rules]]
+type = "Text"
+globs = ["**/*.txt"]
 
 [[d1_databases]]
 binding = "DB"

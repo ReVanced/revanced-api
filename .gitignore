@@ -1,14 +1,6 @@
+.vscode/
 node_modules/
 dist/
 .wrangler/
 .dev.vars
-
-# Editor
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
+.env

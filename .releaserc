@@ -16,47 +16,20 @@
     ],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    "gradle-semantic-release-plugin",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
     [
       "@semantic-release/git",
       {
         "assets": [
           "CHANGELOG.md",
-          "gradle.properties"
+          "package.json"
         ],
         "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": [
-          {
-            "path": "build/libs/*"
-          }
-        ],
-        "successComment": false
-      }
-    ],
-    [
-      "@codedependant/semantic-release-docker",
-      {
-        "dockerImage": "revanced-api",
-        "dockerTags": [
-           "{{#if prerelease.[0]}}dev{{else}}main{{/if}}",
-           "{{#unless prerelease.[0]}}latest{{/unless}}",
-           "{{version}}"
-        ],
-        "dockerRegistry": "ghcr.io",
-        "dockerProject": "revanced",
-        "dockerPlatform": [
-          "linux/amd64",
-          "linux/arm64"
-        ],
-        "dockerArgs": {
-           "GITHUB_ACTOR": null,
-           "GITHUB_TOKEN": null
-        }
       }
     ],
     [
