@@ -1,8 +1,9 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import type { Env } from "../types";
 import { authMiddleware } from "../auth/auth";
-import { ErrorResponseSchema, AnnouncementIdParamSchema } from "../schemas/common";
+import { ErrorResponseSchema } from "../schemas/common";
 import {
+  AnnouncementIdParamSchema,
   AnnouncementResponseSchema,
   AnnouncementsResponseSchema,
   CreateAnnouncementBodySchema,
@@ -61,35 +62,6 @@ app.openapi(
   async (c) => {
     const body = c.req.valid("json");
     return c.json(await announcementsService.createAnnouncement(c.env, body), 201);
-  },
-);
-
-app.openapi(
-  createRoute({
-    method: "get",
-    path: "/{id}",
-    tags: ["Announcements"],
-    summary: "Get an announcement",
-    description: "Get an announcement by its ID.",
-    request: { params: AnnouncementIdParamSchema },
-    responses: {
-      200: {
-        content: { "application/json": { schema: AnnouncementResponseSchema } },
-        description: "The announcement.",
-      },
-      404: {
-        content: { "application/json": { schema: ErrorResponseSchema } },
-        description: "Announcement not found.",
-      },
-    },
-  }),
-  async (c) => {
-    const { id } = c.req.valid("param");
-    const result = await announcementsService.getAnnouncement(c.env, id);
-    if (!result) {
-      return c.json({ error: "Announcement not found" }, 404);
-    }
-    return c.json(result, 200);
   },
 );
 

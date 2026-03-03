@@ -42,14 +42,6 @@ export async function createAnnouncement(
   return formatRow(result[0]);
 }
 
-export async function getAnnouncement(env: Env, id: number) {
-  const database = getDatabase(env.DB);
-  const rows = await database.select().from(announcements).where(eq(announcements.id, id));
-
-  if (rows.length === 0) return null;
-  return formatRow(rows[0]);
-}
-
 export async function updateAnnouncement(
   env: Env,
   id: number,
@@ -64,14 +56,17 @@ export async function updateAnnouncement(
   const database = getDatabase(env.DB);
 
   const updates: Record<string, unknown> = {};
-  if (body.author !== undefined) updates.author = body.author;
-  if (body.title !== undefined && body.title !== null) updates.title = body.title;
-  if (body.content !== undefined) updates.content = body.content;
-  if (body.archived_at !== undefined) updates.archivedAt = body.archived_at;
-  if (body.level !== undefined && body.level !== null) updates.level = body.level;
+  if (body.author) updates.author = body.author;
+  if (body.title) updates.title = body.title;
+  if (body.content) updates.content = body.content;
+  if (body.archived_at) updates.archivedAt = body.archived_at;
+  if (body.level) updates.level = body.level;
 
   if (Object.keys(updates).length === 0) {
-    return getAnnouncement(env, id);
+    const database = getDatabase(env.DB);
+    const rows = await database.select().from(announcements).where(eq(announcements.id, id));
+    if (rows.length === 0) return null;
+    return formatRow(rows[0]);
   }
 
   const result = await database

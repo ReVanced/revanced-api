@@ -11,10 +11,3 @@ export const PrereleaseQuerySchema = z.object({
 export const ErrorResponseSchema = z.object({
   error: z.string().openapi({ example: "Something went wrong" }),
 });
-
-export const AnnouncementIdParamSchema = z.object({
-  id: z.coerce
-    .number()
-    .int()
-    .openapi({ description: "Announcement ID", example: 1, param: { in: "path" } }),
-});

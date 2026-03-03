@@ -1,5 +1,12 @@
 import { z } from "@hono/zod-openapi";
 
+export const AnnouncementIdParamSchema = z.object({
+  id: z.coerce
+    .number()
+    .int()
+    .openapi({ description: "Announcement ID.", example: 1, param: { in: "path" } }),
+});
+
 export const AnnouncementResponseSchema = z
   .object({
     id: z.number().int().openapi({ example: 1 }),
