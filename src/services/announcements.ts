@@ -1,0 +1,91 @@
+import { getDatabase } from "../db/client";
+import { announcements } from "../db/schema";
+import { eq, desc } from "drizzle-orm";
+import type { Env } from "../types";
+
+function formatRow(row: typeof announcements.$inferSelect) {
+  return {
+    id: row.id,
+    author: row.author,
+    title: row.title,
+    content: row.content,
+    created_at: row.createdAt,
+    archived_at: row.archivedAt,
+    level: row.level,
+  };
+}
+
+export async function listAnnouncements(env: Env) {
+  const database = getDatabase(env.DB);
+  const rows = await database.select().from(announcements).orderBy(desc(announcements.id));
+  return rows.map(formatRow);
+}
+
+export async function createAnnouncement(
+  env: Env,
+  body: { author?: string; title: string; content?: string; level?: number },
+) {
+  const database = getDatabase(env.DB);
+  const now = new Date().toISOString().replace(/\.\d{3}Z$/, "");
+
+  const result = await database
+    .insert(announcements)
+    .values({
+      author: body.author ?? null,
+      title: body.title,
+      content: body.content ?? null,
+      createdAt: now,
+      level: body.level ?? 0,
+    })
+    .returning();
+
+  return formatRow(result[0]);
+}
+
+export async function getAnnouncement(env: Env, id: number) {
+  const database = getDatabase(env.DB);
+  const rows = await database.select().from(announcements).where(eq(announcements.id, id));
+
+  if (rows.length === 0) return null;
+  return formatRow(rows[0]);
+}
+
+export async function updateAnnouncement(
+  env: Env,
+  id: number,
+  body: {
+    author?: string;
+    title?: string | null;
+    content?: string | null;
+    archived_at?: string | null;
+    level?: number | null;
+  },
+) {
+  const database = getDatabase(env.DB);
+
+  const updates: Record<string, unknown> = {};
+  if (body.author !== undefined) updates.author = body.author;
+  if (body.title !== undefined && body.title !== null) updates.title = body.title;
+  if (body.content !== undefined) updates.content = body.content;
+  if (body.archived_at !== undefined) updates.archivedAt = body.archived_at;
+  if (body.level !== undefined && body.level !== null) updates.level = body.level;
+
+  if (Object.keys(updates).length === 0) {
+    return getAnnouncement(env, id);
+  }
+
+  const result = await database
+    .update(announcements)
+    .set(updates)
+    .where(eq(announcements.id, id))
+    .returning();
+
+  if (result.length === 0) return null;
+  return formatRow(result[0]);
+}
+
+export async function deleteAnnouncement(env: Env, id: number) {
+  const database = getDatabase(env.DB);
+  const result = await database.delete(announcements).where(eq(announcements.id, id)).returning();
+  return result.length > 0;
+}

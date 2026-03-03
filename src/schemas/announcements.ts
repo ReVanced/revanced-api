@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
 
-export const AnnouncementResponse = z
+export const AnnouncementResponseSchema = z
   .object({
     id: z.number().int().openapi({ example: 1 }),
     author: z.string().nullable().openapi({ example: "ReVanced" }),
@@ -12,9 +12,9 @@ export const AnnouncementResponse = z
   })
   .openapi("Announcement");
 
-export const AnnouncementsResponse = z.array(AnnouncementResponse);
+export const AnnouncementsResponseSchema = z.array(AnnouncementResponseSchema);
 
-export const CreateAnnouncementBody = z
+export const CreateAnnouncementBodySchema = z
   .object({
     author: z.string().optional().openapi({ example: "ReVanced" }),
     title: z.string().openapi({ example: "Welcome" }),
@@ -23,7 +23,7 @@ export const CreateAnnouncementBody = z
   })
   .openapi("CreateAnnouncement");
 
-export const UpdateAnnouncementBody = z
+export const UpdateAnnouncementBodySchema = z
   .object({
     author: z.string().optional().openapi({ example: "ReVanced" }),
     title: z.string().optional().openapi({ example: "Updated title" }),

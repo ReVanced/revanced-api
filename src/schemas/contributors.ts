@@ -15,7 +15,7 @@ export const ContributableSchema = z
   })
   .openapi("Contributable");
 
-export const ContributorsResponse = z.array(ContributableSchema);
+export const ContributorsResponseSchema = z.array(ContributableSchema);
 
 export const GpgKeySchema = z
   .object({
@@ -34,4 +34,4 @@ export const TeamMemberSchema = z
   })
   .openapi("TeamMember");
 
-export const TeamResponse = z.array(TeamMemberSchema);
+export const TeamResponseSchema = z.array(TeamMemberSchema);

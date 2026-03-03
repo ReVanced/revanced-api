@@ -1,176 +1,159 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env, AppVariables } from "../types";
-import { PrereleaseQuery, ErrorResponse } from "../schemas/common";
-import { ReleaseResponse, VersionResponse, HistoryResponse } from "../schemas/releases";
+import type { Env } from "../types";
+import { PrereleaseQuerySchema, ErrorResponseSchema } from "../schemas/common";
+import { ReleaseResponseSchema, VersionResponseSchema, HistoryResponseSchema } from "../schemas/releases";
+import * as managerService from "../services/manager";
 
-const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
+const app = new OpenAPIHono<{ Bindings: Env }>();
 
-// GET /manager
-const getManagerRoute = createRoute({
-  method: "get",
-  path: "/",
-  tags: ["Manager"],
-  summary: "Get current manager release",
-  description: "Get the current manager release",
-  request: { query: PrereleaseQuery },
-  responses: {
-    200: { content: { "application/json": { schema: ReleaseResponse } }, description: "The latest manager release" },
-    500: { content: { "application/json": { schema: ErrorResponse } }, description: "GitHub API error" },
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/",
+    tags: ["Manager"],
+    summary: "Get current manager release",
+    description: "Get the current manager release.",
+    request: { query: PrereleaseQuerySchema },
+    responses: {
+      200: {
+        content: { "application/json": { schema: ReleaseResponseSchema } },
+        description: "The latest manager release.",
+      },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
+    },
+  }),
+  async (c) => {
+    const { prerelease } = c.req.valid("query");
+    try {
+      return c.json(await managerService.getRelease(c.env, prerelease === "true"), 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
+);
 
-let _managerAssetRegex: RegExp | undefined;
-
-app.openapi(getManagerRoute, async (c) => {
-  const { prerelease } = c.req.valid("query");
-  const backend = c.get("backend");
-  _managerAssetRegex ??= new RegExp(c.env.MANAGER_ASSET_REGEX);
-  const managerAssetRegex = _managerAssetRegex;
-
-  try {
-    const release = await backend.release(c.env.ORGANIZATION, c.env.MANAGER_REPO, prerelease === "true");
-    const asset = release.assets.find((a) => managerAssetRegex.test(a.name));
-
-    return c.json({
-      version: release.tag,
-      created_at: release.createdAt,
-      description: release.releaseNote,
-      download_url: asset?.downloadUrl ?? "",
-    }, 200);
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
-
-// GET /manager/version
-const getManagerVersionRoute = createRoute({
-  method: "get",
-  path: "/version",
-  tags: ["Manager"],
-  summary: "Get current manager release version",
-  description: "Get the current manager release version",
-  request: { query: PrereleaseQuery },
-  responses: {
-    200: { content: { "application/json": { schema: VersionResponse } }, description: "The current manager release version" },
-    500: { content: { "application/json": { schema: ErrorResponse } }, description: "GitHub API error" },
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/version",
+    tags: ["Manager"],
+    summary: "Get current manager release version",
+    description: "Get the current manager release version.",
+    request: { query: PrereleaseQuerySchema },
+    responses: {
+      200: {
+        content: { "application/json": { schema: VersionResponseSchema } },
+        description: "The current manager release version.",
+      },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
+    },
+  }),
+  async (c) => {
+    const { prerelease } = c.req.valid("query");
+    try {
+      return c.json(await managerService.getVersion(c.env, prerelease === "true"), 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
+);
 
-app.openapi(getManagerVersionRoute, async (c) => {
-  const { prerelease } = c.req.valid("query");
-  const backend = c.get("backend");
-
-  try {
-    const release = await backend.release(c.env.ORGANIZATION, c.env.MANAGER_REPO, prerelease === "true");
-    return c.json({ version: release.tag }, 200);
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
-
-// GET /manager/history
-const getManagerHistoryRoute = createRoute({
-  method: "get",
-  path: "/history",
-  tags: ["Manager"],
-  summary: "Get manager release history",
-  description: "Get the manager release history (changelog)",
-  request: { query: PrereleaseQuery },
-  responses: {
-    200: { content: { "application/json": { schema: HistoryResponse } }, description: "The manager release history" },
-    404: { description: "No manager release history configured" },
-    500: { content: { "application/json": { schema: ErrorResponse } }, description: "GitHub API error" },
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/history",
+    tags: ["Manager"],
+    summary: "Get manager release history",
+    description: "Get the manager release history (changelog).",
+    request: { query: PrereleaseQuerySchema },
+    responses: {
+      200: {
+        content: { "application/json": { schema: HistoryResponseSchema } },
+        description: "The manager release history.",
+      },
+      404: { description: "No manager release history configured." },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
+    },
+  }),
+  async (c) => {
+    const { prerelease } = c.req.valid("query");
+    try {
+      const result = await managerService.getHistory(c.env, prerelease === "true");
+      if (!result) {
+        return c.body(null, 404);
+      }
+      return c.json(result, 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
+);
 
-app.openapi(getManagerHistoryRoute, async (c) => {
-  const { prerelease } = c.req.valid("query");
-  const historyFile = c.env.MANAGER_HISTORY_FILE;
-
-  if (!historyFile) {
-    return c.body(null, 404);
-  }
-
-  const backend = c.get("backend");
-  const branch = prerelease === "true" ? c.env.PRERELEASE_BRANCH : c.env.MAIN_BRANCH;
-
-  try {
-    const content = await backend.fileContent(c.env.ORGANIZATION, c.env.MANAGER_REPO, branch, historyFile);
-    return c.json({ history: content }, 200);
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
-
-// GET /manager/downloaders
-const getDownloadersRoute = createRoute({
-  method: "get",
-  path: "/downloaders",
-  tags: ["Manager"],
-  summary: "Get current manager downloaders release",
-  description: "Get the current manager downloaders release",
-  request: { query: PrereleaseQuery },
-  responses: {
-    200: { content: { "application/json": { schema: ReleaseResponse } }, description: "The latest manager downloaders release" },
-    500: { content: { "application/json": { schema: ErrorResponse } }, description: "GitHub API error" },
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/downloaders",
+    tags: ["Manager"],
+    summary: "Get current manager downloaders release",
+    description: "Get the current manager downloaders release.",
+    request: { query: PrereleaseQuerySchema },
+    responses: {
+      200: {
+        content: { "application/json": { schema: ReleaseResponseSchema } },
+        description: "The latest manager downloaders release.",
+      },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
+    },
+  }),
+  async (c) => {
+    const { prerelease } = c.req.valid("query");
+    try {
+      return c.json(await managerService.getDownloadersRelease(c.env, prerelease === "true"), 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
+);
 
-let _managerDownloadersAssetRegex: RegExp | undefined;
-
-app.openapi(getDownloadersRoute, async (c) => {
-  const { prerelease } = c.req.valid("query");
-  const backend = c.get("backend");
-  _managerDownloadersAssetRegex ??= new RegExp(c.env.MANAGER_DOWNLOADERS_ASSET_REGEX);
-  const managerDownloadersAssetRegex = _managerDownloadersAssetRegex;
-
-  try {
-    const release = await backend.release(
-      c.env.ORGANIZATION,
-      c.env.MANAGER_DOWNLOADERS_REPO,
-      prerelease === "true",
-    );
-    const asset = release.assets.find((a) => managerDownloadersAssetRegex.test(a.name));
-
-    return c.json({
-      version: release.tag,
-      created_at: release.createdAt,
-      description: release.releaseNote,
-      download_url: asset?.downloadUrl ?? "",
-    }, 200);
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
-
-// GET /manager/downloaders/version
-const getDownloadersVersionRoute = createRoute({
-  method: "get",
-  path: "/downloaders/version",
-  tags: ["Manager"],
-  summary: "Get current manager downloaders release version",
-  description: "Get the current manager downloaders release version",
-  request: { query: PrereleaseQuery },
-  responses: {
-    200: { content: { "application/json": { schema: VersionResponse } }, description: "The current manager downloaders release version" },
-    500: { content: { "application/json": { schema: ErrorResponse } }, description: "GitHub API error" },
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/downloaders/version",
+    tags: ["Manager"],
+    summary: "Get current manager downloaders release version",
+    description: "Get the current manager downloaders release version.",
+    request: { query: PrereleaseQuerySchema },
+    responses: {
+      200: {
+        content: { "application/json": { schema: VersionResponseSchema } },
+        description: "The current manager downloaders release version.",
+      },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
+    },
+  }),
+  async (c) => {
+    const { prerelease } = c.req.valid("query");
+    try {
+      return c.json(await managerService.getDownloadersVersion(c.env, prerelease === "true"), 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
-
-app.openapi(getDownloadersVersionRoute, async (c) => {
-  const { prerelease } = c.req.valid("query");
-  const backend = c.get("backend");
-
-  try {
-    const release = await backend.release(
-      c.env.ORGANIZATION,
-      c.env.MANAGER_DOWNLOADERS_REPO,
-      prerelease === "true",
-    );
-    return c.json({ version: release.tag }, 200);
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
+);
 
 export default app;

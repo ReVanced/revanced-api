@@ -1,10 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
-import type { Env, AppVariables, Database } from "./types";
-import { GitHubBackend } from "./backend/github";
-import { createDb } from "./db/client";
+import type { Env } from "./types";
 
-import pkg from "../package.json";
+import packageJson from "../package.json";
 import patchesApp from "./routes/patches";
 import managerApp from "./routes/manager";
 import announcementsApp from "./routes/announcements";
@@ -12,39 +10,22 @@ import contributorsApp from "./routes/contributors";
 import teamApp from "./routes/team";
 import aboutApp from "./routes/about";
 
-const VERSION = pkg.version;
+const VERSION = packageJson.version;
 
-type AppBindings = { Bindings: Env; Variables: AppVariables };
+type AppBindings = { Bindings: Env };
 
 const app = new OpenAPIHono<AppBindings>();
+const v1App = new OpenAPIHono<AppBindings>();
 
-// v1 sub-app — all routes are mounted here under a single prefix
-const v1 = new OpenAPIHono<AppBindings>();
+v1App.route("/patches", patchesApp);
+v1App.route("/manager", managerApp);
+v1App.route("/announcements", announcementsApp);
+v1App.route("/contributors", contributorsApp);
+v1App.route("/team", teamApp);
+v1App.route("/about", aboutApp);
 
-// Middleware: share GitHubBackend and db across all routes (lazily cached)
-let _backend: GitHubBackend | undefined;
-let _db: Database | undefined;
+app.route("/v1", v1App);
 
-v1.use("*", async (c, next) => {
-  _backend ??= new GitHubBackend(c.env.GITHUB_TOKEN);
-  _db ??= createDb(c.env.DB);
-
-  c.set("backend", _backend);
-  c.set("db", _db);
-
-  await next();
-});
-
-v1.route("/patches", patchesApp);
-v1.route("/manager", managerApp);
-v1.route("/announcements", announcementsApp);
-v1.route("/contributors", contributorsApp);
-v1.route("/team", teamApp);
-v1.route("/about", aboutApp);
-
-app.route("/v1", v1);
-
-// OpenAPI spec endpoint
 app.doc("/openapi", () => ({
   openapi: "3.1.0",
   info: {
@@ -67,7 +48,6 @@ app.doc("/openapi", () => ({
   ],
 }));
 
-// Swagger UI served at root
 app.get("/", swaggerUI({ url: "/openapi" }));
 
 export default app;

@@ -6,8 +6,6 @@ import type {
   BackendMember,
 } from "./types";
 
-// GitHub API response types — all the shapes that GitHub sends back
-
 interface GitHubAsset {
   name: string;
   browser_download_url: string;
@@ -45,8 +43,6 @@ interface GitHubGpgKey {
   key_id: string;
 }
 
-// Formats an ISO 8601 datetime to bare datetime without timezone suffix or milliseconds.
-// "2025-01-15T10:30:00.123Z" becomes "2025-01-15T10:30:00"
 function formatDatetime(isoString: string): string {
   return isoString
     .replace(/\.\d{3}Z$/, "")
@@ -54,33 +50,28 @@ function formatDatetime(isoString: string): string {
     .replace(/[+-]\d{2}:\d{2}$/, "");
 }
 
-// GitHubBackend class — implements the Backend interface using the GitHub API
 export class GitHubBackend implements Backend {
   private readonly baseUrl = "https://api.github.com";
   private readonly rawBaseUrl = "https://raw.githubusercontent.com";
-  private readonly token?: string;
+  private readonly headers: HeadersInit;
 
   constructor(token?: string) {
-    this.token = token;
-  }
-
-  private headers(): HeadersInit {
-    const h: Record<string, string> = {
+    const headers: Record<string, string> = {
       Accept: "application/vnd.github+json",
       "User-Agent": "revanced-api",
     };
-    if (this.token) {
-      h["Authorization"] = `Bearer ${this.token}`;
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
-    return h;
+    this.headers = headers;
   }
 
   private async fetchJson<T>(url: string): Promise<T> {
-    const res = await fetch(url, { headers: this.headers() });
-    if (!res.ok) {
-      throw new Error(`GitHub API error: ${res.status} ${res.statusText} — ${url}`);
+    const response = await fetch(url, { headers: this.headers });
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText} — ${url}`);
     }
-    return res.json() as Promise<T>;
+    return response.json() as Promise<T>;
   }
 
   async release(owner: string, repo: string, prerelease: boolean): Promise<BackendRelease> {
@@ -106,9 +97,9 @@ export class GitHubBackend implements Backend {
       createdAt: formatDatetime(release.created_at),
       prerelease: release.prerelease,
       assets: release.assets.map(
-        (a): BackendAsset => ({
-          name: a.name,
-          downloadUrl: a.browser_download_url,
+        (asset): BackendAsset => ({
+          name: asset.name,
+          downloadUrl: asset.browser_download_url,
         }),
       ),
     };
@@ -116,11 +107,11 @@ export class GitHubBackend implements Backend {
 
   async fileContent(owner: string, repo: string, branch: string, path: string): Promise<string> {
     const url = `${this.rawBaseUrl}/${owner}/${repo}/${branch}/${path}`;
-    const res = await fetch(url, { headers: this.headers() });
-    if (!res.ok) {
-      throw new Error(`GitHub raw file error: ${res.status} ${res.statusText} — ${url}`);
+    const response = await fetch(url, { headers: this.headers });
+    if (!response.ok) {
+      throw new Error(`GitHub raw file error: ${response.status} ${response.statusText} — ${url}`);
     }
-    return res.text();
+    return response.text();
   }
 
   async contributors(owner: string, repo: string): Promise<BackendContributor[]> {
@@ -128,17 +119,17 @@ export class GitHubBackend implements Backend {
       `${this.baseUrl}/repos/${owner}/${repo}/contributors?per_page=100`,
     );
 
-    return contributors.map((c) => ({
-      name: c.login,
-      avatarUrl: c.avatar_url,
-      url: c.html_url,
-      contributions: c.contributions,
+    return contributors.map((contributor) => ({
+      name: contributor.login,
+      avatarUrl: contributor.avatar_url,
+      url: contributor.html_url,
+      contributions: contributor.contributions,
     }));
   }
 
-  async members(org: string): Promise<BackendMember[]> {
+  async members(organization: string): Promise<BackendMember[]> {
     const publicMembers = await this.fetchJson<GitHubMember[]>(
-      `${this.baseUrl}/orgs/${org}/public_members`,
+      `${this.baseUrl}/orgs/${organization}/public_members`,
     );
 
     const members = await Promise.all(
@@ -154,7 +145,7 @@ export class GitHubBackend implements Backend {
           url: user.html_url,
           bio: user.bio,
           gpgKeys: {
-            ids: gpgKeys.map((k) => k.key_id),
+            ids: gpgKeys.map((key) => key.key_id),
             url: `https://github.com/${user.login}.gpg`,
           },
         } satisfies BackendMember;
@@ -162,5 +153,9 @@ export class GitHubBackend implements Backend {
     );
 
     return members;
+  }
+
+  repositoryUrl(owner: string, repo: string): string {
+    return `https://github.com/${owner}/${repo}`;
   }
 }

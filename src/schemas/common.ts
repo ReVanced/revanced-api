@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
 
-export const PrereleaseQuery = z.object({
+export const PrereleaseQuerySchema = z.object({
   prerelease: z
     .enum(["true", "false"])
     .optional()
@@ -8,11 +8,11 @@ export const PrereleaseQuery = z.object({
     .openapi({ description: "Whether to get prerelease data", example: "false" }),
 });
 
-export const ErrorResponse = z.object({
+export const ErrorResponseSchema = z.object({
   error: z.string().openapi({ example: "Something went wrong" }),
 });
 
-export const AnnouncementIdParam = z.object({
+export const AnnouncementIdParamSchema = z.object({
   id: z.coerce
     .number()
     .int()

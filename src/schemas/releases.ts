@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
 
-export const ReleaseResponse = z
+export const ReleaseResponseSchema = z
   .object({
     version: z.string().openapi({ example: "v4.0.0" }),
     created_at: z.string().openapi({ example: "2025-01-15T10:30:00" }),
@@ -21,23 +21,23 @@ export const ReleaseResponse = z
   })
   .openapi("Release");
 
-export const VersionResponse = z
+export const VersionResponseSchema = z
   .object({
     version: z.string().openapi({ example: "v4.0.0" }),
   })
   .openapi("Version");
 
-export const HistoryResponse = z
+export const HistoryResponseSchema = z
   .object({
     history: z.string().openapi({ example: "# Changelog\n\n## v4.0.0\n..." }),
   })
   .openapi("History");
 
-export const PublicKeyResponse = z
+export const PublicKeyResponseSchema = z
   .object({
     patches_public_key: z.string().openapi({
       example: "-----BEGIN PGP PUBLIC KEY BLOCK-----\n...\n-----END PGP PUBLIC KEY BLOCK-----",
-      description: "The PGP public key for verifying patches assets",
+      description: "The PGP public key for verifying patches assets.",
     }),
   })
   .openapi("PublicKey");

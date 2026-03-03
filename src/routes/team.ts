@@ -1,50 +1,36 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Env, AppVariables } from "../types";
-import { ErrorResponse } from "../schemas/common";
-import { TeamResponse } from "../schemas/contributors";
+import type { Env } from "../types";
+import { ErrorResponseSchema } from "../schemas/common";
+import { TeamResponseSchema } from "../schemas/contributors";
+import * as teamService from "../services/team";
 
-const app = new OpenAPIHono<{ Bindings: Env; Variables: AppVariables }>();
+const app = new OpenAPIHono<{ Bindings: Env }>();
 
-// GET /team
-const getTeamRoute = createRoute({
-  method: "get",
-  path: "/",
-  tags: ["API"],
-  summary: "Get team members",
-  description: "Get the list of team members from the organization",
-  responses: {
-    200: {
-      content: { "application/json": { schema: TeamResponse } },
-      description: "The list of team members",
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/",
+    tags: ["API"],
+    summary: "Get team members",
+    description: "Get the list of team members from the organization.",
+    responses: {
+      200: {
+        content: { "application/json": { schema: TeamResponseSchema } },
+        description: "The list of team members.",
+      },
+      500: {
+        content: { "application/json": { schema: ErrorResponseSchema } },
+        description: "GitHub API error.",
+      },
     },
-    500: {
-      content: { "application/json": { schema: ErrorResponse } },
-      description: "GitHub API error",
-    },
+  }),
+  async (c) => {
+    try {
+      return c.json(await teamService.getTeamMembers(c.env), 200);
+    } catch (error) {
+      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
+    }
   },
-});
-
-app.openapi(getTeamRoute, async (c) => {
-  const backend = c.get("backend");
-
-  try {
-    const members = await backend.members(c.env.ORGANIZATION);
-
-    return c.json(
-      members.map((m) => ({
-        name: m.name,
-        avatar_url: m.avatarUrl,
-        url: m.url,
-        bio: m.bio,
-        gpg_key: m.gpgKeys.ids[0]
-          ? { id: m.gpgKeys.ids[0], url: m.gpgKeys.url }
-          : null,
-      })),
-      200,
-    );
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
-  }
-});
+);
 
 export default app;
