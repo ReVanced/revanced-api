@@ -180,7 +180,7 @@ app.openapi(updateAnnouncementRoute, async (c) => {
   if (body.title !== undefined && body.title !== null) updates.title = body.title;
   if (body.content !== undefined) updates.content = body.content;
   if (body.archived_at !== undefined) updates.archivedAt = body.archived_at;
-  if (body.level !== undefined) updates.level = body.level;
+  if (body.level !== undefined && body.level !== null) updates.level = body.level;
 
   if (Object.keys(updates).length === 0) {
     // Nothing to update — just return the existing row
