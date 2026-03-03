@@ -19,6 +19,7 @@ export interface Env {
   MANAGER_HISTORY_FILE: string;
   MAIN_BRANCH: string;
   PRERELEASE_BRANCH: string;
+  PATCHES_PUBLIC_KEY_FILE: string;
   CONTRIBUTORS_REPOS: string;
   API_VERSION: string;
 }

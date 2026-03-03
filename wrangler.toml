@@ -1,10 +1,7 @@
 name = "revanced-api"
 main = "src/index.ts"
 compatibility_date = "2025-02-01"
-
-[[rules]]
-type = "Text"
-globs = ["**/*.txt"]
+compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"

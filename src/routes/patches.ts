@@ -117,8 +117,8 @@ app.openapi(
       },
     },
   }),
-  (c) => {
-    return c.json(patchesService.getPublicKey(), 200);
+  async (c) => {
+    return c.json(await patchesService.getPublicKey(c.env), 200);
   },
 );
 

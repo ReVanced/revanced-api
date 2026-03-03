@@ -8,6 +8,7 @@ export interface Config {
     assetRegex: RegExp;
     signatureAssetRegex: RegExp;
     historyFile: string;
+    publicKeyFile: string;
   };
   manager: {
     repo: string;
@@ -32,6 +33,7 @@ function parseConfig(env: Env): Config {
       assetRegex: new RegExp(env.PATCHES_ASSET_REGEX),
       signatureAssetRegex: new RegExp(env.PATCHES_SIGNATURE_ASSET_REGEX),
       historyFile: env.PATCHES_HISTORY_FILE,
+      publicKeyFile: env.PATCHES_PUBLIC_KEY_FILE,
     },
     manager: {
       repo: env.MANAGER_REPO,

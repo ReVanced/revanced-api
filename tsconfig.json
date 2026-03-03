@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "lib": ["ESNext"],
-    "types": ["@cloudflare/workers-types"],
+    "types": ["@cloudflare/workers-types", "@types/node"],
     "paths": {
       "@/*": ["./src/*"]
     },
