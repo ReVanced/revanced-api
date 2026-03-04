@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import { getBackend, getConfig } from "../config";
 import type { Env } from "../types";
 
+let _publicKeyCache: string | undefined;
+
 export async function getRelease(env: Env, prerelease: boolean) {
   const backend = getBackend(env);
   const { organization, patches } = getConfig(env);
@@ -40,8 +42,19 @@ export async function getHistory(env: Env, prerelease: boolean) {
   return { history: content };
 }
 
+async function readPublicKey(env: Env): Promise<string> {
+  if (!_publicKeyCache) {
+    const { patches } = getConfig(env);
+    _publicKeyCache = await readFile(patches.publicKeyFile, "utf-8");
+  }
+  return _publicKeyCache;
+}
+
 export async function getPublicKey(env: Env) {
-  const { patches } = getConfig(env);
-  const content = await readFile(patches.publicKeyFile, "utf-8");
+  const content = await readPublicKey(env);
   return { patches_public_key: content };
+}
+
+export async function getRawPublicKey(env: Env) {
+  return readPublicKey(env);
 }

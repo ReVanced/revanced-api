@@ -9,6 +9,7 @@ import announcementsApp from "./routes/announcements";
 import contributorsApp from "./routes/contributors";
 import teamApp from "./routes/team";
 import aboutApp from "./routes/about";
+import keysApp from "./routes/keys";
 
 const VERSION = packageJson.version;
 
@@ -25,6 +26,7 @@ v1App.route("/team", teamApp);
 v1App.route("/about", aboutApp);
 
 app.route("/v1", v1App);
+app.route("/keys", keysApp);
 
 app.doc("/openapi", () => ({
   openapi: "3.1.0",
