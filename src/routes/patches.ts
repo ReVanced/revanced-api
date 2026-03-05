@@ -8,6 +8,7 @@ import {
   PublicKeyResponseSchema,
 } from "../schemas/releases";
 import * as patchesService from "../services/patches";
+import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 

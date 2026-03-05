@@ -3,8 +3,12 @@ import type { Env } from "../types";
 import { ErrorResponseSchema } from "../schemas/common";
 import { TeamResponseSchema } from "../schemas/contributors";
 import * as teamService from "../services/team";
+import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
+
+// 1-day cache for team members
+app.use("*", cacheControl(CacheDuration.day));
 
 app.openapi(
   createRoute({

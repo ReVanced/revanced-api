@@ -1,8 +1,12 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Env } from "../types";
 import * as patchesService from "../services/patches";
+import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
+
+// 356-day cache for public keys (essentially immutable)
+app.use("*", cacheControl(CacheDuration.immutable));
 
 app.openapi(
   createRoute({

@@ -1,6 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 import type { Env } from "./types";
+import { cacheControl, CacheDuration } from "./cache";
 
 import packageJson from "../package.json";
 import patchesApp from "./routes/patches";
@@ -18,6 +19,9 @@ type AppBindings = { Bindings: Env };
 const app = new OpenAPIHono<AppBindings>();
 const v1App = new OpenAPIHono<AppBindings>();
 
+// Default 5-minute cache for all v1 routes (overridden per-route where needed)
+v1App.use("*", cacheControl(CacheDuration.short));
+
 v1App.route("/patches", patchesApp);
 v1App.route("/manager", managerApp);
 v1App.route("/announcements", announcementsApp);
@@ -29,22 +33,22 @@ app.route("/v1", v1App);
 app.route("/keys", keysApp);
 
 app.doc("/openapi", () => ({
-  openapi: "3.1.0",
-  info: {
-    title: "ReVanced API",
-    version: VERSION,
-    description: "API server for ReVanced.",
-    contact: {
-      name: "ReVanced",
-      url: "https://revanced.app",
-      email: "contact@revanced.app",
-    },
-    license: {
-      name: "AGPLv3",
-      url: "https://github.com/ReVanced/revanced-api/blob/main/LICENSE",
-    },
-  },
-  security: [],
+	openapi: "3.1.0",
+	info: {
+		title: "ReVanced API",
+		version: VERSION,
+		description: "API server for ReVanced.",
+		contact: {
+			name: "ReVanced",
+			url: "https://revanced.app",
+			email: "contact@revanced.app",
+		},
+		license: {
+			name: "AGPLv3",
+			url: "https://github.com/ReVanced/revanced-api/blob/main/LICENSE",
+		},
+	},
+	security: [],
   servers: [
     { url: "https://api.revanced.app", description: "Production" },
   ],

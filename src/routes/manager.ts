@@ -3,6 +3,7 @@ import type { Env } from "../types";
 import { PrereleaseQuerySchema, ErrorResponseSchema } from "../schemas/common";
 import { ReleaseResponseSchema, VersionResponseSchema, HistoryResponseSchema } from "../schemas/releases";
 import * as managerService from "../services/manager";
+import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
