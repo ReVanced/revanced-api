@@ -87,25 +87,18 @@ Some of the features ReVanced API include:
 
 ReVanced API is deployed as a Cloudflare Worker.
 
-### ⚡ Cloudflare Workers
+### 🧑‍💻 Local development
 
-1. Install dependencies with `npm install`
-2. Create a `.dev.vars` file for local secrets:
-   ```
-   API_TOKEN=your-secret-token
-   GITHUB_TOKEN=ghp_your-github-token
-   ```
-3. Create a local D1 database and run migrations with `npm run db:migrate:local`
-4. Start the development server with `npm run dev`
+1. Install dependencies with `bun install`
+2. Copy `.env.example` to `.env` and fill in the required environment variables
+3. Create a local D1 database and run migrations with `bun run db:migration:apply`
+4. Start the development server with `bun run dev`
 
 ### 🌐 Deployment
 
 ```bash
-# Deploy to Cloudflare Workers
-npm run deploy
-
-# Run remote D1 migrations
-npm run db:migrate:remote
+bun run db:create # Configure the database_id in wrangler.toml after this command.
+bun run deploy
 ```
 
 Environment variables are configured in `wrangler.toml` (non-secrets) and via `wrangler secret put` or `.dev.vars` (secrets).
