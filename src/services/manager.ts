@@ -26,15 +26,18 @@ export async function getVersion(env: Env, prerelease: boolean) {
 
 export async function getHistory(env: Env, prerelease: boolean) {
   const backend = getBackend(env);
-  const { organization, manager, branches } = getConfig(env);
+  const { organization, manager } = getConfig(env);
 
-  if (!manager.historyFile) {
-    return null;
-  }
+  const allReleases = await backend.releases(organization, manager.repo, 100);
+  const filtered = prerelease
+    ? allReleases
+    : allReleases.filter((r) => !r.prerelease);
 
-  const branch = prerelease ? branches.prerelease : branches.main;
-  const content = await backend.fileContent(organization, manager.repo, branch, manager.historyFile);
-  return { history: content };
+  return filtered.map((r) => ({
+    version: r.tag,
+    created_at: r.createdAt,
+    description: r.releaseNote,
+  }));
 }
 
 export async function getDownloadersRelease(env: Env, prerelease: boolean) {

@@ -34,7 +34,7 @@ export interface BackendMember {
 
 export interface Backend {
   release(owner: string, repo: string, prerelease: boolean): Promise<BackendRelease>;
-  fileContent(owner: string, repo: string, branch: string, path: string): Promise<string>;
+  releases(owner: string, repo: string, count: number): Promise<BackendRelease[]>;
   contributors(owner: string, repo: string): Promise<BackendContributor[]>;
   members(organization: string): Promise<BackendMember[]>;
   repositoryUrl(owner: string, repo: string): string;

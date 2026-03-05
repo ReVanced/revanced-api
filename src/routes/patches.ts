@@ -129,13 +129,12 @@ app.openapi(
     path: "/history",
     tags: ["Patches"],
     summary: "Get patches release history",
-    description: "Get the stable patches release history (changelog).",
+    description: "Get the stable patches release history.",
     responses: {
       200: {
         content: { "application/json": { schema: HistoryResponseSchema } },
         description: "The patches release history.",
       },
-      404: { description: "No patches release history configured." },
       500: {
         content: { "application/json": { schema: ErrorResponseSchema } },
         description: "GitHub API error.",
@@ -144,11 +143,7 @@ app.openapi(
   }),
   async (c) => {
     try {
-      const result = await patchesService.getHistory(c.env, false);
-      if (!result) {
-        return c.body(null, 404);
-      }
-      return c.json(result, 200);
+      return c.json(await patchesService.getHistory(c.env, false), 200);
     } catch (error) {
       return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
     }
@@ -161,13 +156,12 @@ app.openapi(
     path: "/history/prerelease",
     tags: ["Patches"],
     summary: "Get patches prerelease history",
-    description: "Get the patches prerelease history (changelog).",
+    description: "Get the patches prerelease history.",
     responses: {
       200: {
         content: { "application/json": { schema: HistoryResponseSchema } },
         description: "The patches prerelease history.",
       },
-      404: { description: "No patches release history configured." },
       500: {
         content: { "application/json": { schema: ErrorResponseSchema } },
         description: "GitHub API error.",
@@ -176,11 +170,7 @@ app.openapi(
   }),
   async (c) => {
     try {
-      const result = await patchesService.getHistory(c.env, true);
-      if (!result) {
-        return c.body(null, 404);
-      }
-      return c.json(result, 200);
+      return c.json(await patchesService.getHistory(c.env, true), 200);
     } catch (error) {
       return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
     }

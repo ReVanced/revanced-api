@@ -52,7 +52,6 @@ function formatDatetime(isoString: string): string {
 
 export class GitHubBackend implements Backend {
   private readonly baseUrl = "https://api.github.com";
-  private readonly rawBaseUrl = "https://raw.githubusercontent.com";
   private readonly headers: HeadersInit;
 
   constructor(token?: string) {
@@ -105,13 +104,23 @@ export class GitHubBackend implements Backend {
     };
   }
 
-  async fileContent(owner: string, repo: string, branch: string, path: string): Promise<string> {
-    const url = `${this.rawBaseUrl}/${owner}/${repo}/${branch}/${path}`;
-    const response = await fetch(url, { headers: this.headers });
-    if (!response.ok) {
-      throw new Error(`GitHub raw file error: ${response.status} ${response.statusText} — ${url}`);
-    }
-    return response.text();
+  async releases(owner: string, repo: string, count: number): Promise<BackendRelease[]> {
+    const releases = await this.fetchJson<GitHubRelease[]>(
+      `${this.baseUrl}/repos/${owner}/${repo}/releases?per_page=${count}`,
+    );
+
+    return releases.map((release) => ({
+      tag: release.tag_name,
+      releaseNote: release.body ?? "",
+      createdAt: formatDatetime(release.created_at),
+      prerelease: release.prerelease,
+      assets: release.assets.map(
+        (asset): BackendAsset => ({
+          name: asset.name,
+          downloadUrl: asset.browser_download_url,
+        }),
+      ),
+    }));
   }
 
   async contributors(owner: string, repo: string): Promise<BackendContributor[]> {

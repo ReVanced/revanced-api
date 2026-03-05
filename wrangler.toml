@@ -10,17 +10,12 @@ ORGANIZATION = "revanced"
 PATCHES_REPO = "revanced-patches"
 PATCHES_ASSET_REGEX = "rvp$"
 PATCHES_SIGNATURE_ASSET_REGEX = "asc$"
-PATCHES_HISTORY_FILE = "CHANGELOG.md"
 PATCHES_PUBLIC_KEY_FILE = "static/root/keys.asc"
 MANAGER_REPO = "revanced-manager"
 MANAGER_ASSET_REGEX = "apk$"
 MANAGER_DOWNLOADERS_REPO = "revanced-manager-downloaders"
 MANAGER_DOWNLOADERS_ASSET_REGEX = "apk$"
-MANAGER_HISTORY_FILE = ""
 
-# Branches
-MAIN_BRANCH = "main"
-PRERELEASE_BRANCH = "dev"
 
 # Contributors
 CONTRIBUTORS_REPOS = "revanced-patcher:ReVanced Patcher,revanced-patches:ReVanced Patches,revanced-website:ReVanced Website,revanced-cli:ReVanced CLI,revanced-manager:ReVanced Manager"
@@ -32,5 +27,5 @@ API_VERSION = "5"
 [[d1_databases]]
 binding = "DB"
 database_name = "revanced-api"
-database_id = "0e48d858-0e59-45dd-86fe-ca763b4fe85e"
+database_id = ""
 migrations_dir = "drizzle/migrations"

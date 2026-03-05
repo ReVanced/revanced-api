@@ -31,15 +31,18 @@ export async function getVersion(env: Env, prerelease: boolean) {
 
 export async function getHistory(env: Env, prerelease: boolean) {
   const backend = getBackend(env);
-  const { organization, patches, branches } = getConfig(env);
+  const { organization, patches } = getConfig(env);
 
-  if (!patches.historyFile) {
-    return null;
-  }
+  const allReleases = await backend.releases(organization, patches.repo, 100);
+  const filtered = prerelease
+    ? allReleases
+    : allReleases.filter((r) => !r.prerelease);
 
-  const branch = prerelease ? branches.prerelease : branches.main;
-  const content = await backend.fileContent(organization, patches.repo, branch, patches.historyFile);
-  return { history: content };
+  return filtered.map((r) => ({
+    version: r.tag,
+    created_at: r.createdAt,
+    description: r.releaseNote,
+  }));
 }
 
 async function readPublicKey(env: Env): Promise<string> {

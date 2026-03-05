@@ -27,11 +27,15 @@ export const VersionResponseSchema = z
   })
   .openapi("Version");
 
-export const HistoryResponseSchema = z
+export const ReleaseSimpleSchema = z
   .object({
-    history: z.string().openapi({ example: "# Changelog\n\n## v4.0.0\n..." }),
+    version: z.string().openapi({ example: "v4.0.0" }),
+    created_at: z.string().openapi({ example: "2025-01-15T10:30:00" }),
+    description: z.string().openapi({ example: "Release notes markdown here..." }),
   })
-  .openapi("History");
+  .openapi("ReleaseSimple");
+
+export const HistoryResponseSchema = z.array(ReleaseSimpleSchema);
 
 export const PublicKeyResponseSchema = z
   .object({
