@@ -1,12 +1,12 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Env } from "../types";
-import aboutData from "about.json";
-import { cacheControl, CacheDuration } from "../cache";
+import aboutData from "../../data/about.json";
+import { edgeCache, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
 // 1-day cache for about info
-app.use("*", cacheControl(CacheDuration.day));
+app.use("*", edgeCache("about", CacheDuration.day));
 
 const AboutResponseSchema = z
 	.object({

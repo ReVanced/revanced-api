@@ -7,7 +7,6 @@ import {
 	HistoryResponseSchema,
 } from "../schemas/releases";
 import * as managerService from "../services/manager";
-import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
