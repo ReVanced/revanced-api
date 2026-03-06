@@ -58,7 +58,7 @@ jobs:
             API_VERSION
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.READ_REPOSITORIES_GITHUB_TOKEN }}
           ORGANIZATION: ${{ env.ORGANIZATION }}
           PATCHES_REPO: ${{ env.PATCHES_REPO }}
           PATCHES_ASSET_REGEX: ${{ env.PATCHES_ASSET_REGEX }}
