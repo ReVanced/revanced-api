@@ -3,24 +3,6 @@ main = "src/index.ts"
 compatibility_date = "2025-02-01"
 compatibility_flags = ["nodejs_compat"]
 
-[vars]
-ORGANIZATION = "revanced"
-
-PATCHES_REPO = "revanced-patches"
-PATCHES_ASSET_REGEX = "rvp$"
-PATCHES_SIGNATURE_ASSET_REGEX = "asc$"
-PATCHES_PUBLIC_KEY_FILE = "keys"
-
-MANAGER_REPO = "revanced-manager"
-MANAGER_ASSET_REGEX = "apk$"
-MANAGER_DOWNLOADERS_REPO = "revanced-manager-downloaders"
-MANAGER_DOWNLOADERS_ASSET_REGEX = "apk$"
-
-CONTRIBUTORS_REPOS = "revanced-patcher:ReVanced Patcher,revanced-patches:ReVanced Patches,revanced-website:ReVanced Website,revanced-cli:ReVanced CLI,revanced-manager:ReVanced Manager"
-
-API_VERSION = "5"
-
-
 [assets]
 directory = "data"
 binding = "ASSETS"
@@ -28,5 +10,5 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "revanced-api"
-database_id = ""
+database_id = "0e48d858-0e59-45dd-86fe-ca763b4fe85e"
 migrations_dir = "drizzle/migrations"

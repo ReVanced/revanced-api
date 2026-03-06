@@ -68,11 +68,24 @@ export default {
 						url: "https://github.com/ReVanced/revanced-api/blob/main/LICENSE",
 					},
 				},
-				security: [],
 				servers: [
 					{ url: "https://api.revanced.app", description: "Production" },
+					{
+						url: "{customServer}",
+						description: "Custom server",
+						variables: {
+							customServer: {
+								default: "api.revanced.app",
+								description: "Custom server URL",
+							},
+						},
+					},
 				],
 			}));
+			_app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
+				type: "http",
+				scheme: "bearer",
+			});
 		}
 		return _app.fetch(request, env, ctx);
 	},
