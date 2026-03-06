@@ -1,4 +1,3 @@
-import { cache } from "hono/cache";
 import type { MiddlewareHandler } from "hono";
 
 const SECONDS_PER_DAY = 86400;
@@ -14,12 +13,13 @@ export const CacheDuration = {
 } as const;
 
 /**
- * Edge caching middleware using Hono's built-in cache().
- * Sets Cache-Control headers that Cloudflare's CDN and the Cache API respect.
+ * Hono middleware that sets a `Cache-Control` header.
+ * Cloudflare's CDN will respect `max-age` for edge caching.
  */
-export function edgeCache(cacheName: string, maxAgeSeconds: number): MiddlewareHandler {
-	return cache({
-		cacheName: `revanced-api-${cacheName}`,
-		cacheControl: `public, max-age=${maxAgeSeconds}`,
-	});
+export function cacheControl(maxAgeSeconds: number): MiddlewareHandler {
+	const value = `public, max-age=${maxAgeSeconds}`;
+	return async (c, next) => {
+		c.header("Cache-Control", value);
+		await next();
+	};
 }

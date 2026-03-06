@@ -3,12 +3,12 @@ import type { Env } from "../types";
 import { ErrorResponseSchema } from "../schemas/common";
 import { ContributorsResponseSchema } from "../schemas/contributors";
 import * as contributorsService from "../services/contributors";
-import { edgeCache, CacheDuration } from "../cache";
+import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
 // 1-day cache for contributors
-app.use("*", edgeCache("contributors", CacheDuration.day));
+app.use("*", cacheControl(CacheDuration.day));
 
 app.openapi(
 	createRoute({

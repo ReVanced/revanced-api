@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 import type { Env } from "./types";
-import { edgeCache, CacheDuration } from "./cache";
+import { cacheControl, CacheDuration } from "./cache";
 import { getConfig } from "./config";
 
 import packageJson from "../package.json";
@@ -39,7 +39,7 @@ export default {
 			});
 
 			// Default 5-minute cache for all routes (overridden per-route where needed)
-			_app.use("*", edgeCache("api", CacheDuration.short));
+			_app.use("*", cacheControl(CacheDuration.short));
 
 			const versionedApp = new OpenAPIHono<AppBindings>();
 			versionedApp.route("/patches", patchesApp);
