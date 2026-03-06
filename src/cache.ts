@@ -14,7 +14,7 @@ export const CacheDuration = {
 
 /**
  * Hono middleware that sets a `Cache-Control` header.
- * The CDN (Vercel / Cloudflare) will respect `s-maxage` for edge caching
+ * The CDN will respect `s-maxage` for edge caching
  * while browsers use `max-age`.
  */
 export function cacheControl(maxAgeSeconds: number): MiddlewareHandler {

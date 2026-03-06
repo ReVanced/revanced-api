@@ -1,7 +1,7 @@
 name: 🐞 Bug report
 description: Report a bug or an issue.
-title: 'bug: '
-labels: ['Bug report']
+title: "bug: "
+labels: ["Bug report"]
 body:
   - type: markdown
     attributes:
@@ -81,11 +81,10 @@ body:
         - Add steps to reproduce the bug if possible (Step 1. ... Step 2. ...)
         - Add images and videos if possible
     validations:
-        required: true
+      required: true
   - type: textarea
     attributes:
       label: Error logs
-      description: Exceptions can be captured by running `logcat | grep AndroidRuntime` in a shell.
       render: shell
   - type: textarea
     attributes:

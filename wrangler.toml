@@ -4,25 +4,26 @@ compatibility_date = "2025-02-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-API_TOKEN = "secret-token"
-GITHUB_TOKEN = ""
 ORGANIZATION = "revanced"
+
 PATCHES_REPO = "revanced-patches"
 PATCHES_ASSET_REGEX = "rvp$"
 PATCHES_SIGNATURE_ASSET_REGEX = "asc$"
-PATCHES_PUBLIC_KEY_FILE = "static/root/keys.asc"
+PATCHES_PUBLIC_KEY_FILE = "keys"
+
 MANAGER_REPO = "revanced-manager"
 MANAGER_ASSET_REGEX = "apk$"
 MANAGER_DOWNLOADERS_REPO = "revanced-manager-downloaders"
 MANAGER_DOWNLOADERS_ASSET_REGEX = "apk$"
 
-
-# Contributors
 CONTRIBUTORS_REPOS = "revanced-patcher:ReVanced Patcher,revanced-patches:ReVanced Patches,revanced-website:ReVanced Website,revanced-cli:ReVanced CLI,revanced-manager:ReVanced Manager"
 
-# API
 API_VERSION = "5"
 
+
+[assets]
+directory = "data"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"

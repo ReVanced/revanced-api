@@ -11,30 +11,26 @@ const app = new OpenAPIHono<{ Bindings: Env }>();
 app.use("*", cacheControl(CacheDuration.day));
 
 app.openapi(
-  createRoute({
-    method: "get",
-    path: "/",
-    tags: ["API"],
-    summary: "Get contributors",
-    description: "Get the list of contributors for each configured repository.",
-    responses: {
-      200: {
-        content: { "application/json": { schema: ContributorsResponseSchema } },
-        description: "The list of contributors.",
-      },
-      500: {
-        content: { "application/json": { schema: ErrorResponseSchema } },
-        description: "GitHub API error.",
-      },
-    },
-  }),
-  async (c) => {
-    try {
-      return c.json(await contributorsService.getContributors(c.env), 200);
-    } catch (error) {
-      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
-    }
-  },
+	createRoute({
+		method: "get",
+		path: "/",
+		tags: ["API"],
+		summary: "Get contributors",
+		description: "Get the list of contributors for each configured repository.",
+		responses: {
+			200: {
+				content: { "application/json": { schema: ContributorsResponseSchema } },
+				description: "The list of contributors.",
+			},
+			500: {
+				content: { "application/json": { schema: ErrorResponseSchema } },
+				description: "GitHub API error.",
+			},
+		},
+	}),
+	async (c) => {
+		return c.json(await contributorsService.getContributors(c.env), 200);
+	},
 );
 
 export default app;

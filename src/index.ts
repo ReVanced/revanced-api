@@ -11,7 +11,6 @@ import announcementsApp from "./routes/announcements";
 import contributorsApp from "./routes/contributors";
 import teamApp from "./routes/team";
 import aboutApp from "./routes/about";
-import keysApp from "./routes/keys";
 
 type AppBindings = { Bindings: Env };
 
@@ -27,6 +26,18 @@ export default {
 			const { apiVersion } = getConfig(env);
 
 			_app = new OpenAPIHono<AppBindings>();
+
+			_app.onError((err, c) => {
+				console.error(err);
+				return c.json(
+					{
+						error: err.message || "Unknown error",
+						stack: err.stack,
+					},
+					500,
+				);
+			});
+
 			// Default 5-minute cache for all versioned routes (overridden per-route where needed)
 			_app.use("*", cacheControl(CacheDuration.short));
 
@@ -39,7 +50,6 @@ export default {
 			versionedApp.route("/about", aboutApp);
 
 			_app.route(`/v${apiVersion}`, versionedApp);
-			_app.route("/keys", keysApp);
 			_app.get("/", swaggerUI({ url: `/v${apiVersion}/openapi` }));
 
 			_app.doc(`/v${apiVersion}/openapi`, () => ({

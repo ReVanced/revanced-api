@@ -29,11 +29,7 @@ app.openapi(
     },
   }),
   async (c) => {
-    try {
       return c.json(await teamService.getTeamMembers(c.env), 200);
-    } catch (error) {
-      return c.json({ error: error instanceof Error ? error.message : "Unknown error" }, 500);
-    }
   },
 );
 
