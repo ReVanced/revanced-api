@@ -38,11 +38,7 @@ export default {
 			versionedApp.route("/contributors", contributorsApp);
 			versionedApp.route("/team", teamApp);
 			versionedApp.route("/about", aboutApp);
-
-			_app.route(`/v${apiVersion}`, versionedApp);
-			_app.route("/keys", keysApp);
-
-			_app.doc("/openapi", () => ({
+			versionedApp.doc("/openapi", () => ({
 				openapi: "3.1.0",
 				info: {
 					title: "ReVanced API",
@@ -64,7 +60,10 @@ export default {
 				],
 			}));
 
-			_app.get("/", swaggerUI({ url: "/openapi" }));
+			_app.route(`/v${apiVersion}`, versionedApp);
+			_app.route("/keys", keysApp);
+
+			_app.get("/", swaggerUI({ url: `/v${apiVersion}/openapi` }));
 		}
 		return _app.fetch(request, env, ctx);
 	},
