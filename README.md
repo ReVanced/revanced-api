@@ -101,8 +101,6 @@ bun run db:migration:apply --remote # Configure the database_id in wrangler.toml
 bun run deploy
 ```
 
-Environment variables are configured in `wrangler.toml` (non-secrets) and via `wrangler secret put` or `.dev.vars` (secrets).
-
 ## 📚 Everything else
 
 ### 📙 Contributing
