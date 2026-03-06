@@ -27,11 +27,10 @@ export default {
 			const { apiVersion } = getConfig(env);
 
 			_app = new OpenAPIHono<AppBindings>();
-			const versionedApp = new OpenAPIHono<AppBindings>();
-
 			// Default 5-minute cache for all versioned routes (overridden per-route where needed)
-			versionedApp.use("*", cacheControl(CacheDuration.short));
+			_app.use("*", cacheControl(CacheDuration.short));
 
+			const versionedApp = new OpenAPIHono<AppBindings>();
 			versionedApp.route("/patches", patchesApp);
 			versionedApp.route("/manager", managerApp);
 			versionedApp.route("/announcements", announcementsApp);
