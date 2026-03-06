@@ -97,7 +97,7 @@ ReVanced API is deployed as a Cloudflare Worker.
 ### 🌐 Deployment
 
 ```bash
-bun run db:create # Configure the database_id in wrangler.toml after this command.
+bun run db:migration:apply --remote # Configure the database_id in wrangler.toml after this command.
 bun run deploy
 ```
 
