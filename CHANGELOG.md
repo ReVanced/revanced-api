@@ -1,3 +1,10 @@
+# [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-07)
+
+
+### Features
+
+* Convert ReVanced API from a Ktor server to serverless ([#211](https://github.com/ReVanced/revanced-api/issues/211)) ([2ba8849](https://github.com/ReVanced/revanced-api/commit/2ba8849dafa8ec6879a083e9815804f104bb0711))
+
 # [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-02)
 
 # [1.7.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.2...v1.7.0-dev.3) (2026-02-20)
