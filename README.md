@@ -60,7 +60,7 @@
 
 # 🚀 ReVanced API
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ReVanced/revanced-api/release.yml)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ReVanced/revanced-api/deploy.yml)
 ![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)
 
 API server for ReVanced.
@@ -85,75 +85,21 @@ Some of the features ReVanced API include:
 
 ## 🚀 How to get started
 
-ReVanced API can be deployed as a Docker container or used standalone.
+ReVanced API is deployed as a Cloudflare Worker.
 
-## 🐳 Docker
+### 🧑‍💻 Local development
 
-To deploy ReVanced API as a Docker container, you can use Docker Compose or Docker CLI.  
-The Docker image is published on GitHub Container registry,
-so before you can pull the image, you need
-to [authenticate to the Container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry).
+1. Install dependencies with `bun install`
+2. Copy `.env.example` to `.env` and fill in the required environment variables
+3. Create a local D1 database and run migrations with `bun run db:migration:apply`
+4. Start the development server with `bun run dev`
 
-### 🗄️ Docker Compose
+### 🌐 Deployment
 
-1. Create an `.env` file using [.env.example](.env.example) as a template
-2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
-3. Create an `about.json` file using [about.example.json](about.example.json) as a template
-4. Create a `docker-compose.yml` file using [docker-compose.example.yml](docker-compose.example.yml) as a template
-5. Run `docker-compose up -d` to start the server
-
-### 💻 Docker CLI
-
-1. Create an `.env` file using [.env.example](.env.example) as a template
-2. Create a `configuration.toml` file using [configuration.example.toml](configuration.example.toml) as a template
-3. Create an `about.json` file using [about.example.json](about.example.json) as a template
-4. Start the container using the following command:
-   ```shell
-   docker run -d --name revanced-api \
-    # Mount the .env file
-    -v $(pwd)/.env:/app/.env \
-    # Mount the configuration.toml file
-    -v $(pwd)/configuration.toml:/app/configuration.toml \
-    # Mount the patches public key
-    -v $(pwd)/patches-public-key.asc:/app/patches-public-key.asc \
-    # Mount the static folder
-    -v $(pwd)/static:/app/static \
-    # Mount the about.json file
-    -v $(pwd)/about.json:/app/about.json \
-    # Mount the persistence folder
-    -v $(pwd)/persistence:/app/persistence \
-    # Expose the port 8888
-    -p 8888:8888 \
-    # Use the start command to start the server
-    -e COMMAND=start \
-    # Pull the image from the GitHub Container registry
-    ghcr.io/revanced/revanced-api:latest
-   ```
-
-## 🖥️ Standalone
-
-To deploy ReVanced API standalone, you can either use the pre-built executable or build it from source.
-
-### 📦 Pre-built executable
-
-A Java Runtime Environment (JRE) must be installed.
-
-1. [Download](https://github.com/ReVanced/revanced-api/releases/latest) ReVanced API to a folder
-2. In the same folder, create an `.env` file using [.env.example](.env.example) as a template
-3. In the same folder, create a `configuration.toml` file
-   using [configuration.example.toml](configuration.example.toml) as a template
-4. In the same folder, create an `about.json` file using [about.example.json](about.example.json) as a template
-5. Run `java -jar revanced-api.jar start` to start the server
-
-### 🛠️ From source
-
-A Java Development Kit (JDK) and Git must be installed.
-
-1. Run `git clone git@github.com:ReVanced/revanced-api.git` to clone the repository
-2. Copy [.env.example](.env.example) to `.env` and fill in the required values
-3. Copy [configuration.example.toml](configuration.example.toml) to `configuration.toml` and fill in the required values
-4. Copy [about.example.json](about.example.json) to `about.json` and fill in the required values
-5. Run `gradlew run --args=start` to start the server
+```bash
+bun run db:migration:apply --remote # Configure the database_id in wrangler.toml after this command.
+bun run deploy
+```
 
 ## 📚 Everything else
 
@@ -161,14 +107,6 @@ A Java Development Kit (JDK) and Git must be installed.
 
 Thank you for considering contributing to ReVanced API. You can find the contribution
 guidelines [here](CONTRIBUTING.md).
-
-### 🛠️ Building
-
-To build ReVanced API, a Java Development Kit (JDK) and Git must be installed.  
-Follow the steps below to build ReVanced API:
-
-1. Run `git clone git@github.com:ReVanced/revanced-api.git` to clone the repository
-2. Run `gradlew build` to build the project
 
 ## 📜 Licence
 

@@ -1,0 +1,14 @@
+name = "revanced-api"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "data"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "revanced-api"
+database_id = "0e48d858-0e59-45dd-86fe-ca763b4fe85e"
+migrations_dir = "drizzle/migrations"

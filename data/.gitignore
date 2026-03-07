@@ -1,0 +1,3 @@
+# Ignore data files. Copy from example files before building.
+*
+!.gitignore
