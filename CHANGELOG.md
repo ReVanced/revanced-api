@@ -1,3 +1,5 @@
+# [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-02)
+
 # [1.7.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.2...v1.7.0-dev.3) (2026-02-20)
 
 # [1.7.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.1...v1.7.0-dev.2) (2026-02-20)
