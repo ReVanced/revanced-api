@@ -1,6 +1,6 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Env } from "../types";
-import aboutData from "../../data/about.json";
+import aboutData from "about.json";
 import { cacheControl, CacheDuration } from "../cache";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
