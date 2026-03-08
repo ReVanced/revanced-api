@@ -19,7 +19,9 @@ export const CacheDuration = {
 export function cacheControl(maxAgeSeconds: number): MiddlewareHandler {
 	const value = `public, max-age=${maxAgeSeconds}`;
 	return async (c, next) => {
-		c.header("Cache-Control", value);
 		await next();
+		if (c.req.method === "GET" || c.req.method === "HEAD") {
+			c.header("Cache-Control", value);
+		}
 	};
 }
