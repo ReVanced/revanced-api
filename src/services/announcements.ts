@@ -1,6 +1,6 @@
 import { getDatabase } from "../db/client";
 import { announcements, tags, announcementTags } from "../db/schema";
-import { eq, desc, count } from "drizzle-orm";
+import { eq, desc, and, count } from "drizzle-orm";
 import type { Env } from "../types";
 
 async function getTagsForAnnouncement(db: ReturnType<typeof getDatabase>, announcementId: number): Promise<string[]> {
@@ -122,37 +122,38 @@ export async function updateAnnouncement(
 	}
 
 	if (body.tags !== undefined) {
-		// Get the old tags before updating
-		const oldTagRows = await database
-			.select({ tagId: announcementTags.tagId })
+		// Get current tags for this announcement
+		const currentTagRows = await database
+			.select({ tagId: announcementTags.tagId, name: tags.name })
 			.from(announcementTags)
+			.innerJoin(tags, eq(announcementTags.tagId, tags.id))
 			.where(eq(announcementTags.announcementId, id));
-		const oldTagIds = oldTagRows.map((r) => r.tagId);
 
-		// Remove existing associations
-		await database.delete(announcementTags).where(eq(announcementTags.announcementId, id));
+		const currentTagNames = new Set(currentTagRows.map((r) => r.name));
+		const newTagNames = new Set(body.tags);
 
-		// Find or create each new tag and associate it
-		const newTagIds: number[] = [];
+		// Add tags that are in the new set but not currently associated
 		for (const name of body.tags) {
-			newTagIds.push(await findOrCreateTag(database, name));
+			if (!currentTagNames.has(name)) {
+				const tagId = await findOrCreateTag(database, name);
+				await database.insert(announcementTags).values({ announcementId: id, tagId });
+			}
 		}
 
-		if (newTagIds.length > 0) {
-			await database.insert(announcementTags).values(
-				newTagIds.map((tagId) => ({ announcementId: id, tagId })),
+		// Remove tags no longer needed and delete orphaned tag records
+		for (const { tagId, name } of currentTagRows) {
+			if (newTagNames.has(name)) continue;
+
+			await database.delete(announcementTags).where(
+				and(eq(announcementTags.announcementId, id), eq(announcementTags.tagId, tagId)),
 			);
-		}
 
-		// Delete old tags that are no longer referenced by any announcement
-		for (const oldTagId of oldTagIds) {
-			if (newTagIds.includes(oldTagId)) continue;
 			const [usage] = await database
 				.select({ count: count() })
 				.from(announcementTags)
-				.where(eq(announcementTags.tagId, oldTagId));
+				.where(eq(announcementTags.tagId, tagId));
 			if (usage.count === 0) {
-				await database.delete(tags).where(eq(tags.id, oldTagId));
+				await database.delete(tags).where(eq(tags.id, tagId));
 			}
 		}
 	}
