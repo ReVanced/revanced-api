@@ -18,8 +18,10 @@ export const AnnouncementResponseSchema = z
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().nullable().openapi({ example: "Some content" }),
 		tags: z.array(z.string()).openapi({ example: ["Important"] }),
-		created_at: z.string().datetime().openapi({ example: "2025-01-01T00:00:00.000Z" }),
-		archived_at: z.string().datetime().nullable().openapi({ example: null }),
+		created_at: z.iso
+			.datetime()
+			.openapi({ example: "1970-01-01T00:00:00.000Z" }),
+		archived_at: z.iso.datetime().nullable().openapi({ example: null }),
 		level: z.number().int().openapi({ example: 0 }),
 	})
 	.openapi("Announcement");
@@ -31,16 +33,15 @@ export const CreateAnnouncementBodySchema = z
 		author: z.string().optional().openapi({ example: "ReVanced" }),
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().optional().openapi({ example: "Some content" }),
-		created_at: z
-			.string()
+		created_at: z.string().datetime().nullable().optional().openapi({
+			example: "2024-01-01T00:00:00.000Z",
+			description: "UTC timestamp. Defaults to current time if omitted.",
+		}),
+		archived_at: z.iso
 			.datetime()
 			.nullable()
 			.optional()
-			.openapi({
-				example: "2025-01-01T00:00:00.000Z",
-				description: "UTC timestamp. Defaults to current time if omitted.",
-			}),
-		tags: z.array(z.string()).optional().openapi({ example: ["Important"] }),
+			.openapi({ example: null, description: "UTC timestamp." }),
 		level: z.number().int().optional().default(0).openapi({ example: 0 }),
 	})
 	.openapi("CreateAnnouncement");
@@ -50,15 +51,11 @@ export const UpdateAnnouncementBodySchema = z
 		author: z.string().optional().openapi({ example: "ReVanced" }),
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().optional().openapi({ example: "Some content" }),
-		created_at: z
-			.string()
-			.datetime()
-			.nullable()
-			.optional()
-			.openapi({ example: "2024-01-01T00:00:00.000Z", description: "UTC timestamp." }),
-		tags: z.array(z.string()).optional().openapi({ example: ["Important"] }),
-		archived_at: z
-			.string()
+		created_at: z.iso.datetime().nullable().optional().openapi({
+			example: "2024-01-01T00:00:00.000Z",
+			description: "UTC timestamp.",
+		}),
+		archived_at: z.iso
 			.datetime()
 			.nullable()
 			.optional()
