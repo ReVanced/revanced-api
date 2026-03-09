@@ -1,14 +1,31 @@
 import { getDatabase } from "../db/client";
-import { announcements } from "../db/schema";
-import { eq, desc } from "drizzle-orm";
+import { announcements, tags, announcementTags } from "../db/schema";
+import { eq, desc, and, count } from "drizzle-orm";
 import type { Env } from "../types";
 
-function formatRow(row: typeof announcements.$inferSelect) {
+async function getTagsForAnnouncement(db: ReturnType<typeof getDatabase>, announcementId: number): Promise<string[]> {
+	const rows = await db
+		.select({ name: tags.name })
+		.from(announcementTags)
+		.innerJoin(tags, eq(announcementTags.tagId, tags.id))
+		.where(eq(announcementTags.announcementId, announcementId));
+	return rows.map((r) => r.name);
+}
+
+/** Find or create a tag by name, returning its ID. */
+async function findOrCreateTag(db: ReturnType<typeof getDatabase>, name: string): Promise<number> {
+	await db.insert(tags).values({ name }).onConflictDoNothing();
+	const [row] = await db.select({ id: tags.id }).from(tags).where(eq(tags.name, name));
+	return row.id;
+}
+
+function formatRow(row: typeof announcements.$inferSelect, announcementTagNames: string[] = []) {
 	return {
 		id: row.id,
 		author: row.author,
 		title: row.title,
 		content: row.content,
+		tags: announcementTagNames,
 		created_at: row.createdAt,
 		archived_at: row.archivedAt,
 		level: row.level,
@@ -17,11 +34,14 @@ function formatRow(row: typeof announcements.$inferSelect) {
 
 export async function listAnnouncements(env: Env) {
 	const database = getDatabase(env.DB);
-	const rows = await database
-		.select()
-		.from(announcements)
-		.orderBy(desc(announcements.id));
-	return rows.map(formatRow);
+	const rows = await database.select().from(announcements).orderBy(desc(announcements.id));
+
+	const results = [];
+	for (const row of rows) {
+		const tagNames = await getTagsForAnnouncement(database, row.id);
+		results.push(formatRow(row, tagNames));
+	}
+	return results;
 }
 
 export async function createAnnouncement(
@@ -30,9 +50,8 @@ export async function createAnnouncement(
 		author?: string;
 		title: string;
 		content?: string;
-		created_at?: string;
-		archived_at?: string;
-
+		created_at?: string | null;
+		tags?: string[];
 		level?: number;
 	},
 ) {
@@ -44,12 +63,24 @@ export async function createAnnouncement(
 			title: body.title,
 			content: body.content ?? null,
 			createdAt: body.created_at ?? new Date().toISOString(),
-			archivedAt: body.archived_at ?? null,
 			level: body.level ?? 0,
 		})
 		.returning();
 
-	return formatRow(result[0]);
+	const created = result[0];
+
+	if (body.tags && body.tags.length > 0) {
+		const tagIds: number[] = [];
+		for (const name of body.tags) {
+			tagIds.push(await findOrCreateTag(database, name));
+		}
+		await database.insert(announcementTags).values(
+			tagIds.map((tagId) => ({ announcementId: created.id, tagId })),
+		);
+	}
+
+	const tagNames = await getTagsForAnnouncement(database, created.id);
+	return formatRow(created, tagNames);
 }
 
 export async function updateAnnouncement(
@@ -60,6 +91,7 @@ export async function updateAnnouncement(
 		title?: string | null;
 		content?: string | null;
 		created_at?: string | null;
+		tags?: string[];
 		archived_at?: string | null;
 		level?: number | null;
 	},
@@ -74,31 +106,85 @@ export async function updateAnnouncement(
 	if (body.archived_at) updates.archivedAt = body.archived_at;
 	if (body.level) updates.level = body.level;
 
-	if (Object.keys(updates).length === 0) {
-		const database = getDatabase(env.DB);
-		const rows = await database
-			.select()
-			.from(announcements)
-			.where(eq(announcements.id, id));
+	let row;
+	if (Object.keys(updates).length > 0) {
+		const result = await database
+			.update(announcements)
+			.set(updates)
+			.where(eq(announcements.id, id))
+			.returning();
+		if (result.length === 0) return null;
+		row = result[0];
+	} else {
+		const rows = await database.select().from(announcements).where(eq(announcements.id, id));
 		if (rows.length === 0) return null;
-		return formatRow(rows[0]);
+		row = rows[0];
 	}
 
-	const result = await database
-		.update(announcements)
-		.set(updates)
-		.where(eq(announcements.id, id))
-		.returning();
+	if (body.tags !== undefined) {
+		// Get current tags for this announcement
+		const currentTagRows = await database
+			.select({ tagId: announcementTags.tagId, name: tags.name })
+			.from(announcementTags)
+			.innerJoin(tags, eq(announcementTags.tagId, tags.id))
+			.where(eq(announcementTags.announcementId, id));
 
-	if (result.length === 0) return null;
-	return formatRow(result[0]);
+		const currentTagNames = new Set(currentTagRows.map((r) => r.name));
+		const newTagNames = new Set(body.tags);
+
+		// Add tags that are in the new set but not currently associated
+		for (const name of body.tags) {
+			if (!currentTagNames.has(name)) {
+				const tagId = await findOrCreateTag(database, name);
+				await database.insert(announcementTags).values({ announcementId: id, tagId });
+			}
+		}
+
+		// Remove tags no longer needed and delete orphaned tag records
+		for (const { tagId, name } of currentTagRows) {
+			if (newTagNames.has(name)) continue;
+
+			await database.delete(announcementTags).where(
+				and(eq(announcementTags.announcementId, id), eq(announcementTags.tagId, tagId)),
+			);
+
+			const [usage] = await database
+				.select({ count: count() })
+				.from(announcementTags)
+				.where(eq(announcementTags.tagId, tagId));
+			if (usage.count === 0) {
+				await database.delete(tags).where(eq(tags.id, tagId));
+			}
+		}
+	}
+
+	const tagNames = await getTagsForAnnouncement(database, id);
+	return formatRow(row, tagNames);
 }
 
 export async function deleteAnnouncement(env: Env, id: number) {
 	const database = getDatabase(env.DB);
-	const result = await database
-		.delete(announcements)
-		.where(eq(announcements.id, id))
-		.returning();
-	return result.length > 0;
+
+	// Get tags associated with this announcement before deleting
+	const announcementTagRows = await database
+		.select({ tagId: announcementTags.tagId })
+		.from(announcementTags)
+		.where(eq(announcementTags.announcementId, id));
+	const tagIds = announcementTagRows.map((r) => r.tagId);
+
+	const result = await database.delete(announcements).where(eq(announcements.id, id)).returning();
+	if (result.length === 0) return false;
+
+	// Delete tags that are no longer referenced by any announcement
+	for (const tagId of tagIds) {
+		const [usage] = await database
+			.select({ count: count() })
+			.from(announcementTags)
+			.where(eq(announcementTags.tagId, tagId));
+		if (usage.count === 0) {
+			await database.delete(tags).where(eq(tags.id, tagId));
+		}
+	}
+
+	return true;
 }

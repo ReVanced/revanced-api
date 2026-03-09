@@ -3,7 +3,7 @@ import { z } from "@hono/zod-openapi";
 export const ReleaseResponseSchema = z
   .object({
     version: z.string().openapi({ example: "v4.0.0" }),
-    created_at: z.string().openapi({ example: "2025-01-15T10:30:00" }),
+    created_at: z.iso.datetime().openapi({ example: "1970-01-01T00:00:00.000Z" }),
     description: z.string().openapi({ example: "Release notes markdown here..." }),
     download_url: z.string().url().openapi({
       example:
@@ -30,7 +30,7 @@ export const VersionResponseSchema = z
 export const ReleaseSimpleSchema = z
   .object({
     version: z.string().openapi({ example: "v4.0.0" }),
-    created_at: z.string().openapi({ example: "2025-01-15T10:30:00" }),
+    created_at: z.iso.datetime().openapi({ example: "1970-01-01T00:00:00.000Z" }),
     description: z.string().openapi({ example: "Release notes markdown here..." }),
   })
   .openapi("ReleaseSimple");
