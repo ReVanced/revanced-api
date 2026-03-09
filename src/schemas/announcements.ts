@@ -18,8 +18,8 @@ export const AnnouncementResponseSchema = z
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().nullable().openapi({ example: "Some content" }),
 		tags: z.array(z.string()).openapi({ example: ["Important"] }),
-		created_at: z.string().openapi({ example: "2025-01-01T00:00:00.000Z" }),
-		archived_at: z.string().nullable().openapi({ example: null }),
+		created_at: z.string().datetime().openapi({ example: "2025-01-01T00:00:00.000Z" }),
+		archived_at: z.string().datetime().nullable().openapi({ example: null }),
 		level: z.number().int().openapi({ example: 0 }),
 	})
 	.openapi("Announcement");
