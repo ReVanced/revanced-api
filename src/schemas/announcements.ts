@@ -34,7 +34,7 @@ export const CreateAnnouncementBodySchema = z
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().optional().openapi({ example: "Some content" }),
 		created_at: z.string().datetime().nullable().optional().openapi({
-			example: "2024-01-01T00:00:00.000Z",
+			example: "1970-01-01T00:00:00.000Z",
 			description: "UTC timestamp. Defaults to current time if omitted.",
 		}),
 		archived_at: z.iso
@@ -52,7 +52,7 @@ export const UpdateAnnouncementBodySchema = z
 		title: z.string().openapi({ example: "Welcome" }),
 		content: z.string().optional().openapi({ example: "Some content" }),
 		created_at: z.iso.datetime().nullable().optional().openapi({
-			example: "2024-01-01T00:00:00.000Z",
+			example: "1970-01-01T00:00:00.000Z",
 			description: "UTC timestamp.",
 		}),
 		archived_at: z.iso
