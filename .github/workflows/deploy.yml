@@ -1,0 +1,82 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: ${{ runner.os }}-bun-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun i --frozen-lockfile
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bunx semantic-release
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          preCommands: |
+            echo "$ABOUT_JSON" > about.json
+            echo "$KEYS" > data/keys
+            bun run db:migration:apply --remote
+          command: deploy
+          secrets: |
+            API_TOKEN
+            GITHUB_TOKEN
+            ORGANIZATION
+            PATCHES_REPO
+            PATCHES_ASSET_REGEX
+            PATCHES_SIGNATURE_ASSET_REGEX
+            PATCHES_PUBLIC_KEY_FILE
+            MANAGER_REPO
+            MANAGER_ASSET_REGEX
+            MANAGER_DOWNLOADERS_REPO
+            MANAGER_DOWNLOADERS_ASSET_REGEX
+            CONTRIBUTORS_REPOS
+            API_VERSION
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.READ_REPOSITORIES_GITHUB_TOKEN }}
+          ORGANIZATION: ${{ vars.ORGANIZATION }}
+          PATCHES_REPO: ${{ vars.PATCHES_REPO }}
+          PATCHES_ASSET_REGEX: ${{ vars.PATCHES_ASSET_REGEX }}
+          PATCHES_SIGNATURE_ASSET_REGEX: ${{ vars.PATCHES_SIGNATURE_ASSET_REGEX }}
+          PATCHES_PUBLIC_KEY_FILE: ${{ vars.PATCHES_PUBLIC_KEY_FILE }}
+          MANAGER_REPO: ${{ vars.MANAGER_REPO }}
+          MANAGER_ASSET_REGEX: ${{ vars.MANAGER_ASSET_REGEX }}
+          MANAGER_DOWNLOADERS_REPO: ${{ vars.MANAGER_DOWNLOADERS_REPO }}
+          MANAGER_DOWNLOADERS_ASSET_REGEX: ${{ vars.MANAGER_DOWNLOADERS_ASSET_REGEX }}
+          CONTRIBUTORS_REPOS: ${{ vars.CONTRIBUTORS_REPOS }}
+          API_VERSION: ${{ vars.API_VERSION }}
+          ABOUT_JSON: ${{ vars.ABOUT_JSON }}
+          KEYS: ${{ vars.KEYS }}

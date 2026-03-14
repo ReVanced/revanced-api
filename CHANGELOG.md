@@ -1,3 +1,35 @@
+# [1.7.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.4...v1.7.0-dev.5) (2026-03-14)
+
+
+### Features
+
+* Add missing tags field to announcements ([#213](https://github.com/ReVanced/revanced-api/issues/213)) ([3674c6f](https://github.com/ReVanced/revanced-api/commit/3674c6ff099426fccc32ce4df519011c019da04f))
+
+# [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-07)
+
+
+### Features
+
+* Convert ReVanced API from a Ktor server to serverless ([#211](https://github.com/ReVanced/revanced-api/issues/211)) ([2ba8849](https://github.com/ReVanced/revanced-api/commit/2ba8849dafa8ec6879a083e9815804f104bb0711))
+
+# [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-02)
+
+# [1.7.0-dev.3](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.2...v1.7.0-dev.3) (2026-02-20)
+
+# [1.7.0-dev.2](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.1...v1.7.0-dev.2) (2026-02-20)
+
+
+### Features
+
+* Add history route ([f0c9d4b](https://github.com/ReVanced/revanced-api/commit/f0c9d4bab0eca4b00e9d174ec6b44018882ee74d))
+
+# [1.7.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.6.1...v1.7.0-dev.1) (2026-02-19)
+
+
+### Features
+
+* Add `downloaders` route ([#208](https://github.com/ReVanced/revanced-api/issues/208)) ([64f9431](https://github.com/ReVanced/revanced-api/commit/64f9431b50de681a662f0a6ed773dcbdecd29045))
+
 ## [1.6.1](https://github.com/ReVanced/revanced-api/compare/v1.6.0...v1.6.1) (2025-07-11)
 
 
