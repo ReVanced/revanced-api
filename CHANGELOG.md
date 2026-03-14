@@ -1,3 +1,10 @@
+# [1.7.0-dev.5](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.4...v1.7.0-dev.5) (2026-03-14)
+
+
+### Features
+
+* Add missing tags field to announcements ([#213](https://github.com/ReVanced/revanced-api/issues/213)) ([3674c6f](https://github.com/ReVanced/revanced-api/commit/3674c6ff099426fccc32ce4df519011c019da04f))
+
 # [1.7.0-dev.4](https://github.com/ReVanced/revanced-api/compare/v1.7.0-dev.3...v1.7.0-dev.4) (2026-03-07)
 
 
