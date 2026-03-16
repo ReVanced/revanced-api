@@ -7,6 +7,8 @@ import {
 	AnnouncementResponseSchema,
 	AnnouncementsResponseSchema,
 	CreateAnnouncementBodySchema,
+	LatestAnnouncementIdsResponseSchema,
+	LatestAnnouncementsResponseSchema,
 	UpdateAnnouncementBodySchema,
 } from "../schemas/announcements";
 import * as announcementsService from "../services/announcements";
@@ -31,6 +33,56 @@ app.openapi(
 	}),
 	async (c) => {
 		return c.json(await announcementsService.listAnnouncements(c.env), 200);
+	},
+);
+
+app.openapi(
+	createRoute({
+		method: "get",
+		path: "/latest",
+		tags: ["Announcements"],
+		summary: "Get the latest announcement for each tag",
+		description:
+			"Get the newest announcement for every available announcement tag.",
+		responses: {
+			200: {
+				content: {
+					"application/json": { schema: LatestAnnouncementsResponseSchema },
+				},
+				description: "The newest announcement for each tag.",
+			},
+		},
+	}),
+	async (c) => {
+		return c.json(
+			await announcementsService.getLatestAnnouncementsByTag(c.env),
+			200,
+		);
+	},
+);
+
+app.openapi(
+	createRoute({
+		method: "get",
+		path: "/latest/id",
+		tags: ["Announcements"],
+		summary: "Get the latest announcement ID for each tag",
+		description:
+			"Get the ID of the newest announcement for every available announcement tag.",
+		responses: {
+			200: {
+				content: {
+					"application/json": { schema: LatestAnnouncementIdsResponseSchema },
+				},
+				description: "The newest announcement ID for each tag.",
+			},
+		},
+	}),
+	async (c) => {
+		return c.json(
+			await announcementsService.getLatestAnnouncementIdsByTag(c.env),
+			200,
+		);
 	},
 );
 

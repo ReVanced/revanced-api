@@ -28,6 +28,28 @@ export const AnnouncementResponseSchema = z
 
 export const AnnouncementsResponseSchema = z.array(AnnouncementResponseSchema);
 
+export const LatestAnnouncementEntrySchema = z
+	.object({
+		tag: z.string().nullable().openapi({ example: "Important" }),
+		announcement: AnnouncementResponseSchema,
+	})
+	.openapi("LatestAnnouncementEntry");
+
+export const LatestAnnouncementsResponseSchema = z
+	.array(LatestAnnouncementEntrySchema)
+	.openapi("LatestAnnouncementsByTag");
+
+export const LatestAnnouncementIdEntrySchema = z
+	.object({
+		tag: z.string().nullable().openapi({ example: "Important" }),
+		id: z.number().int().openapi({ example: 1 }),
+	})
+	.openapi("LatestAnnouncementIdEntry");
+
+export const LatestAnnouncementIdsResponseSchema = z
+	.array(LatestAnnouncementIdEntrySchema)
+	.openapi("LatestAnnouncementIdsByTag");
+
 export const CreateAnnouncementBodySchema = z
 	.object({
 		author: z.string().optional().openapi({ example: "ReVanced" }),

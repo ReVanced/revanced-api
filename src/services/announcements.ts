@@ -1,9 +1,12 @@
 import { getDatabase } from "../db/client";
 import { announcements, tags, announcementTags } from "../db/schema";
-import { eq, desc, and, count } from "drizzle-orm";
+import { eq, desc, and, count, inArray, isNull } from "drizzle-orm";
 import type { Env } from "../types";
 
-async function getTagsForAnnouncement(db: ReturnType<typeof getDatabase>, announcementId: number): Promise<string[]> {
+async function getTagsForAnnouncement(
+	db: ReturnType<typeof getDatabase>,
+	announcementId: number,
+): Promise<string[]> {
 	const rows = await db
 		.select({ name: tags.name })
 		.from(announcementTags)
@@ -12,14 +15,94 @@ async function getTagsForAnnouncement(db: ReturnType<typeof getDatabase>, announ
 	return rows.map((r) => r.name);
 }
 
+async function getTagsForAnnouncements(
+	db: ReturnType<typeof getDatabase>,
+	announcementIds: number[],
+): Promise<Map<number, string[]>> {
+	if (announcementIds.length === 0) {
+		return new Map();
+	}
+
+	const rows = await db
+		.select({
+			announcementId: announcementTags.announcementId,
+			name: tags.name,
+		})
+		.from(announcementTags)
+		.innerJoin(tags, eq(announcementTags.tagId, tags.id))
+		.where(inArray(announcementTags.announcementId, announcementIds));
+
+	const tagMap = new Map<number, string[]>();
+	for (const row of rows) {
+		const announcementTagNames = tagMap.get(row.announcementId);
+		if (announcementTagNames) {
+			announcementTagNames.push(row.name);
+			continue;
+		}
+
+		tagMap.set(row.announcementId, [row.name]);
+	}
+
+	return tagMap;
+}
+
+async function getLatestAnnouncementRowsByTag(
+	db: ReturnType<typeof getDatabase>,
+) {
+	const rows = await db
+		.select({ tagName: tags.name, announcement: announcements })
+		.from(tags)
+		.innerJoin(announcementTags, eq(announcementTags.tagId, tags.id))
+		.innerJoin(
+			announcements,
+			eq(announcementTags.announcementId, announcements.id),
+		)
+		.orderBy(tags.name, desc(announcements.id));
+
+	const latestByTag = new Map<string, typeof announcements.$inferSelect>();
+	for (const row of rows) {
+		if (!latestByTag.has(row.tagName)) {
+			latestByTag.set(row.tagName, row.announcement);
+		}
+	}
+
+	return latestByTag;
+}
+
+async function getLatestUntaggedAnnouncementRow(
+	db: ReturnType<typeof getDatabase>,
+) {
+	const [row] = await db
+		.select({ announcement: announcements })
+		.from(announcements)
+		.leftJoin(
+			announcementTags,
+			eq(announcementTags.announcementId, announcements.id),
+		)
+		.where(isNull(announcementTags.announcementId))
+		.orderBy(desc(announcements.id))
+		.limit(1);
+
+	return row?.announcement ?? null;
+}
+
 /** Find or create a tag by name, returning its ID. */
-async function findOrCreateTag(db: ReturnType<typeof getDatabase>, name: string): Promise<number> {
+async function findOrCreateTag(
+	db: ReturnType<typeof getDatabase>,
+	name: string,
+): Promise<number> {
 	await db.insert(tags).values({ name }).onConflictDoNothing();
-	const [row] = await db.select({ id: tags.id }).from(tags).where(eq(tags.name, name));
+	const [row] = await db
+		.select({ id: tags.id })
+		.from(tags)
+		.where(eq(tags.name, name));
 	return row.id;
 }
 
-function formatRow(row: typeof announcements.$inferSelect, announcementTagNames: string[] = []) {
+function formatRow(
+	row: typeof announcements.$inferSelect,
+	announcementTagNames: string[] = [],
+) {
 	return {
 		id: row.id,
 		author: row.author,
@@ -32,9 +115,22 @@ function formatRow(row: typeof announcements.$inferSelect, announcementTagNames:
 	};
 }
 
+type LatestAnnouncementEntry = {
+	tag: string | null;
+	announcement: ReturnType<typeof formatRow>;
+};
+
+type LatestAnnouncementIdEntry = {
+	tag: string | null;
+	id: number;
+};
+
 export async function listAnnouncements(env: Env) {
 	const database = getDatabase(env.DB);
-	const rows = await database.select().from(announcements).orderBy(desc(announcements.id));
+	const rows = await database
+		.select()
+		.from(announcements)
+		.orderBy(desc(announcements.id));
 
 	const results = [];
 	for (const row of rows) {
@@ -42,6 +138,56 @@ export async function listAnnouncements(env: Env) {
 		results.push(formatRow(row, tagNames));
 	}
 	return results;
+}
+
+export async function getLatestAnnouncementsByTag(env: Env) {
+	const database = getDatabase(env.DB);
+	const latestByTag = await getLatestAnnouncementRowsByTag(database);
+	const latestUntagged = await getLatestUntaggedAnnouncementRow(database);
+	const announcementIds = [
+		...new Set([...latestByTag.values()].map((row) => row.id)),
+	];
+	if (latestUntagged) {
+		announcementIds.push(latestUntagged.id);
+	}
+	const announcementTagsMap = await getTagsForAnnouncements(database, [
+		...new Set(announcementIds),
+	]);
+
+	const entries: LatestAnnouncementEntry[] = [...latestByTag.entries()].map(
+		([tagName, row]) => ({
+			tag: tagName,
+			announcement: formatRow(row, announcementTagsMap.get(row.id) ?? []),
+		}),
+	);
+
+	if (latestUntagged) {
+		entries.push({
+			tag: null,
+			announcement: formatRow(latestUntagged, []),
+		});
+	}
+
+	return entries;
+}
+
+export async function getLatestAnnouncementIdsByTag(env: Env) {
+	const database = getDatabase(env.DB);
+	const latestByTag = await getLatestAnnouncementRowsByTag(database);
+	const latestUntagged = await getLatestUntaggedAnnouncementRow(database);
+
+	const entries: LatestAnnouncementIdEntry[] = [...latestByTag.entries()].map(
+		([tagName, row]) => ({
+			tag: tagName,
+			id: row.id,
+		}),
+	);
+
+	if (latestUntagged) {
+		entries.push({ tag: null, id: latestUntagged.id });
+	}
+
+	return entries;
 }
 
 export async function createAnnouncement(
@@ -74,9 +220,9 @@ export async function createAnnouncement(
 		for (const name of body.tags) {
 			tagIds.push(await findOrCreateTag(database, name));
 		}
-		await database.insert(announcementTags).values(
-			tagIds.map((tagId) => ({ announcementId: created.id, tagId })),
-		);
+		await database
+			.insert(announcementTags)
+			.values(tagIds.map((tagId) => ({ announcementId: created.id, tagId })));
 	}
 
 	const tagNames = await getTagsForAnnouncement(database, created.id);
@@ -116,7 +262,10 @@ export async function updateAnnouncement(
 		if (result.length === 0) return null;
 		row = result[0];
 	} else {
-		const rows = await database.select().from(announcements).where(eq(announcements.id, id));
+		const rows = await database
+			.select()
+			.from(announcements)
+			.where(eq(announcements.id, id));
 		if (rows.length === 0) return null;
 		row = rows[0];
 	}
@@ -136,7 +285,9 @@ export async function updateAnnouncement(
 		for (const name of body.tags) {
 			if (!currentTagNames.has(name)) {
 				const tagId = await findOrCreateTag(database, name);
-				await database.insert(announcementTags).values({ announcementId: id, tagId });
+				await database
+					.insert(announcementTags)
+					.values({ announcementId: id, tagId });
 			}
 		}
 
@@ -144,9 +295,14 @@ export async function updateAnnouncement(
 		for (const { tagId, name } of currentTagRows) {
 			if (newTagNames.has(name)) continue;
 
-			await database.delete(announcementTags).where(
-				and(eq(announcementTags.announcementId, id), eq(announcementTags.tagId, tagId)),
-			);
+			await database
+				.delete(announcementTags)
+				.where(
+					and(
+						eq(announcementTags.announcementId, id),
+						eq(announcementTags.tagId, tagId),
+					),
+				);
 
 			const [usage] = await database
 				.select({ count: count() })
@@ -172,7 +328,10 @@ export async function deleteAnnouncement(env: Env, id: number) {
 		.where(eq(announcementTags.announcementId, id));
 	const tagIds = announcementTagRows.map((r) => r.tagId);
 
-	const result = await database.delete(announcements).where(eq(announcements.id, id)).returning();
+	const result = await database
+		.delete(announcements)
+		.where(eq(announcements.id, id))
+		.returning();
 	if (result.length === 0) return false;
 
 	// Delete tags that are no longer referenced by any announcement

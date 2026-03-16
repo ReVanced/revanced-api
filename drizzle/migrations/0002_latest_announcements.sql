@@ -1,0 +1,1 @@
+CREATE INDEX `announcement_tags_tag_id_idx` ON `announcement_tags` (`tag_id`);

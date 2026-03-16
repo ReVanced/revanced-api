@@ -1,3 +1,10 @@
+# [1.8.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.7.0...v1.8.0-dev.1) (2026-03-16)
+
+
+### Features
+
+* Add latest APIs for announcements ([e4d7e25](https://github.com/ReVanced/revanced-api/commit/e4d7e25e6c3caa381af38ec542a63c81ca9b13a2))
+
 # [1.7.0](https://github.com/ReVanced/revanced-api/compare/v1.6.1...v1.7.0) (2026-03-14)
 
 
