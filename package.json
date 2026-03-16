@@ -1,6 +1,6 @@
 {
   "name": "revanced-api",
-  "version": "1.8.0-dev.1",
+  "version": "1.8.0",
   "description": "API server for ReVanced.",
   "type": "module",
   "scripts": {
