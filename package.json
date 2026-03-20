@@ -1,39 +1,41 @@
 {
-  "name": "revanced-api",
-  "version": "1.8.0",
-  "description": "API server for ReVanced.",
-  "type": "module",
-  "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "db:create": "wrangler d1 create revanced-api",
-    "db:migration:generate": "drizzle-kit generate",
-    "db:migration:apply": "wrangler d1 migrations apply revanced-api"
-  },
-  "keywords": [
-    "revanced",
-    "api",
-    "hono",
-    "cloudflare-workers"
-  ],
-  "license": "AGPL-3.0",
-  "dependencies": {
-    "@hono/swagger-ui": "^0.6.1",
-    "@hono/zod-openapi": "^1.2.2",
-    "drizzle-orm": "^0.45.1",
-    "hono": "^4.12.8",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260317.1",
-    "@kilianpaquier/semantic-release-backmerge": "^1.7.3",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^13.1.5",
-    "@types/node": "^25.5.0",
-    "drizzle-kit": "^0.31.10",
-    "semantic-release": "^25.0.3",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.76.0"
-  }
+    "name": "revanced-api",
+    "version": "1.8.0",
+    "description": "API server for ReVanced.",
+    "type": "module",
+    "scripts": {
+        "dev": "wrangler dev",
+        "deploy": "wrangler deploy",
+        "format": "prettier --write --ignore-unknown .",
+        "db:create": "wrangler d1 create revanced-api",
+        "db:migration:generate": "drizzle-kit generate",
+        "db:migration:apply": "wrangler d1 migrations apply revanced-api"
+    },
+    "keywords": [
+        "revanced",
+        "api",
+        "hono",
+        "cloudflare-workers"
+    ],
+    "license": "AGPL-3.0",
+    "dependencies": {
+        "@hono/swagger-ui": "^0.6.1",
+        "@hono/zod-openapi": "^1.2.2",
+        "drizzle-orm": "^0.45.1",
+        "hono": "^4.12.8",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20260317.1",
+        "@kilianpaquier/semantic-release-backmerge": "^1.7.3",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/npm": "^13.1.5",
+        "@types/node": "^25.5.0",
+        "drizzle-kit": "^0.31.10",
+        "prettier": "3.8.1",
+        "semantic-release": "^25.0.3",
+        "typescript": "^5.9.3",
+        "wrangler": "^4.76.0"
+    }
 }
