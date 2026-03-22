@@ -9,7 +9,8 @@
         "format": "prettier --write --ignore-unknown .",
         "db:create": "wrangler d1 create revanced-api",
         "db:migration:generate": "drizzle-kit generate",
-        "db:migration:apply": "wrangler d1 migrations apply revanced-api"
+        "db:migration:apply": "wrangler d1 migrations apply revanced-api",
+        "build:client:ts": "openapi-ts -o ./src/client -i"
     },
     "keywords": [
         "revanced",
@@ -20,13 +21,14 @@
     "license": "AGPL-3.0",
     "dependencies": {
         "@hono/swagger-ui": "^0.6.1",
-        "@hono/zod-openapi": "^1.2.2",
+        "@hono/zod-openapi": "^1.2.3",
         "drizzle-orm": "^0.45.1",
         "hono": "^4.12.8",
         "zod": "^4.3.6"
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20260317.1",
+        "@hey-api/openapi-ts": "0.94.4",
         "@kilianpaquier/semantic-release-backmerge": "^1.7.3",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
