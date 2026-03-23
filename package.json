@@ -10,7 +10,7 @@
         "db:create": "wrangler d1 create revanced-api",
         "db:migration:generate": "drizzle-kit generate",
         "db:migration:apply": "wrangler d1 migrations apply revanced-api",
-        "build:client:ts": "openapi-ts -o ./src/client -i"
+        "build:client:ts": "openapi-ts -o ./client/ts -i"
     },
     "keywords": [
         "revanced",
