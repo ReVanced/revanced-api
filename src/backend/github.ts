@@ -43,12 +43,7 @@ interface GitHubGpgKey {
     key_id: string;
 }
 
-function formatDatetime(isoString: string): string {
-    return isoString
-        .replace(/\.\d{3}Z$/, '')
-        .replace(/Z$/, '')
-        .replace(/[+-]\d{2}:\d{2}$/, '');
-}
+import { formatDatetime } from '../utils';
 
 export class GitHubBackend implements Backend {
     private readonly baseUrl = 'https://api.github.com';
