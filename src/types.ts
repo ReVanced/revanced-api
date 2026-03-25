@@ -7,7 +7,12 @@ export interface Env {
     ASSETS: Fetcher;
     DB: D1Database;
     API_TOKEN: string;
+    BACKEND: string;
     GITHUB_TOKEN?: string;
+    GITEA_TOKEN?: string;
+    GITEA_URL?: string;
+    GITLAB_TOKEN?: string;
+    GITLAB_URL?: string;
     ORGANIZATION: string;
     PATCHES_REPO: string;
     PATCHES_ASSET_REGEX: string;
