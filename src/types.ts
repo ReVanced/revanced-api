@@ -9,8 +9,7 @@ export interface Env {
     API_TOKEN: string;
     BACKEND: string;
     BACKEND_TOKEN?: string;
-    GITEA_URL?: string;
-    GITLAB_URL?: string;
+    BACKEND_URL?: string;
     ORGANIZATION: string;
     PATCHES_REPO: string;
     PATCHES_ASSET_REGEX: string;
