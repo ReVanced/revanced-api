@@ -56,13 +56,13 @@ export function getBackend(env: Env): Backend {
 }
 
 function createBackend(env: Env): Backend {
-    switch (env.BACKEND) {
+    switch (env.BACKEND ?? 'github') {
         case 'github':
             return new GitHubBackend(env.BACKEND_TOKEN);
         case 'gitea':
             return new GiteaBackend(env.BACKEND_URL!, env.BACKEND_TOKEN);
         case 'gitlab':
-            return new GitLabBackend(env.BACKEND_URL ?? 'https://gitlab.com', env.BACKEND_TOKEN);
+            return new GitLabBackend(env.BACKEND_URL, env.BACKEND_TOKEN);
         default:
             throw new Error(`Unknown backend: ${env.BACKEND}`);
     }

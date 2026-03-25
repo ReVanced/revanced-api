@@ -7,7 +7,7 @@ export interface Env {
     ASSETS: Fetcher;
     DB: D1Database;
     API_TOKEN: string;
-    BACKEND: string;
+    BACKEND?: string;
     BACKEND_TOKEN?: string;
     BACKEND_URL?: string;
     ORGANIZATION: string;

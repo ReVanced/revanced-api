@@ -51,9 +51,10 @@ export class GitLabBackend implements Backend {
     private readonly webUrl: string;
     private readonly headers: HeadersInit;
 
-    constructor(url: string, token?: string) {
-        this.webUrl = url;
-        this.baseUrl = `${url}/api/v4`;
+    constructor(url?: string, token?: string) {
+        const resolvedUrl = url || 'https://gitlab.com';
+        this.webUrl = resolvedUrl;
+        this.baseUrl = `${resolvedUrl}/api/v4`;
         const headers: Record<string, string> = {
             Accept: 'application/json'
         };
