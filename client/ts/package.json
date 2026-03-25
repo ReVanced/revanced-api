@@ -2,8 +2,8 @@
     "name": "@revanced/api-client",
     "version": "0.0.1",
     "module": "./dist/index.js",
-    "peerDependencies": {
-        "typescript": "^5.9.3"
+    "devDependencies": {
+        "typescript": "^6.0.2"
     },
     "exports": {
         ".": {
