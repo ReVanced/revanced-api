@@ -3,3 +3,6 @@ drizzle/
 bun.lock
 node_modules/
 *.md
+dist/
+build/
+out/
