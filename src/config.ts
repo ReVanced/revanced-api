@@ -1,5 +1,8 @@
 import type { Env } from './types';
+import type { Backend } from './backend/types';
 import { GitHubBackend } from './backend/github';
+import { GiteaBackend } from './backend/gitea';
+import { GitLabBackend } from './backend/gitlab';
 
 export interface Config {
     organization: string;
@@ -46,8 +49,21 @@ export function getConfig(env: Env): Config {
     });
 }
 
-let _backend: GitHubBackend | undefined;
+let _backend: Backend | undefined;
 
-export function getBackend(env: Env): GitHubBackend {
-    return (_backend ??= new GitHubBackend(env.GITHUB_TOKEN));
+export function getBackend(env: Env): Backend {
+    return (_backend ??= createBackend(env));
+}
+
+function createBackend(env: Env): Backend {
+    switch (env.BACKEND ?? 'github') {
+        case 'github':
+            return new GitHubBackend(env.BACKEND_TOKEN);
+        case 'gitea':
+            return new GiteaBackend(env.BACKEND_URL!, env.BACKEND_TOKEN);
+        case 'gitlab':
+            return new GitLabBackend(env.BACKEND_URL, env.BACKEND_TOKEN);
+        default:
+            throw new Error(`Unknown backend: ${env.BACKEND}`);
+    }
 }
