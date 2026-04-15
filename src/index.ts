@@ -51,7 +51,7 @@ export default {
             _app.route(`/v${apiVersion}`, versionedApp);
             _app.get('/', swaggerUI({ url: `/v${apiVersion}/openapi` }));
 
-            _app.doc(`/v${apiVersion}/openapi`, () => ({
+            _app.doc31(`/v${apiVersion}/openapi`, () => ({
                 openapi: '3.1.0',
                 info: {
                     title: 'ReVanced API',

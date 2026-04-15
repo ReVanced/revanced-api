@@ -1,3 +1,10 @@
+## [1.8.1-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.8.0...v1.8.1-dev.1) (2026-04-15)
+
+
+### Bug Fixes
+
+* Generate OpenAPI v3.1.x specification ([#220](https://github.com/ReVanced/revanced-api/issues/220)) ([2576077](https://github.com/ReVanced/revanced-api/commit/257607709925a6e10a45389c108bc27d7943deac))
+
 # [1.8.0](https://github.com/ReVanced/revanced-api/compare/v1.7.0...v1.8.0) (2026-03-16)
 
 
