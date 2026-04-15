@@ -30,7 +30,7 @@
         [
             "@semantic-release/npm",
             {
-                "pkgRoot": "client/ts",
+                "pkgRoot": "client",
                 "npmPublish": true
             }
         ],
@@ -40,7 +40,7 @@
                 "assets": [
                     "CHANGELOG.md",
                     "package.json",
-                    "client/ts/package.json"
+                    "client/package.json"
                 ],
                 "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
