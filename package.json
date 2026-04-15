@@ -10,7 +10,7 @@
         "db:create": "wrangler d1 create revanced-api",
         "db:migration:generate": "drizzle-kit generate",
         "db:migration:apply": "wrangler d1 migrations apply revanced-api",
-        "gen:client:ts": "openapi-ts -o ./client/ts -i",
+        "gen:client:ts": "openapi-ts -i",
         "build:client:ts": "bun run --filter ./client/ts build"
     },
     "keywords": [
@@ -39,6 +39,9 @@
         "prettier": "3.8.3",
         "semantic-release": "^25.0.3",
         "typescript": "^6.0.2",
-        "wrangler": "^4.82.2"
-    }
+        "wrangler": "^4.83.0"
+    },
+    "workspaces": [
+        "client/ts"
+    ]
 }
