@@ -7,7 +7,9 @@ export interface Env {
     ASSETS: Fetcher;
     DB: D1Database;
     API_TOKEN: string;
-    GITHUB_TOKEN?: string;
+    BACKEND?: string;
+    BACKEND_TOKEN?: string;
+    BACKEND_URL?: string;
     ORGANIZATION: string;
     PATCHES_REPO: string;
     PATCHES_ASSET_REGEX: string;
