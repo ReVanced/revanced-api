@@ -12,11 +12,9 @@ export const ContributorSchema = z.object({
 export const ContributableSchema = z
     .object({
         name: z.string().openapi({ example: 'ReVanced Patches' }),
-        url: z
-            .url()
-            .openapi({
-                example: 'https://github.com/revanced/revanced-patches'
-            }),
+        url: z.url().openapi({
+            example: 'https://github.com/revanced/revanced-patches'
+        }),
         contributors: z.array(ContributorSchema)
     })
     .openapi('Contributable');
@@ -33,11 +31,9 @@ export const GpgKeySchema = z
 export const TeamMemberSchema = z
     .object({
         name: z.string().openapi({ example: 'oSumAtrIX' }),
-        avatar_url: z
-            .url()
-            .openapi({
-                example: 'https://avatars.githubusercontent.com/u/...'
-            }),
+        avatar_url: z.url().openapi({
+            example: 'https://avatars.githubusercontent.com/u/...'
+        }),
         url: z.url().openapi({ example: 'https://github.com/oSumAtrIX' }),
         bio: z.string().nullable().openapi({ example: 'Some bio text' }),
         gpg_key: GpgKeySchema

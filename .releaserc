@@ -1,42 +1,60 @@
 {
-  "branches": [
-    "main",
-    {
-      "name": "dev",
-      "prerelease": true
-    }
-  ],
-  "plugins": [
-    [
-      "@semantic-release/commit-analyzer", {
-        "releaseRules": [
-          { "type": "build", "scope": "Needs bump", "release": "patch" }
-        ]
-      }
+    "branches": [
+        "main",
+        {
+            "name": "dev",
+            "prerelease": true
+        }
     ],
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/changelog",
-    [
-      "@semantic-release/npm",
-      {
-        "npmPublish": false
-      }
-    ],
-    [
-      "@semantic-release/git",
-      {
-        "assets": [
-          "CHANGELOG.md",
-          "package.json"
+    "plugins": [
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "releaseRules": [
+                    {
+                        "type": "build",
+                        "scope": "Needs bump",
+                        "release": "patch"
+                    }
+                ]
+            }
         ],
-        "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    [
-      "@kilianpaquier/semantic-release-backmerge",
-      {
-        "targets": [{ "from": "main", "to": "dev" }]
-      }
+        "@semantic-release/release-notes-generator",
+        "@semantic-release/changelog",
+        [
+            "@semantic-release/npm",
+            {
+                "npmPublish": false
+            }
+        ],
+        [
+            "@semantic-release/npm",
+            {
+                "pkgRoot": "client",
+                "npmPublish": true
+            }
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "CHANGELOG.md",
+                    "package.json",
+                    "client/package.json"
+                ],
+                "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+            }
+        ],
+        [
+            "@kilianpaquier/semantic-release-backmerge",
+            {
+                "targets": [
+                    {
+                        "from": "main",
+                        "to": "dev"
+                    }
+                ]
+            }
+        ]
     ]
-  ]
 }

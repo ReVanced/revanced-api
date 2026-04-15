@@ -9,7 +9,9 @@
         "format": "prettier --write --ignore-unknown .",
         "db:create": "wrangler d1 create revanced-api",
         "db:migration:generate": "drizzle-kit generate",
-        "db:migration:apply": "wrangler d1 migrations apply revanced-api"
+        "db:migration:apply": "wrangler d1 migrations apply revanced-api",
+        "gen:client:ts": "openapi-ts -i",
+        "build:client:ts": "bun run --cwd client build"
     },
     "keywords": [
         "revanced",
@@ -20,22 +22,26 @@
     "license": "AGPL-3.0",
     "dependencies": {
         "@hono/swagger-ui": "^0.6.1",
-        "@hono/zod-openapi": "^1.2.2",
-        "drizzle-orm": "^0.45.1",
-        "hono": "^4.12.8",
+        "@hono/zod-openapi": "^1.3.0",
+        "drizzle-orm": "^0.45.2",
+        "hono": "^4.12.14",
         "zod": "^4.3.6"
     },
     "devDependencies": {
-        "@cloudflare/workers-types": "^4.20260317.1",
-        "@kilianpaquier/semantic-release-backmerge": "^1.7.3",
+        "@cloudflare/workers-types": "^4.20260415.1",
+        "@hey-api/openapi-ts": "0.96.0",
+        "@kilianpaquier/semantic-release-backmerge": "^1.7.4",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "@semantic-release/npm": "^13.1.5",
-        "@types/node": "^25.5.0",
+        "@types/node": "^25.6.0",
         "drizzle-kit": "^0.31.10",
-        "prettier": "3.8.1",
+        "prettier": "3.8.3",
         "semantic-release": "^25.0.3",
-        "typescript": "^5.9.3",
-        "wrangler": "^4.76.0"
-    }
+        "typescript": "^6.0.2",
+        "wrangler": "^4.83.0"
+    },
+    "workspaces": [
+        "client"
+    ]
 }

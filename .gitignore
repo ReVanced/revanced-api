@@ -4,3 +4,7 @@ node_modules/
 .dev.vars
 .env
 about.json
+openapi-ts-error-*.log
+dist/
+build/
+out/
