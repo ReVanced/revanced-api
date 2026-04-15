@@ -2,9 +2,87 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteV5AnnouncementsByIdData, DeleteV5AnnouncementsByIdErrors, DeleteV5AnnouncementsByIdResponses, GetV5AboutData, GetV5AboutResponses, GetV5AnnouncementsData, GetV5AnnouncementsLatestData, GetV5AnnouncementsLatestIdData, GetV5AnnouncementsLatestIdResponses, GetV5AnnouncementsLatestResponses, GetV5AnnouncementsResponses, GetV5ContributorsData, GetV5ContributorsErrors, GetV5ContributorsResponses, GetV5ManagerData, GetV5ManagerDownloadersData, GetV5ManagerDownloadersErrors, GetV5ManagerDownloadersPrereleaseData, GetV5ManagerDownloadersPrereleaseErrors, GetV5ManagerDownloadersPrereleaseResponses, GetV5ManagerDownloadersResponses, GetV5ManagerDownloadersVersionData, GetV5ManagerDownloadersVersionErrors, GetV5ManagerDownloadersVersionPrereleaseData, GetV5ManagerDownloadersVersionPrereleaseErrors, GetV5ManagerDownloadersVersionPrereleaseResponses, GetV5ManagerDownloadersVersionResponses, GetV5ManagerErrors, GetV5ManagerHistoryData, GetV5ManagerHistoryErrors, GetV5ManagerHistoryPrereleaseData, GetV5ManagerHistoryPrereleaseErrors, GetV5ManagerHistoryPrereleaseResponses, GetV5ManagerHistoryResponses, GetV5ManagerPrereleaseData, GetV5ManagerPrereleaseErrors, GetV5ManagerPrereleaseResponses, GetV5ManagerResponses, GetV5ManagerVersionData, GetV5ManagerVersionErrors, GetV5ManagerVersionPrereleaseData, GetV5ManagerVersionPrereleaseErrors, GetV5ManagerVersionPrereleaseResponses, GetV5ManagerVersionResponses, GetV5PatchesData, GetV5PatchesErrors, GetV5PatchesHistoryData, GetV5PatchesHistoryErrors, GetV5PatchesHistoryPrereleaseData, GetV5PatchesHistoryPrereleaseErrors, GetV5PatchesHistoryPrereleaseResponses, GetV5PatchesHistoryResponses, GetV5PatchesKeysData, GetV5PatchesKeysResponses, GetV5PatchesPrereleaseData, GetV5PatchesPrereleaseErrors, GetV5PatchesPrereleaseResponses, GetV5PatchesResponses, GetV5PatchesVersionData, GetV5PatchesVersionErrors, GetV5PatchesVersionPrereleaseData, GetV5PatchesVersionPrereleaseErrors, GetV5PatchesVersionPrereleaseResponses, GetV5PatchesVersionResponses, GetV5TeamData, GetV5TeamErrors, GetV5TeamResponses, PatchV5AnnouncementsByIdData, PatchV5AnnouncementsByIdErrors, PatchV5AnnouncementsByIdResponses, PostV5AnnouncementsData, PostV5AnnouncementsErrors, PostV5AnnouncementsResponses } from './types.gen';
+import type {
+    DeleteV5AnnouncementsByIdData,
+    DeleteV5AnnouncementsByIdErrors,
+    DeleteV5AnnouncementsByIdResponses,
+    GetV5AboutData,
+    GetV5AboutResponses,
+    GetV5AnnouncementsData,
+    GetV5AnnouncementsLatestData,
+    GetV5AnnouncementsLatestIdData,
+    GetV5AnnouncementsLatestIdResponses,
+    GetV5AnnouncementsLatestResponses,
+    GetV5AnnouncementsResponses,
+    GetV5ContributorsData,
+    GetV5ContributorsErrors,
+    GetV5ContributorsResponses,
+    GetV5ManagerData,
+    GetV5ManagerDownloadersData,
+    GetV5ManagerDownloadersErrors,
+    GetV5ManagerDownloadersPrereleaseData,
+    GetV5ManagerDownloadersPrereleaseErrors,
+    GetV5ManagerDownloadersPrereleaseResponses,
+    GetV5ManagerDownloadersResponses,
+    GetV5ManagerDownloadersVersionData,
+    GetV5ManagerDownloadersVersionErrors,
+    GetV5ManagerDownloadersVersionPrereleaseData,
+    GetV5ManagerDownloadersVersionPrereleaseErrors,
+    GetV5ManagerDownloadersVersionPrereleaseResponses,
+    GetV5ManagerDownloadersVersionResponses,
+    GetV5ManagerErrors,
+    GetV5ManagerHistoryData,
+    GetV5ManagerHistoryErrors,
+    GetV5ManagerHistoryPrereleaseData,
+    GetV5ManagerHistoryPrereleaseErrors,
+    GetV5ManagerHistoryPrereleaseResponses,
+    GetV5ManagerHistoryResponses,
+    GetV5ManagerPrereleaseData,
+    GetV5ManagerPrereleaseErrors,
+    GetV5ManagerPrereleaseResponses,
+    GetV5ManagerResponses,
+    GetV5ManagerVersionData,
+    GetV5ManagerVersionErrors,
+    GetV5ManagerVersionPrereleaseData,
+    GetV5ManagerVersionPrereleaseErrors,
+    GetV5ManagerVersionPrereleaseResponses,
+    GetV5ManagerVersionResponses,
+    GetV5PatchesData,
+    GetV5PatchesErrors,
+    GetV5PatchesHistoryData,
+    GetV5PatchesHistoryErrors,
+    GetV5PatchesHistoryPrereleaseData,
+    GetV5PatchesHistoryPrereleaseErrors,
+    GetV5PatchesHistoryPrereleaseResponses,
+    GetV5PatchesHistoryResponses,
+    GetV5PatchesKeysData,
+    GetV5PatchesKeysResponses,
+    GetV5PatchesPrereleaseData,
+    GetV5PatchesPrereleaseErrors,
+    GetV5PatchesPrereleaseResponses,
+    GetV5PatchesResponses,
+    GetV5PatchesVersionData,
+    GetV5PatchesVersionErrors,
+    GetV5PatchesVersionPrereleaseData,
+    GetV5PatchesVersionPrereleaseErrors,
+    GetV5PatchesVersionPrereleaseResponses,
+    GetV5PatchesVersionResponses,
+    GetV5TeamData,
+    GetV5TeamErrors,
+    GetV5TeamResponses,
+    PatchV5AnnouncementsByIdData,
+    PatchV5AnnouncementsByIdErrors,
+    PatchV5AnnouncementsByIdResponses,
+    PostV5AnnouncementsData,
+    PostV5AnnouncementsErrors,
+    PostV5AnnouncementsResponses
+} from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
+export type Options<
+    TData extends TDataShape = TDataShape,
+    ThrowOnError extends boolean = boolean,
+    TResponse = unknown
+> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -23,199 +101,398 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Get the current stable patches release.
  */
-export const getV5Patches = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesResponses, GetV5PatchesErrors, ThrowOnError>({ url: '/v5/patches', ...options });
+export const getV5Patches = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5PatchesData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesResponses,
+        GetV5PatchesErrors,
+        ThrowOnError
+    >({ url: '/v5/patches', ...options });
 
 /**
  * Get current patches prerelease
  *
  * Get the current patches prerelease.
  */
-export const getV5PatchesPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesPrereleaseResponses, GetV5PatchesPrereleaseErrors, ThrowOnError>({ url: '/v5/patches/prerelease', ...options });
+export const getV5PatchesPrerelease = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5PatchesPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesPrereleaseResponses,
+        GetV5PatchesPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/patches/prerelease', ...options });
 
 /**
  * Get current patches release version
  *
  * Get the current stable patches release version.
  */
-export const getV5PatchesVersion = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesVersionData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesVersionResponses, GetV5PatchesVersionErrors, ThrowOnError>({ url: '/v5/patches/version', ...options });
+export const getV5PatchesVersion = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5PatchesVersionData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesVersionResponses,
+        GetV5PatchesVersionErrors,
+        ThrowOnError
+    >({ url: '/v5/patches/version', ...options });
 
 /**
  * Get current patches prerelease version
  *
  * Get the current patches prerelease version.
  */
-export const getV5PatchesVersionPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesVersionPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesVersionPrereleaseResponses, GetV5PatchesVersionPrereleaseErrors, ThrowOnError>({ url: '/v5/patches/version/prerelease', ...options });
+export const getV5PatchesVersionPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5PatchesVersionPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesVersionPrereleaseResponses,
+        GetV5PatchesVersionPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/patches/version/prerelease', ...options });
 
 /**
  * Get patches release history
  *
  * Get the stable patches release history.
  */
-export const getV5PatchesHistory = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesHistoryData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesHistoryResponses, GetV5PatchesHistoryErrors, ThrowOnError>({ url: '/v5/patches/history', ...options });
+export const getV5PatchesHistory = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5PatchesHistoryData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesHistoryResponses,
+        GetV5PatchesHistoryErrors,
+        ThrowOnError
+    >({ url: '/v5/patches/history', ...options });
 
 /**
  * Get patches prerelease history
  *
  * Get the patches prerelease history.
  */
-export const getV5PatchesHistoryPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesHistoryPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesHistoryPrereleaseResponses, GetV5PatchesHistoryPrereleaseErrors, ThrowOnError>({ url: '/v5/patches/history/prerelease', ...options });
+export const getV5PatchesHistoryPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5PatchesHistoryPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesHistoryPrereleaseResponses,
+        GetV5PatchesHistoryPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/patches/history/prerelease', ...options });
 
 /**
  * Get patches public keys
  *
  * Get the public keys for verifying patches assets.
  */
-export const getV5PatchesKeys = <ThrowOnError extends boolean = false>(options?: Options<GetV5PatchesKeysData, ThrowOnError>) => (options?.client ?? client).get<GetV5PatchesKeysResponses, unknown, ThrowOnError>({ url: '/v5/patches/keys', ...options });
+export const getV5PatchesKeys = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5PatchesKeysData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5PatchesKeysResponses,
+        unknown,
+        ThrowOnError
+    >({ url: '/v5/patches/keys', ...options });
 
 /**
  * Get current manager release
  *
  * Get the current stable manager release.
  */
-export const getV5Manager = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerResponses, GetV5ManagerErrors, ThrowOnError>({ url: '/v5/manager', ...options });
+export const getV5Manager = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ManagerData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerResponses,
+        GetV5ManagerErrors,
+        ThrowOnError
+    >({ url: '/v5/manager', ...options });
 
 /**
  * Get current manager prerelease
  *
  * Get the current manager prerelease.
  */
-export const getV5ManagerPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerPrereleaseResponses, GetV5ManagerPrereleaseErrors, ThrowOnError>({ url: '/v5/manager/prerelease', ...options });
+export const getV5ManagerPrerelease = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ManagerPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerPrereleaseResponses,
+        GetV5ManagerPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/prerelease', ...options });
 
 /**
  * Get current manager release version
  *
  * Get the current stable manager release version.
  */
-export const getV5ManagerVersion = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerVersionData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerVersionResponses, GetV5ManagerVersionErrors, ThrowOnError>({ url: '/v5/manager/version', ...options });
+export const getV5ManagerVersion = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ManagerVersionData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerVersionResponses,
+        GetV5ManagerVersionErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/version', ...options });
 
 /**
  * Get current manager prerelease version
  *
  * Get the current manager prerelease version.
  */
-export const getV5ManagerVersionPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerVersionPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerVersionPrereleaseResponses, GetV5ManagerVersionPrereleaseErrors, ThrowOnError>({ url: '/v5/manager/version/prerelease', ...options });
+export const getV5ManagerVersionPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5ManagerVersionPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerVersionPrereleaseResponses,
+        GetV5ManagerVersionPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/version/prerelease', ...options });
 
 /**
  * Get manager release history
  *
  * Get the stable manager release history.
  */
-export const getV5ManagerHistory = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerHistoryData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerHistoryResponses, GetV5ManagerHistoryErrors, ThrowOnError>({ url: '/v5/manager/history', ...options });
+export const getV5ManagerHistory = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ManagerHistoryData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerHistoryResponses,
+        GetV5ManagerHistoryErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/history', ...options });
 
 /**
  * Get manager prerelease history
  *
  * Get the manager prerelease history.
  */
-export const getV5ManagerHistoryPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerHistoryPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerHistoryPrereleaseResponses, GetV5ManagerHistoryPrereleaseErrors, ThrowOnError>({ url: '/v5/manager/history/prerelease', ...options });
+export const getV5ManagerHistoryPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5ManagerHistoryPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerHistoryPrereleaseResponses,
+        GetV5ManagerHistoryPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/history/prerelease', ...options });
 
 /**
  * Get current manager downloaders release
  *
  * Get the current stable manager downloaders release.
  */
-export const getV5ManagerDownloaders = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerDownloadersData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerDownloadersResponses, GetV5ManagerDownloadersErrors, ThrowOnError>({ url: '/v5/manager/downloaders', ...options });
+export const getV5ManagerDownloaders = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ManagerDownloadersData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerDownloadersResponses,
+        GetV5ManagerDownloadersErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/downloaders', ...options });
 
 /**
  * Get current manager downloaders prerelease
  *
  * Get the current manager downloaders prerelease.
  */
-export const getV5ManagerDownloadersPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerDownloadersPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerDownloadersPrereleaseResponses, GetV5ManagerDownloadersPrereleaseErrors, ThrowOnError>({ url: '/v5/manager/downloaders/prerelease', ...options });
+export const getV5ManagerDownloadersPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5ManagerDownloadersPrereleaseData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerDownloadersPrereleaseResponses,
+        GetV5ManagerDownloadersPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/downloaders/prerelease', ...options });
 
 /**
  * Get current manager downloaders release version
  *
  * Get the current stable manager downloaders release version.
  */
-export const getV5ManagerDownloadersVersion = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerDownloadersVersionData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerDownloadersVersionResponses, GetV5ManagerDownloadersVersionErrors, ThrowOnError>({ url: '/v5/manager/downloaders/version', ...options });
+export const getV5ManagerDownloadersVersion = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5ManagerDownloadersVersionData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerDownloadersVersionResponses,
+        GetV5ManagerDownloadersVersionErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/downloaders/version', ...options });
 
 /**
  * Get current manager downloaders prerelease version
  *
  * Get the current manager downloaders prerelease version.
  */
-export const getV5ManagerDownloadersVersionPrerelease = <ThrowOnError extends boolean = false>(options?: Options<GetV5ManagerDownloadersVersionPrereleaseData, ThrowOnError>) => (options?.client ?? client).get<GetV5ManagerDownloadersVersionPrereleaseResponses, GetV5ManagerDownloadersVersionPrereleaseErrors, ThrowOnError>({ url: '/v5/manager/downloaders/version/prerelease', ...options });
+export const getV5ManagerDownloadersVersionPrerelease = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<
+        GetV5ManagerDownloadersVersionPrereleaseData,
+        ThrowOnError
+    >
+) =>
+    (options?.client ?? client).get<
+        GetV5ManagerDownloadersVersionPrereleaseResponses,
+        GetV5ManagerDownloadersVersionPrereleaseErrors,
+        ThrowOnError
+    >({ url: '/v5/manager/downloaders/version/prerelease', ...options });
 
 /**
  * Get all announcements
  *
  * Get all announcements ordered by newest first.
  */
-export const getV5Announcements = <ThrowOnError extends boolean = false>(options?: Options<GetV5AnnouncementsData, ThrowOnError>) => (options?.client ?? client).get<GetV5AnnouncementsResponses, unknown, ThrowOnError>({ url: '/v5/announcements', ...options });
+export const getV5Announcements = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5AnnouncementsData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5AnnouncementsResponses,
+        unknown,
+        ThrowOnError
+    >({ url: '/v5/announcements', ...options });
 
 /**
  * Create an announcement
  *
  * Create a new announcement. Requires bearer token authentication.
  */
-export const postV5Announcements = <ThrowOnError extends boolean = false>(options?: Options<PostV5AnnouncementsData, ThrowOnError>) => (options?.client ?? client).post<PostV5AnnouncementsResponses, PostV5AnnouncementsErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/v5/announcements',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers
-    }
-});
+export const postV5Announcements = <ThrowOnError extends boolean = false>(
+    options?: Options<PostV5AnnouncementsData, ThrowOnError>
+) =>
+    (options?.client ?? client).post<
+        PostV5AnnouncementsResponses,
+        PostV5AnnouncementsErrors,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/v5/announcements',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers
+        }
+    });
 
 /**
  * Get the latest announcement for each tag
  *
  * Get the newest announcement for every available announcement tag.
  */
-export const getV5AnnouncementsLatest = <ThrowOnError extends boolean = false>(options?: Options<GetV5AnnouncementsLatestData, ThrowOnError>) => (options?.client ?? client).get<GetV5AnnouncementsLatestResponses, unknown, ThrowOnError>({ url: '/v5/announcements/latest', ...options });
+export const getV5AnnouncementsLatest = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5AnnouncementsLatestData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5AnnouncementsLatestResponses,
+        unknown,
+        ThrowOnError
+    >({ url: '/v5/announcements/latest', ...options });
 
 /**
  * Get the latest announcement ID for each tag
  *
  * Get the ID of the newest announcement for every available announcement tag.
  */
-export const getV5AnnouncementsLatestId = <ThrowOnError extends boolean = false>(options?: Options<GetV5AnnouncementsLatestIdData, ThrowOnError>) => (options?.client ?? client).get<GetV5AnnouncementsLatestIdResponses, unknown, ThrowOnError>({ url: '/v5/announcements/latest/id', ...options });
+export const getV5AnnouncementsLatestId = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetV5AnnouncementsLatestIdData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5AnnouncementsLatestIdResponses,
+        unknown,
+        ThrowOnError
+    >({ url: '/v5/announcements/latest/id', ...options });
 
 /**
  * Delete an announcement
  *
  * Delete an announcement. Requires bearer token authentication.
  */
-export const deleteV5AnnouncementsById = <ThrowOnError extends boolean = false>(options: Options<DeleteV5AnnouncementsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteV5AnnouncementsByIdResponses, DeleteV5AnnouncementsByIdErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/v5/announcements/{id}',
-    ...options
-});
+export const deleteV5AnnouncementsById = <ThrowOnError extends boolean = false>(
+    options: Options<DeleteV5AnnouncementsByIdData, ThrowOnError>
+) =>
+    (options.client ?? client).delete<
+        DeleteV5AnnouncementsByIdResponses,
+        DeleteV5AnnouncementsByIdErrors,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/v5/announcements/{id}',
+        ...options
+    });
 
 /**
  * Update an announcement
  *
  * Update an existing announcement. Requires bearer token authentication.
  */
-export const patchV5AnnouncementsById = <ThrowOnError extends boolean = false>(options: Options<PatchV5AnnouncementsByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchV5AnnouncementsByIdResponses, PatchV5AnnouncementsByIdErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/v5/announcements/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+export const patchV5AnnouncementsById = <ThrowOnError extends boolean = false>(
+    options: Options<PatchV5AnnouncementsByIdData, ThrowOnError>
+) =>
+    (options.client ?? client).patch<
+        PatchV5AnnouncementsByIdResponses,
+        PatchV5AnnouncementsByIdErrors,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/v5/announcements/{id}',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
 
 /**
  * Get contributors
  *
  * Get the list of contributors for each configured repository.
  */
-export const getV5Contributors = <ThrowOnError extends boolean = false>(options?: Options<GetV5ContributorsData, ThrowOnError>) => (options?.client ?? client).get<GetV5ContributorsResponses, GetV5ContributorsErrors, ThrowOnError>({ url: '/v5/contributors', ...options });
+export const getV5Contributors = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5ContributorsData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5ContributorsResponses,
+        GetV5ContributorsErrors,
+        ThrowOnError
+    >({ url: '/v5/contributors', ...options });
 
 /**
  * Get team members
  *
  * Get the list of team members from the organization.
  */
-export const getV5Team = <ThrowOnError extends boolean = false>(options?: Options<GetV5TeamData, ThrowOnError>) => (options?.client ?? client).get<GetV5TeamResponses, GetV5TeamErrors, ThrowOnError>({ url: '/v5/team', ...options });
+export const getV5Team = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5TeamData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<
+        GetV5TeamResponses,
+        GetV5TeamErrors,
+        ThrowOnError
+    >({ url: '/v5/team', ...options });
 
 /**
  * Get about
  *
  * Get information about the API.
  */
-export const getV5About = <ThrowOnError extends boolean = false>(options?: Options<GetV5AboutData, ThrowOnError>) => (options?.client ?? client).get<GetV5AboutResponses, unknown, ThrowOnError>({ url: '/v5/about', ...options });
+export const getV5About = <ThrowOnError extends boolean = false>(
+    options?: Options<GetV5AboutData, ThrowOnError>
+) =>
+    (options?.client ?? client).get<GetV5AboutResponses, unknown, ThrowOnError>(
+        { url: '/v5/about', ...options }
+    );
