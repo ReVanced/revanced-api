@@ -1,5 +1,5 @@
 name = "revanced-api"
-main = "src/index.ts"
+main = "api/src/index.ts"
 compatibility_date = "2025-02-01"
 compatibility_flags = ["nodejs_compat"]
 

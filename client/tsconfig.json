@@ -11,7 +11,7 @@
         // Bundler mode
         "moduleResolution": "bundler",
         "verbatimModuleSyntax": true,
-        "rootDir": "generated",
+        "rootDir": "src",
         "outDir": "dist",
         "declaration": true,
         "declarationMap": true,
@@ -29,5 +29,5 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false
     },
-    "exclude": ["dist"]
+    "exclude": ["dist", "node_modules"]
 }

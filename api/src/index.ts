@@ -3,7 +3,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import type { Env } from './types';
 import { cacheControl, CacheDuration } from './cache';
 import { getConfig } from './config';
-import packageJson from '../package.json';
+import packageJson from 'package.json';
 import patchesApp from './routes/patches';
 import managerApp from './routes/manager';
 import announcementsApp from './routes/announcements';

@@ -11,7 +11,7 @@
         "db:migration:generate": "drizzle-kit generate",
         "db:migration:apply": "wrangler d1 migrations apply revanced-api",
         "gen:client:ts": "openapi-ts -i",
-        "build:client:ts": "bun run --filter ./client/ts build"
+        "build:client:ts": "bun run --cwd client build"
     },
     "keywords": [
         "revanced",
@@ -42,6 +42,6 @@
         "wrangler": "^4.83.0"
     },
     "workspaces": [
-        "client/ts"
+        "client"
     ]
 }
