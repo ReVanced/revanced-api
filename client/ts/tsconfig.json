@@ -11,6 +11,7 @@
         // Bundler mode
         "moduleResolution": "bundler",
         "verbatimModuleSyntax": true,
+        "rootDir": "generated",
         "outDir": "dist",
         "declaration": true,
         "declarationMap": true,

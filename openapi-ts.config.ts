@@ -4,6 +4,6 @@ export default defineConfig({
     input: 'placeholder.yaml', // the input is overridden by the CLI
     output: {
         clean: false,
-        path: 'client/ts'
+        path: 'client/ts/generated'
     }
 });
