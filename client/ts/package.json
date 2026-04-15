@@ -2,6 +2,9 @@
     "name": "@revanced/api-client",
     "version": "0.0.1",
     "module": "./dist/index.js",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
     "devDependencies": {
         "typescript": "^6.0.2"
     },
@@ -21,7 +24,9 @@
     ],
     "scripts": {
         "build": "tsc",
-        "dev": "tsc --watch"
+        "dev": "tsc --watch",
+        "prepublishOnly": "bun run build",
+        "publish:github": "bunx npm publish"
     },
     "type": "module"
 }
