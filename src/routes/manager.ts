@@ -4,9 +4,13 @@ import { ErrorResponseSchema } from '../schemas/common';
 import {
     ReleaseResponseSchema,
     VersionResponseSchema,
-    HistoryResponseSchema
+    HistoryResponseSchema,
+    SignedReleaseResponseSchema, 
+    SignedVersionResponseSchema,
+    SignedHistoryResponseSchema
 } from '../schemas/releases';
 import * as managerService from '../services/manager';
+import { signResponse } from "../services/signature";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -20,7 +24,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The latest manager release.'
             },
@@ -33,7 +37,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getRelease(c.env, false), 200);
+        const data = await managerService.getRelease(c.env, false);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200); 
     }
 );
 
@@ -47,7 +52,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The latest manager prerelease.'
             },
@@ -60,7 +65,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getRelease(c.env, true), 200);
+        const data = await managerService.getRelease(c.env, true);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200); 
     }
 );
 
@@ -74,7 +80,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description: 'The current manager release version.'
             },
@@ -87,7 +93,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getVersion(c.env, false), 200);
+        const data = await managerService.getVersion(c.env, false);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200);  
     }
 );
 
@@ -101,7 +108,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description: 'The current manager prerelease version.'
             },
@@ -114,7 +121,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getVersion(c.env, true), 200);
+        const data = await managerService.getVersion(c.env, true);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200);  
     }
 );
 
@@ -128,7 +136,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: HistoryResponseSchema }
+                    'application/json': { schema: SignedHistoryResponseSchema }
                 },
                 description: 'The manager release history.'
             },
@@ -141,7 +149,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getHistory(c.env, false), 200);
+        const data = await managerService.getHistory(c.env, false);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200);  
     }
 );
 
@@ -155,7 +164,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: HistoryResponseSchema }
+                    'application/json': { schema: SignedHistoryResponseSchema }
                 },
                 description: 'The manager prerelease history.'
             },
@@ -168,7 +177,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await managerService.getHistory(c.env, true), 200);
+        const data = await managerService.getHistory(c.env, true);
+        return c.json( signResponse(data, c.env.MANAGER_PRIVATE_KEY, c.env.MANAGER_CERT), 200);  
     }
 );
 
@@ -182,7 +192,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The latest manager downloaders release.'
             },
@@ -195,10 +205,11 @@ app.openapi(
         }
     }),
     async (c) => {
+        const data = await managerService.getDownloadersRelease(c.env, false);
         return c.json(
-            await managerService.getDownloadersRelease(c.env, false),
+            signResponse(data, c.env.DOWNLOADER_PRIVATE_KEY, c.env.DOWNLOADER_CERT), 
             200
-        );
+        ); 
     }
 );
 
@@ -212,7 +223,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The latest manager downloaders prerelease.'
             },
@@ -225,10 +236,11 @@ app.openapi(
         }
     }),
     async (c) => {
+        const data = await managerService.getDownloadersRelease(c.env, true);
         return c.json(
-            await managerService.getDownloadersRelease(c.env, true),
+            signResponse(data, c.env.DOWNLOADER_PRIVATE_KEY, c.env.DOWNLOADER_CERT), 
             200
-        );
+        ); 
     }
 );
 
@@ -243,7 +255,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description: 'The current manager downloaders release version.'
             },
@@ -256,10 +268,11 @@ app.openapi(
         }
     }),
     async (c) => {
+        const data = await managerService.getDownloadersRelease(c.env, false);
         return c.json(
-            await managerService.getDownloadersVersion(c.env, false),
+            signResponse(data, c.env.DOWNLOADER_PRIVATE_KEY, c.env.DOWNLOADER_CERT), 
             200
-        );
+        ); 
     }
 );
 
@@ -273,7 +286,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description:
                     'The current manager downloaders prerelease version.'
@@ -287,10 +300,11 @@ app.openapi(
         }
     }),
     async (c) => {
+        const data = await managerService.getDownloadersRelease(c.env, true);
         return c.json(
-            await managerService.getDownloadersVersion(c.env, true),
+            signResponse(data, c.env.DOWNLOADER_PRIVATE_KEY, c.env.DOWNLOADER_CERT), 
             200
-        );
+        ); 
     }
 );
 

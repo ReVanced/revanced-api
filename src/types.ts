@@ -19,4 +19,10 @@ export interface Env {
     PATCHES_PUBLIC_KEY_FILE: string;
     CONTRIBUTORS_REPOS: string;
     API_VERSION: string;
+    PATCHES_PRIVATE_KEY: string;
+    PATCHES_CERT: string;
+    MANAGER_PRIVATE_KEY: string;
+    MANAGER_CERT: string;
+    DOWNLOADER_PRIVATE_KEY: string;
+    DOWNLOADER_CERT: string;
 }
