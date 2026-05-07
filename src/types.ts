@@ -18,5 +18,6 @@ export interface Env {
     MANAGER_DOWNLOADERS_ASSET_REGEX: string;
     PATCHES_PUBLIC_KEY_FILE: string;
     CONTRIBUTORS_REPOS: string;
+    IGNORED_CONTRIBUTORS: string;
     API_VERSION: string;
 }

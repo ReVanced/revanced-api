@@ -16,6 +16,7 @@ export interface Config {
         downloadersAssetRegex: RegExp;
     };
     contributorRepos: { repo: string; name: string }[];
+    ignoredContributors: string[];
     apiVersion: string;
 }
 
@@ -42,6 +43,7 @@ export function getConfig(env: Env): Config {
             const [repo, ...nameParts] = entry.trim().split(':');
             return { repo: repo.trim(), name: nameParts.join(':').trim() };
         }),
+        ignoredContributors: env.IGNORED_CONTRIBUTORS.split(",").map((entry) => entry.trim()),
         apiVersion: env.API_VERSION
     });
 }
