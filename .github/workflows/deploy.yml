@@ -63,6 +63,7 @@ jobs:
             MANAGER_DOWNLOADERS_REPO
             MANAGER_DOWNLOADERS_ASSET_REGEX
             CONTRIBUTORS_REPOS
+            IGNORED_CONTRIBUTORS
             API_VERSION
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -77,6 +78,7 @@ jobs:
           MANAGER_DOWNLOADERS_REPO: ${{ vars.MANAGER_DOWNLOADERS_REPO }}
           MANAGER_DOWNLOADERS_ASSET_REGEX: ${{ vars.MANAGER_DOWNLOADERS_ASSET_REGEX }}
           CONTRIBUTORS_REPOS: ${{ vars.CONTRIBUTORS_REPOS }}
+          IGNORED_CONTRIBUTORS: ${{ vars.IGNORED_CONTRIBUTORS }}
           API_VERSION: ${{ vars.API_VERSION }}
           ABOUT_JSON: ${{ vars.ABOUT_JSON }}
           KEYS: ${{ vars.KEYS }}
