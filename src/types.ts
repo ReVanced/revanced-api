@@ -20,4 +20,10 @@ export interface Env {
     CONTRIBUTORS_REPOS: string;
     IGNORED_CONTRIBUTORS: string;
     API_VERSION: string;
+    PATCHES_PRIVATE_KEY: string;
+    PATCHES_CERT: string;
+    MANAGER_PRIVATE_KEY: string;
+    MANAGER_CERT: string;
+    DOWNLOADER_PRIVATE_KEY: string;
+    DOWNLOADER_CERT: string;
 }

@@ -5,9 +5,13 @@ import {
     ReleaseResponseSchema,
     VersionResponseSchema,
     HistoryResponseSchema,
-    PublicKeyResponseSchema
+    PublicKeyResponseSchema,
+    SignedReleaseResponseSchema, 
+    SignedVersionResponseSchema,
+    SignedHistoryResponseSchema
 } from '../schemas/releases';
 import * as patchesService from '../services/patches';
+import { signResponse } from "../services/signature";
 
 const app = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -21,7 +25,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The current patches release.'
             },
@@ -34,7 +38,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getRelease(c.env, false), 200);
+        const data = await patchesService.getRelease(c.env, false);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 
@@ -48,7 +53,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: ReleaseResponseSchema }
+                    'application/json': { schema: SignedReleaseResponseSchema }
                 },
                 description: 'The current patches prerelease.'
             },
@@ -61,7 +66,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getRelease(c.env, true), 200);
+       const data = await patchesService.getRelease(c.env, true);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 
@@ -77,7 +83,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description: 'The current patches release version.'
             },
@@ -90,7 +96,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getVersion(c.env, false), 200);
+        const data = await patchesService.getVersion(c.env, false);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 
@@ -104,7 +111,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: VersionResponseSchema }
+                    'application/json': { schema: SignedVersionResponseSchema }
                 },
                 description: 'The current patches prerelease version.'
             },
@@ -117,7 +124,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getVersion(c.env, true), 200);
+        const data = await patchesService.getVersion(c.env, true);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 
@@ -131,7 +139,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: HistoryResponseSchema }
+                    'application/json': { schema: SignedHistoryResponseSchema }
                 },
                 description: 'The patches release history.'
             },
@@ -144,7 +152,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getHistory(c.env, false), 200);
+        const data = await patchesService.getHistory(c.env, false);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 
@@ -158,7 +167,7 @@ app.openapi(
         responses: {
             200: {
                 content: {
-                    'application/json': { schema: HistoryResponseSchema }
+                    'application/json': { schema: SignedHistoryResponseSchema }
                 },
                 description: 'The patches prerelease history.'
             },
@@ -171,7 +180,8 @@ app.openapi(
         }
     }),
     async (c) => {
-        return c.json(await patchesService.getHistory(c.env, true), 200);
+        const data = await patchesService.getHistory(c.env, true);
+        return c.json(signResponse(data, c.env.PATCHES_PRIVATE_KEY, c.env.PATCHES_CERT), 200); 
     }
 );
 

@@ -49,3 +49,21 @@ export const PublicKeyResponseSchema = z
         })
     })
     .openapi('PublicKey');
+
+export const SignedReleaseResponseSchema = z.object({
+    data: ReleaseResponseSchema,
+    signature: z.string(),
+    certificate: z.string(),
+}).openapi("SignedRelease");
+
+export const SignedVersionResponseSchema = z.object({
+    data: VersionResponseSchema,
+    signature: z.string(),
+    certificate: z.string(),
+}).openapi("SignedVersion");
+
+export const SignedHistoryResponseSchema = z.object({
+    data: HistoryResponseSchema,
+    signature: z.string(),
+    certificate: z.string(),
+}).openapi("SignedHistory");
