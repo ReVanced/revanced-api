@@ -6,56 +6,54 @@ import type {
     BackendMember
 } from './types';
 
-interface GitHubAsset {
+interface GiteaAsset {
     name: string;
     browser_download_url: string;
 }
 
-interface GitHubRelease {
+interface GiteaRelease {
     tag_name: string;
     body: string;
     created_at: string;
     prerelease: boolean;
-    assets: GitHubAsset[];
+    assets: GiteaAsset[];
 }
 
-interface GitHubContributor {
+interface GiteaContributor {
     login: string;
     avatar_url: string;
     html_url: string;
     contributions: number;
 }
 
-interface GitHubMember {
+interface GiteaMember {
     login: string;
     avatar_url: string;
-    html_url: string;
 }
 
-interface GitHubUser {
+interface GiteaUser {
     login: string;
     avatar_url: string;
-    html_url: string;
-    bio: string | null;
+    biography: string;
 }
 
-interface GitHubGpgKey {
+interface GiteaGpgKey {
     key_id: string;
 }
 
 import { formatDatetime } from '../utils';
 
-export class GitHubBackend implements Backend {
-    private readonly baseUrl = 'https://api.github.com';
+export class GiteaBackend implements Backend {
+    private readonly baseUrl: string;
     private readonly headers: HeadersInit;
 
-    constructor(token?: string) {
+    constructor(url: string, token?: string) {
+        this.baseUrl = `${url}/api/v1`;
         const headers: Record<string, string> = {
-            Accept: 'application/vnd.github+json',
-            'User-Agent': 'revanced-api'
+            Accept: 'application/json'
         };
         if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+            headers['Authorization'] = `token ${token}`;
         }
         this.headers = headers;
     }
@@ -64,7 +62,7 @@ export class GitHubBackend implements Backend {
         const response = await fetch(url, { headers: this.headers });
         if (!response.ok) {
             throw new Error(
-                `GitHub API error: ${response.status} ${response.statusText} — ${url}`
+                `Gitea API error: ${response.status} ${response.statusText} — ${url}`
             );
         }
         return response.json() as Promise<T>;
@@ -75,18 +73,18 @@ export class GitHubBackend implements Backend {
         repo: string,
         prerelease: boolean
     ): Promise<BackendRelease> {
-        let release: GitHubRelease;
+        let release: GiteaRelease;
 
         if (prerelease) {
-            const releases = await this.fetchJson<GitHubRelease[]>(
-                `${this.baseUrl}/repos/${owner}/${repo}/releases?per_page=1`
+            const releases = await this.fetchJson<GiteaRelease[]>(
+                `${this.baseUrl}/repos/${owner}/${repo}/releases?limit=1`
             );
             if (releases.length === 0) {
                 throw new Error(`No releases found for ${owner}/${repo}`);
             }
             release = releases[0];
         } else {
-            release = await this.fetchJson<GitHubRelease>(
+            release = await this.fetchJson<GiteaRelease>(
                 `${this.baseUrl}/repos/${owner}/${repo}/releases/latest`
             );
         }
@@ -110,8 +108,8 @@ export class GitHubBackend implements Backend {
         repo: string,
         count: number
     ): Promise<BackendRelease[]> {
-        const releases = await this.fetchJson<GitHubRelease[]>(
-            `${this.baseUrl}/repos/${owner}/${repo}/releases?per_page=${count}`
+        const releases = await this.fetchJson<GiteaRelease[]>(
+            `${this.baseUrl}/repos/${owner}/${repo}/releases?limit=${count}`
         );
 
         return releases.map((release) => ({
@@ -129,33 +127,25 @@ export class GitHubBackend implements Backend {
     }
 
     async contributors(
-        owner: string,
-        repo: string
+        _owner: string,
+        _repo: string
     ): Promise<BackendContributor[]> {
-        const contributors = await this.fetchJson<GitHubContributor[]>(
-            `${this.baseUrl}/repos/${owner}/${repo}/contributors?per_page=100`
-        );
-
-        return contributors.map((contributor) => ({
-            name: contributor.login,
-            avatarUrl: contributor.avatar_url,
-            url: contributor.html_url,
-            contributions: contributor.contributions
-        }));
+        // TODO: Forgejo does not have a contributors API yet.
+        return [];
     }
 
     async members(organization: string): Promise<BackendMember[]> {
-        const publicMembers = await this.fetchJson<GitHubMember[]>(
+        const publicMembers = await this.fetchJson<GiteaMember[]>(
             `${this.baseUrl}/orgs/${organization}/public_members`
         );
 
         const members = await Promise.all(
             publicMembers.map(async (member) => {
                 const [user, gpgKeys] = await Promise.all([
-                    this.fetchJson<GitHubUser>(
+                    this.fetchJson<GiteaUser>(
                         `${this.baseUrl}/users/${member.login}`
                     ),
-                    this.fetchJson<GitHubGpgKey[]>(
+                    this.fetchJson<GiteaGpgKey[]>(
                         `${this.baseUrl}/users/${member.login}/gpg_keys`
                     )
                 ]);
@@ -163,11 +153,11 @@ export class GitHubBackend implements Backend {
                 return {
                     name: user.login,
                     avatarUrl: user.avatar_url,
-                    url: user.html_url,
-                    bio: user.bio,
+                    url: `${this.baseUrl.replace('/api/v1', '')}/${user.login}`,
+                    bio: user.biography || null,
                     gpgKeys: {
                         ids: gpgKeys.map((key) => key.key_id),
-                        url: `https://github.com/${user.login}.gpg`
+                        url: `${this.baseUrl}/users/${user.login}/gpg_keys`
                     }
                 } satisfies BackendMember;
             })
@@ -177,6 +167,6 @@ export class GitHubBackend implements Backend {
     }
 
     repositoryUrl(owner: string, repo: string): string {
-        return `https://github.com/${owner}/${repo}`;
+        return `${this.baseUrl.replace('/api/v1', '')}/${owner}/${repo}`;
     }
 }
