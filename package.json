@@ -1,10 +1,11 @@
 {
     "name": "revanced-api",
-    "version": "1.9.0-dev.1",
+    "version": "1.7.0-dev.1",
     "description": "API server for ReVanced.",
     "type": "module",
     "scripts": {
         "dev": "wrangler dev",
+        "test": "bun test",
         "deploy": "wrangler deploy",
         "format": "prettier --write --ignore-unknown .",
         "db:create": "wrangler d1 create revanced-api",
@@ -31,6 +32,7 @@
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "@semantic-release/npm": "^13.1.5",
+        "@types/bun": "^1.4.1",
         "@types/node": "^25.5.0",
         "drizzle-kit": "^0.31.10",
         "prettier": "3.8.1",

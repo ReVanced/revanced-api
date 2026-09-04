@@ -30,8 +30,7 @@ export default {
                 console.error(err);
                 return c.json(
                     {
-                        error: err.message || 'Unknown error',
-                        stack: err.stack
+                        error: err.message || 'Unknown error'
                     },
                     500
                 );

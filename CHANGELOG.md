@@ -1,3 +1,21 @@
+# [1.7.0-dev.1](https://github.com/mostafaNazari702/revanced-api/compare/v1.6.1...v1.7.0-dev.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* Correct announcement update handling, ISO timestamps and error responses ([9abefb0](https://github.com/mostafaNazari702/revanced-api/commit/9abefb03b297b5fe3156da15c607783cc548403e))
+* Generate OpenAPI v3.1.x specification ([#220](https://github.com/mostafaNazari702/revanced-api/issues/220)) ([2576077](https://github.com/mostafaNazari702/revanced-api/commit/257607709925a6e10a45389c108bc27d7943deac))
+
+
+### Features
+
+* Add `downloaders` route ([#208](https://github.com/mostafaNazari702/revanced-api/issues/208)) ([64f9431](https://github.com/mostafaNazari702/revanced-api/commit/64f9431b50de681a662f0a6ed773dcbdecd29045))
+* Add filter for repository contributors ([#223](https://github.com/mostafaNazari702/revanced-api/issues/223)) ([c38e077](https://github.com/mostafaNazari702/revanced-api/commit/c38e0779b2a0d8b7ac2c4a9b2ca7e5ba35222d94))
+* Add history route ([f0c9d4b](https://github.com/mostafaNazari702/revanced-api/commit/f0c9d4bab0eca4b00e9d174ec6b44018882ee74d))
+* Add latest APIs for announcements ([e4d7e25](https://github.com/mostafaNazari702/revanced-api/commit/e4d7e25e6c3caa381af38ec542a63c81ca9b13a2))
+* Add missing tags field to announcements ([#213](https://github.com/mostafaNazari702/revanced-api/issues/213)) ([3674c6f](https://github.com/mostafaNazari702/revanced-api/commit/3674c6ff099426fccc32ce4df519011c019da04f))
+* Convert ReVanced API from a Ktor server to serverless ([#211](https://github.com/mostafaNazari702/revanced-api/issues/211)) ([2ba8849](https://github.com/mostafaNazari702/revanced-api/commit/2ba8849dafa8ec6879a083e9815804f104bb0711))
+
 # [1.9.0-dev.1](https://github.com/ReVanced/revanced-api/compare/v1.8.1-dev.1...v1.9.0-dev.1) (2026-07-19)
 
 

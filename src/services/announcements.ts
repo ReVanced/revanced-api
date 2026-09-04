@@ -197,6 +197,7 @@ export async function createAnnouncement(
         title: string;
         content?: string;
         created_at?: string | null;
+        archived_at?: string | null;
         tags?: string[];
         level?: number;
     }
@@ -209,6 +210,7 @@ export async function createAnnouncement(
             title: body.title,
             content: body.content ?? null,
             createdAt: body.created_at ?? new Date().toISOString(),
+            archivedAt: body.archived_at ?? null,
             level: body.level ?? 0
         })
         .returning();
@@ -231,28 +233,45 @@ export async function createAnnouncement(
     return formatRow(created, tagNames);
 }
 
+export type UpdateAnnouncementInput = {
+    author?: string | null;
+    title?: string | null;
+    content?: string | null;
+    created_at?: string | null;
+    tags?: string[];
+    archived_at?: string | null;
+    level?: number | null;
+};
+
+export function buildAnnouncementUpdates(
+    body: UpdateAnnouncementInput
+): Partial<typeof announcements.$inferInsert> {
+    const updates: Partial<typeof announcements.$inferInsert> = {};
+
+    if (body.author !== undefined) updates.author = body.author;
+    if (body.title !== undefined && body.title !== null) {
+        updates.title = body.title;
+    }
+    if (body.content !== undefined) updates.content = body.content;
+    if (body.created_at !== undefined && body.created_at !== null) {
+        updates.createdAt = body.created_at;
+    }
+    if (body.archived_at !== undefined) updates.archivedAt = body.archived_at;
+    if (body.level !== undefined && body.level !== null) {
+        updates.level = body.level;
+    }
+
+    return updates;
+}
+
 export async function updateAnnouncement(
     env: Env,
     id: number,
-    body: {
-        author?: string;
-        title?: string | null;
-        content?: string | null;
-        created_at?: string | null;
-        tags?: string[];
-        archived_at?: string | null;
-        level?: number | null;
-    }
+    body: UpdateAnnouncementInput
 ) {
     const database = getDatabase(env.DB);
 
-    const updates: Record<string, unknown> = {};
-    if (body.author) updates.author = body.author;
-    if (body.title) updates.title = body.title;
-    if (body.content) updates.content = body.content;
-    if (body.created_at) updates.createdAt = body.created_at;
-    if (body.archived_at) updates.archivedAt = body.archived_at;
-    if (body.level) updates.level = body.level;
+    const updates = buildAnnouncementUpdates(body);
 
     let row;
     if (Object.keys(updates).length > 0) {

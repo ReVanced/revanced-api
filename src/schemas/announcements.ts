@@ -74,7 +74,7 @@ export const UpdateAnnouncementBodySchema = z
         author: z.string().optional().openapi({ example: 'ReVanced' }),
         title: z.string().openapi({ example: 'Welcome' }),
         content: z.string().optional().openapi({ example: 'Some content' }),
-        tags: z.array(z.string()).openapi({ example: ['Important'] }),
+        tags: z.array(z.string()).optional().openapi({ example: ['Important'] }),
         created_at: z.iso.datetime().nullable().optional().openapi({
             example: '1970-01-01T00:00:00.000Z',
             description: 'UTC timestamp.'
@@ -84,6 +84,6 @@ export const UpdateAnnouncementBodySchema = z
             .nullable()
             .optional()
             .openapi({ example: null, description: 'UTC timestamp.' }),
-        level: z.number().int().optional().default(0).openapi({ example: 0 })
+        level: z.number().int().optional().openapi({ example: 0 })
     })
     .openapi('UpdateAnnouncement');

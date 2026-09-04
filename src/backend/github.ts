@@ -43,11 +43,9 @@ interface GitHubGpgKey {
     key_id: string;
 }
 
-function formatDatetime(isoString: string): string {
-    return isoString
-        .replace(/\.\d{3}Z$/, '')
-        .replace(/Z$/, '')
-        .replace(/[+-]\d{2}:\d{2}$/, '');
+export function formatDatetime(isoString: string): string {
+    const parsed = new Date(isoString);
+    return Number.isNaN(parsed.getTime()) ? isoString : parsed.toISOString();
 }
 
 export class GitHubBackend implements Backend {
