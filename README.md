@@ -91,8 +91,38 @@ ReVanced API is deployed as a Cloudflare Worker.
 
 1. Install dependencies with `bun install`
 2. Copy `.env.example` to `.env` and fill in the required environment variables
-3. Create a local D1 database and run migrations with `bun run db:migration:apply`
-4. Start the development server with `bun run dev`
+3. Copy `about.example.json` to `about.json` and customize the API information
+4. Create a local D1 database and run migrations with `bun run db:migration:apply`
+5. Start the development server with `bun run dev`
+
+After setup, run `bun run test` for the tests and `bun run typecheck` to check
+the application and test types.
+
+### 👥 Contributor repositories
+
+The contributors endpoint automatically discovers all public repositories in
+`ORGANIZATION`, including forks and archived repositories. New public repositories
+are included without updating configuration. Repositories are listed by name in
+ascending order.
+
+- `CONTRIBUTORS_REPOS` is an optional comma-separated list of
+  `repository:Display name` overrides. Repositories without an override (or with
+  an empty display name) use their repository name. Overrides do not add
+  repositories that are absent from discovery.
+- `IGNORED_CONTRIBUTOR_REPOS` is an optional comma-separated list of repository
+  names to exclude. Exclusions take precedence over display-name overrides.
+- Both settings trim whitespace and match repository names case-insensitively.
+  `IGNORED_CONTRIBUTORS` continues to filter individual contributors.
+
+For example, `CONTRIBUTORS_REPOS=revanced-api:ReVanced API` and
+`IGNORED_CONTRIBUTOR_REPOS=old-project,example-project` customize the API's name
+and omit those two repositories while including newly discovered repositories.
+Empty repositories have an empty contributors list.
+
+When migrating, `CONTRIBUTORS_REPOS` supplies display names rather than an
+allowlist. Add any public repositories that should stay hidden to
+`IGNORED_CONTRIBUTOR_REPOS`. Clients may retain an earlier response for the
+contributors endpoint's one-day cache duration.
 
 ### 🌐 Deployment
 
