@@ -17,7 +17,7 @@ app.openapi(
         tags: ['API'],
         summary: 'Get contributors',
         description:
-            'Get the list of contributors for each configured repository.',
+            'Get the list of contributors for each public repository in the configured organization, excluding ignored repositories.',
         responses: {
             200: {
                 content: {

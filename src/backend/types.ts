@@ -33,6 +33,7 @@ export interface BackendMember {
 }
 
 export interface Backend {
+    repositories(organization: string): Promise<string[]>;
     release(
         owner: string,
         repo: string,

@@ -26,6 +26,11 @@ interface GitHubContributor {
     contributions: number;
 }
 
+interface GitHubRepository {
+    name: string;
+    private: boolean;
+}
+
 interface GitHubMember {
     login: string;
     avatar_url: string;
@@ -65,14 +70,36 @@ export class GitHubBackend implements Backend {
         this.headers = headers;
     }
 
-    private async fetchJson<T>(url: string): Promise<T> {
+    private async fetchJson<T>(url: string, emptyResponse?: T): Promise<T> {
         const response = await fetch(url, { headers: this.headers });
         if (!response.ok) {
             throw new Error(
                 `GitHub API error: ${response.status} ${response.statusText} — ${url}`
             );
         }
+        if (response.status === 204 && emptyResponse !== undefined) {
+            return emptyResponse;
+        }
         return response.json() as Promise<T>;
+    }
+
+    async repositories(organization: string): Promise<string[]> {
+        const repositories: string[] = [];
+        const perPage = 100;
+
+        for (let page = 1; ; page++) {
+            const batch = await this.fetchJson<GitHubRepository[]>(
+                `${this.baseUrl}/orgs/${encodeURIComponent(organization)}/repos?type=public&sort=full_name&direction=asc&per_page=${perPage}&page=${page}`
+            );
+            repositories.push(
+                ...batch
+                    .filter((repository) => !repository.private)
+                    .map((repository) => repository.name)
+            );
+            if (batch.length < perPage) {
+                return repositories;
+            }
+        }
     }
 
     async release(
@@ -138,7 +165,8 @@ export class GitHubBackend implements Backend {
         repo: string
     ): Promise<BackendContributor[]> {
         const contributors = await this.fetchJson<GitHubContributor[]>(
-            `${this.baseUrl}/repos/${owner}/${repo}/contributors?per_page=100`
+            `${this.baseUrl}/repos/${owner}/${repo}/contributors?per_page=100`,
+            [] // GitHub returns 204 for empty repositories.
         );
 
         return contributors.map((contributor) => ({
