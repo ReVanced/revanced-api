@@ -16,6 +16,7 @@ export interface Config {
         downloadersAssetRegex: RegExp;
     };
     contributorRepos: { repo: string; name: string }[];
+    ignoredContributorRepos: string[];
     ignoredContributors: string[];
     apiVersion: string;
 }
@@ -39,11 +40,20 @@ export function getConfig(env: Env): Config {
                 env.MANAGER_DOWNLOADERS_ASSET_REGEX
             )
         },
-        contributorRepos: env.CONTRIBUTORS_REPOS.split(',').map((entry) => {
-            const [repo, ...nameParts] = entry.trim().split(':');
-            return { repo: repo.trim(), name: nameParts.join(':').trim() };
-        }),
-        ignoredContributors: env.IGNORED_CONTRIBUTORS.split(",").map((entry) => entry.trim()),
+        contributorRepos: (env.CONTRIBUTORS_REPOS ?? '')
+            .split(',')
+            .map((entry) => {
+                const [repo, ...nameParts] = entry.trim().split(':');
+                return { repo: repo.trim(), name: nameParts.join(':').trim() };
+            })
+            .filter(({ repo }) => repo.length > 0),
+        ignoredContributorRepos: (env.IGNORED_CONTRIBUTOR_REPOS ?? '')
+            .split(',')
+            .map((repo) => repo.trim().toLowerCase())
+            .filter(Boolean),
+        ignoredContributors: env.IGNORED_CONTRIBUTORS.split(',').map((entry) =>
+            entry.trim()
+        ),
         apiVersion: env.API_VERSION
     });
 }
